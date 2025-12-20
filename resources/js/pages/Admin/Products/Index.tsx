@@ -94,7 +94,7 @@ export default function ProductsIndex() {
                     {products.map((product) => (
                       <tr key={product.id} className="border-t">
                         <td className="px-4 py-3">{product.name}</td>
-                        <td className="px-4 py-3">Rp {product.price.toLocaleString('id-ID')}</td>
+                        <td className="px-4 py-3">Rp {Number(product.price).toLocaleString('id-ID', { maximumFractionDigits: 0 })}</td>
                         <td className="px-4 py-3">{product.stock} units</td>
                         <td className="px-4 py-3 space-x-2">
                           <Link href={`/admin/products/${product.id}/edit`}>
