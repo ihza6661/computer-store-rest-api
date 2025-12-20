@@ -17,10 +17,9 @@ export default defineConfig({
             },
         }),
         tailwindcss(),
-        wayfinder({
+        ...(process.env.CI === 'true' ? [] : [wayfinder({
             formVariants: true,
-            generate: process.env.CI !== 'true',
-        }),
+        })]),
     ],
     esbuild: {
         jsx: 'automatic',
