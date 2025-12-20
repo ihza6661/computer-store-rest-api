@@ -3,9 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ContactConfirmation;
+use App\Mail\ContactReply;
+use App\Mail\NewContactSubmission;
 use App\Models\Contact;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
 {
@@ -53,8 +58,22 @@ class ContactController extends Controller
 
         $contact = Contact::create($validated);
 
-        // TODO: Send emails (auto-reply to customer + notification to admin)
-        // Mail::send(...);
+        // Send auto-reply to customer
+        try {
+            Mail::to($contact->email)->send(new ContactConfirmation($contact));
+        } catch (\Exception $e) {
+            // Log email error but don't fail the request
+            Log::error('Failed to send contact confirmation email: ' . $e->getMessage());
+        }
+
+        // Send notification to admin
+        try {
+            $adminEmail = config('mail.admin_email', 'admin@rtech.test');
+            Mail::to($adminEmail)->send(new NewContactSubmission($contact));
+        } catch (\Exception $e) {
+            // Log email error but don't fail the request
+            Log::error('Failed to send admin notification email: ' . $e->getMessage());
+        }
 
         return response()->json($contact, Response::HTTP_CREATED);
     }
@@ -89,8 +108,14 @@ class ContactController extends Controller
         // Mark as replied if admin_reply is provided
         if (!empty($validated['admin_reply'])) {
             $contact->markAsReplied();
-            // TODO: Send reply email to customer
-            // Mail::send(...);
+            
+            // Send reply email to customer
+            try {
+                Mail::to($contact->email)->send(new ContactReply($contact));
+            } catch (\Exception $e) {
+                // Log email error but don't fail the request
+                Log::error('Failed to send contact reply email: ' . $e->getMessage());
+            }
         }
 
         return response()->json($contact);
