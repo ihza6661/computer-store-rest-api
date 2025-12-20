@@ -1,6 +1,7 @@
 import { Head, Link, router } from '@inertiajs/react'
 import AdminLayout from '../Layouts/AdminLayout'
 import { useState } from 'react'
+import { apiPost } from '@/lib/api'
 
 interface FormErrors {
   [key: string]: string
@@ -21,14 +22,7 @@ export default function CreateCategory() {
     setLoading(true)
 
     try {
-      const response = await fetch('/api/admin/categories', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify(data),
-      })
+      const response = await apiPost('/api/admin/categories', data)
 
       if (!response.ok) {
         const errorData = await response.json()
@@ -39,7 +33,7 @@ export default function CreateCategory() {
 
       // Redirect to categories list
       router.visit('/admin/categories')
-    } catch (error) {
+    } catch {
       setErrors({ general: 'Failed to create category' })
       setLoading(false)
     }

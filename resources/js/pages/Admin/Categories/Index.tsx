@@ -2,6 +2,7 @@ import { Head, Link } from '@inertiajs/react'
 import AdminLayout from '../Layouts/AdminLayout'
 import { Plus } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { apiDelete } from '@/lib/api'
 
 interface Category {
   id: number
@@ -33,12 +34,7 @@ export default function CategoriesIndex() {
     }
 
     try {
-      const response = await fetch(`/api/admin/categories/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Accept': 'application/json',
-        },
-      })
+      const response = await apiDelete(`/api/admin/categories/${id}`)
 
       if (!response.ok) {
         alert('Failed to delete category')
@@ -47,7 +43,7 @@ export default function CategoriesIndex() {
 
       // Refresh the list
       fetchCategories()
-    } catch (error) {
+    } catch {
       alert('Error deleting category')
     }
   }

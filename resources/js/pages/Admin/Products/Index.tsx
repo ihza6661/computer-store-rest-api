@@ -1,8 +1,9 @@
-import { Head, Link, router } from '@inertiajs/react'
+import { Head, Link } from '@inertiajs/react'
 import AdminLayout from '../Layouts/AdminLayout'
 import { Plus, Edit2, Trash2, Search, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { formatPriceWithCurrency } from '@/lib/utils'
+import { apiDelete } from '@/lib/api'
 
 interface Product {
   id: number
@@ -30,7 +31,6 @@ interface PaginationMeta {
 export default function ProductsIndex() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
-  const [deleteId, setDeleteId] = useState<number | null>(null)
   
   // Pagination state
   const [pagination, setPagination] = useState<PaginationMeta>({
@@ -58,6 +58,7 @@ export default function ProductsIndex() {
 
   useEffect(() => {
     fetchProducts(1)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, categoryFilter, sortBy, sortOrder])
 
   const fetchCategories = async () => {
@@ -124,12 +125,7 @@ export default function ProductsIndex() {
     }
 
     try {
-      const response = await fetch(`/api/admin/products/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Accept': 'application/json',
-        },
-      })
+      const response = await apiDelete(`/api/admin/products/${id}`)
 
       if (!response.ok) {
         alert('Failed to delete product')
@@ -141,7 +137,7 @@ export default function ProductsIndex() {
       const targetPage = isLastItemOnPage ? pagination.current_page - 1 : pagination.current_page
       
       fetchProducts(targetPage)
-    } catch (error) {
+    } catch {
       alert('Error deleting product')
     }
   }
@@ -160,8 +156,8 @@ export default function ProductsIndex() {
     pages.push(1)
     
     // Calculate range around current page
-    let start = Math.max(2, current_page - 1)
-    let end = Math.min(last_page - 1, current_page + 1)
+    const start = Math.max(2, current_page - 1)
+    const end = Math.min(last_page - 1, current_page + 1)
     
     // Add ellipsis after first page if needed
     if (start > 2) {
