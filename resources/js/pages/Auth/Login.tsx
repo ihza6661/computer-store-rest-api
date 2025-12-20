@@ -62,7 +62,7 @@ export default function Login() {
           <div className="mt-6 p-4 bg-blue-50 rounded-lg text-sm">
             <p className="font-semibold mb-2">Demo Credentials:</p>
             <p>Email: admin@rtech.test</p>
-            <p>Password: password123</p>
+            <p>Password: password</p>
           </div>
         </div>
       </div>

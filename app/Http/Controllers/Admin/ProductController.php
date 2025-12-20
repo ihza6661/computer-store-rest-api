@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -26,19 +28,31 @@ class ProductController extends Controller
 
         // Handle image upload to Cloudinary
         if ($request->hasFile('image')) {
-            $uploadedFile = cloudinary()->upload($request->file('image')->getRealPath(), [
-                'folder' => 'r-tech-products',
-                'transformation' => [
-                    'width' => 1000,
-                    'height' => 1000,
-                    'crop' => 'limit',
-                    'quality' => 'auto',
-                    'fetch_format' => 'auto'
-                ]
-            ]);
-            
-            $validated['image_url'] = $uploadedFile->getSecurePath();
-            $validated['image_thumbnail_url'] = $uploadedFile->getSecurePath();
+            try {
+                $uploadedFile = Cloudinary::uploadApi()->upload($request->file('image')->getRealPath(), [
+                    'folder' => 'r-tech-products',
+                    'transformation' => [
+                        'width' => 1000,
+                        'height' => 1000,
+                        'crop' => 'limit',
+                        'quality' => 'auto',
+                        'fetch_format' => 'auto'
+                    ]
+                ]);
+                
+                $validated['image_url'] = $uploadedFile['secure_url'];
+                $validated['image_thumbnail_url'] = $uploadedFile['secure_url'];
+            } catch (\Exception $e) {
+                Log::error('Failed to upload product image to Cloudinary: ' . $e->getMessage(), [
+                    'product_name' => $validated['name'],
+                    'sku' => $validated['sku'],
+                    'error' => $e->getMessage()
+                ]);
+                
+                return back()->withErrors([
+                    'image' => 'Failed to upload image. Please try again.'
+                ])->withInput();
+            }
         }
 
         Product::create($validated);
@@ -65,19 +79,32 @@ class ProductController extends Controller
 
         // Handle image upload to Cloudinary if provided
         if ($request->hasFile('image')) {
-            $uploadedFile = cloudinary()->upload($request->file('image')->getRealPath(), [
-                'folder' => 'r-tech-products',
-                'transformation' => [
-                    'width' => 1000,
-                    'height' => 1000,
-                    'crop' => 'limit',
-                    'quality' => 'auto',
-                    'fetch_format' => 'auto'
-                ]
-            ]);
-            
-            $validated['image_url'] = $uploadedFile->getSecurePath();
-            $validated['image_thumbnail_url'] = $uploadedFile->getSecurePath();
+            try {
+                $uploadedFile = Cloudinary::uploadApi()->upload($request->file('image')->getRealPath(), [
+                    'folder' => 'r-tech-products',
+                    'transformation' => [
+                        'width' => 1000,
+                        'height' => 1000,
+                        'crop' => 'limit',
+                        'quality' => 'auto',
+                        'fetch_format' => 'auto'
+                    ]
+                ]);
+                
+                $validated['image_url'] = $uploadedFile['secure_url'];
+                $validated['image_thumbnail_url'] = $uploadedFile['secure_url'];
+            } catch (\Exception $e) {
+                Log::error('Failed to upload product image to Cloudinary during update: ' . $e->getMessage(), [
+                    'product_id' => $product->id,
+                    'product_name' => $validated['name'],
+                    'sku' => $validated['sku'],
+                    'error' => $e->getMessage()
+                ]);
+                
+                return back()->withErrors([
+                    'image' => 'Failed to upload image. Please try again.'
+                ])->withInput();
+            }
         }
 
         $product->update($validated);

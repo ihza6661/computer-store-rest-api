@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -62,9 +64,35 @@ class ProductController extends Controller
             'specifications' => 'nullable|array',
         ]);
 
-        // Handle image upload
-        $imagePath = $request->file('image')->store('products', 'public');
-        $validated['image_url'] = asset('storage/' . $imagePath);
+        // Handle image upload to Cloudinary
+        if ($request->hasFile('image')) {
+            try {
+                $uploadedFile = Cloudinary::uploadApi()->upload($request->file('image')->getRealPath(), [
+                    'folder' => 'r-tech-products',
+                    'transformation' => [
+                        'width' => 1000,
+                        'height' => 1000,
+                        'crop' => 'limit',
+                        'quality' => 'auto',
+                        'fetch_format' => 'auto'
+                    ]
+                ]);
+                
+                $validated['image_url'] = $uploadedFile['secure_url'];
+                $validated['image_thumbnail_url'] = $uploadedFile['secure_url'];
+            } catch (\Exception $e) {
+                Log::error('API: Failed to upload product image to Cloudinary: ' . $e->getMessage(), [
+                    'product_name' => $validated['name'],
+                    'sku' => $validated['sku'],
+                    'error' => $e->getMessage()
+                ]);
+                
+                return response()->json([
+                    'message' => 'Failed to upload image. Please try again.',
+                    'errors' => ['image' => ['Failed to upload image to Cloudinary.']]
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+        }
 
         $product = Product::create($validated);
 
@@ -97,10 +125,35 @@ class ProductController extends Controller
             'specifications' => 'nullable|array',
         ]);
 
-        // Handle image upload if provided
+        // Handle image upload to Cloudinary if provided
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('products', 'public');
-            $validated['image_url'] = asset('storage/' . $imagePath);
+            try {
+                $uploadedFile = Cloudinary::uploadApi()->upload($request->file('image')->getRealPath(), [
+                    'folder' => 'r-tech-products',
+                    'transformation' => [
+                        'width' => 1000,
+                        'height' => 1000,
+                        'crop' => 'limit',
+                        'quality' => 'auto',
+                        'fetch_format' => 'auto'
+                    ]
+                ]);
+                
+                $validated['image_url'] = $uploadedFile['secure_url'];
+                $validated['image_thumbnail_url'] = $uploadedFile['secure_url'];
+            } catch (\Exception $e) {
+                Log::error('API: Failed to upload product image to Cloudinary during update: ' . $e->getMessage(), [
+                    'product_id' => $product->id,
+                    'product_name' => $validated['name'],
+                    'sku' => $validated['sku'],
+                    'error' => $e->getMessage()
+                ]);
+                
+                return response()->json([
+                    'message' => 'Failed to upload image. Please try again.',
+                    'errors' => ['image' => ['Failed to upload image to Cloudinary.']]
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
         }
 
         $product->update($validated);

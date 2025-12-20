@@ -1,4 +1,5 @@
 import { Head, Link, useForm } from '@inertiajs/react'
+import React from 'react'
 import AdminLayout from '../Layouts/AdminLayout'
 
 interface Category {
@@ -34,6 +35,8 @@ export default function EditProduct({ product, categories }: Props) {
     image: null as File | null,
   })
 
+  const [imagePreview, setImagePreview] = React.useState<string | null>(null)
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     post(`/admin/products/${product.id}`, {
@@ -42,6 +45,20 @@ export default function EditProduct({ product, categories }: Props) {
         // Inertia will handle the redirect
       },
     })
+  }
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.currentTarget.files?.[0]
+    if (file) {
+      setData({ ...data, image: file })
+      
+      // Create preview URL
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string)
+      }
+      reader.readAsDataURL(file)
+    }
   }
 
   return (
@@ -159,16 +176,38 @@ export default function EditProduct({ product, categories }: Props) {
 
             <div>
               <label className="block text-sm font-medium mb-1">Image</label>
+              
+              {/* Current Image */}
+              {product.image_url && !imagePreview && (
+                <div className="mb-3">
+                  <p className="text-sm text-gray-600 mb-2">Current Image:</p>
+                  <img
+                    src={product.image_url}
+                    alt={product.name}
+                    className="w-48 h-48 object-cover border rounded-lg"
+                  />
+                </div>
+              )}
+              
               <input
                 type="file"
                 accept="image/*"
-                onChange={(e) => {
-                  const file = e.currentTarget.files?.[0]
-                  if (file) setData({ ...data, image: file })
-                }}
+                onChange={handleImageChange}
                 className="block w-full px-3 py-2 border rounded-lg"
               />
               {errors.image && <p className="text-red-500 text-sm">{errors.image}</p>}
+              
+              {/* New Image Preview */}
+              {imagePreview && (
+                <div className="mt-3">
+                  <p className="text-sm text-gray-600 mb-2">New Image Preview:</p>
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    className="w-48 h-48 object-cover border rounded-lg"
+                  />
+                </div>
+              )}
             </div>
 
             <div className="flex gap-2">
