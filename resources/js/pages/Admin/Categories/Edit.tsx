@@ -1,6 +1,5 @@
-import { Head, Link, router, usePage } from '@inertiajs/react'
+import { Head, Link, useForm } from '@inertiajs/react'
 import AdminLayout from '../Layouts/AdminLayout'
-import { useEffect, useState } from 'react'
 
 interface Category {
   id: number
@@ -8,79 +7,24 @@ interface Category {
   description: string
 }
 
-interface FormErrors {
-  [key: string]: string
+interface Props {
+  category: Category
 }
 
-export default function EditCategory() {
-  const { params } = usePage()
-  const categoryId = params?.id
-
-  const [data, setData] = useState({
-    name: '',
-    description: '',
+export default function EditCategory({ category }: Props) {
+  const { data, setData, post, processing, errors } = useForm({
+    name: category.name,
+    description: category.description || '',
+    _method: 'PUT' as const,
   })
 
-  const [errors, setErrors] = useState<FormErrors>({})
-  const [loading, setLoading] = useState(true)
-  const [submitting, setSubmitting] = useState(false)
-
-  useEffect(() => {
-    if (categoryId) {
-      fetch(`/api/categories/${categoryId}`)
-        .then((res) => res.json())
-        .then((category: Category) => {
-          setData({
-            name: category.name,
-            description: category.description,
-          })
-          setLoading(false)
-        })
-        .catch(() => {
-          setLoading(false)
-        })
-    }
-  }, [categoryId])
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    setErrors({})
-    setSubmitting(true)
-
-    try {
-      const response = await fetch(`/api/admin/categories/${categoryId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify(data),
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        setErrors(errorData.errors || { general: 'An error occurred' })
-        setSubmitting(false)
-        return
-      }
-
-      // Redirect to categories list
-      router.visit('/admin/categories')
-    } catch (error) {
-      setErrors({ general: 'Failed to update category' })
-      setSubmitting(false)
-    }
-  }
-
-  if (loading) {
-    return (
-      <AdminLayout>
-        <Head title="Edit Category" />
-        <div className="text-center py-8">
-          <p className="text-gray-500">Loading category...</p>
-        </div>
-      </AdminLayout>
-    )
+    post(`/admin/categories/${category.id}`, {
+      onSuccess: () => {
+        // Inertia will handle the redirect
+      },
+    })
   }
 
   return (
@@ -133,10 +77,10 @@ export default function EditCategory() {
             <div className="flex gap-2">
               <button
                 type="submit"
-                disabled={submitting}
+                disabled={processing}
                 className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
               >
-                {submitting ? 'Saving...' : 'Save Changes'}
+                {processing ? 'Saving...' : 'Save Changes'}
               </button>
               <Link href="/admin/categories">
                 <button

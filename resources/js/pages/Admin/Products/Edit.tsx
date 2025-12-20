@@ -1,6 +1,5 @@
-import { Head, Link, router, usePage } from '@inertiajs/react'
+import { Head, Link, useForm } from '@inertiajs/react'
 import AdminLayout from '../Layouts/AdminLayout'
-import { useEffect, useState } from 'react'
 
 interface Category {
   id: number
@@ -19,122 +18,30 @@ interface Product {
   specifications?: Record<string, string>
 }
 
-interface FormData {
-  name: string
-  category_id: string
-  price: string
-  sku: string
-  stock: string
-  description: string
-  image: File | null
-  specifications: Record<string, string>
+interface Props {
+  product: Product
+  categories: Category[]
 }
 
-interface FormErrors {
-  [key: string]: string
-}
-
-export default function EditProduct() {
-  const { params } = usePage()
-  const productId = params?.id
-
-  const [data, setData] = useState<FormData>({
-    name: '',
-    category_id: '',
-    price: '',
-    sku: '',
-    stock: '',
-    description: '',
-    image: null,
-    specifications: {},
+export default function EditProduct({ product, categories }: Props) {
+  const { data, setData, post, processing, errors } = useForm({
+    name: product.name,
+    category_id: String(product.category_id),
+    price: String(product.price),
+    sku: product.sku,
+    stock: String(product.stock),
+    description: product.description,
+    image: null as File | null,
+    _method: 'PUT' as const,
   })
 
-  const [categories, setCategories] = useState<Category[]>([])
-  const [errors, setErrors] = useState<FormErrors>({})
-  const [loading, setLoading] = useState(true)
-  const [submitting, setSubmitting] = useState(false)
-
-  useEffect(() => {
-    // Fetch categories
-    fetch('/api/categories')
-      .then((res) => res.json())
-      .then((data) => setCategories(data))
-
-    // Fetch product
-    if (productId) {
-      fetch(`/api/products/${productId}`)
-        .then((res) => res.json())
-        .then((product: Product) => {
-          setData({
-            name: product.name,
-            category_id: String(product.category_id),
-            price: String(product.price),
-            sku: product.sku,
-            stock: String(product.stock),
-            description: product.description,
-            image: null,
-            specifications: product.specifications || {},
-          })
-          setLoading(false)
-        })
-        .catch(() => {
-          setLoading(false)
-        })
-    }
-  }, [productId])
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    setErrors({})
-    setSubmitting(true)
-
-    const formData = new FormData()
-    formData.append('name', data.name)
-    formData.append('category_id', data.category_id)
-    formData.append('price', data.price)
-    formData.append('sku', data.sku)
-    formData.append('stock', data.stock)
-    formData.append('description', data.description)
-    if (data.image) {
-      formData.append('image', data.image)
-    }
-    if (Object.keys(data.specifications).length > 0) {
-      formData.append('specifications', JSON.stringify(data.specifications))
-    }
-
-    try {
-      const response = await fetch(`/api/admin/products/${productId}`, {
-        method: 'PUT',
-        body: formData,
-        headers: {
-          'Accept': 'application/json',
-        },
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        setErrors(errorData.errors || { general: 'An error occurred' })
-        setSubmitting(false)
-        return
-      }
-
-      // Redirect to products list
-      router.visit('/admin/products')
-    } catch (error) {
-      setErrors({ general: 'Failed to update product' })
-      setSubmitting(false)
-    }
-  }
-
-  if (loading) {
-    return (
-      <AdminLayout>
-        <Head title="Edit Product" />
-        <div className="text-center py-8">
-          <p className="text-gray-500">Loading product...</p>
-        </div>
-      </AdminLayout>
-    )
+    post(`/admin/products/${product.id}`, {
+      onSuccess: () => {
+        // Inertia will handle the redirect
+      },
+    })
   }
 
   return (
@@ -206,15 +113,23 @@ export default function EditProduct() {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Price *</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={data.price}
-                  onChange={(e) => setData({ ...data, price: e.currentTarget.value })}
-                  placeholder="0.00"
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+                <label className="block text-sm font-medium mb-1">Price (Rp) *</label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium">
+                    Rp
+                  </span>
+                  <input
+                    type="number"
+                    step="1"
+                    value={data.price}
+                    onChange={(e) => setData({ ...data, price: e.currentTarget.value })}
+                    placeholder="15000000"
+                    className="w-full pl-12 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  Masukkan harga dalam Rupiah (contoh: 15000000 untuk Rp 15 juta)
+                </p>
                 {errors.price && <p className="text-red-500 text-sm">{errors.price}</p>}
               </div>
 
@@ -259,10 +174,10 @@ export default function EditProduct() {
             <div className="flex gap-2">
               <button
                 type="submit"
-                disabled={submitting}
+                disabled={processing}
                 className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
               >
-                {submitting ? 'Saving...' : 'Save Changes'}
+                {processing ? 'Saving...' : 'Save Changes'}
               </button>
               <Link href="/admin/products">
                 <button

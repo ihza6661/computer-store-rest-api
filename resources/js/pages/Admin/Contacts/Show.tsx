@@ -1,6 +1,6 @@
-import { Head, Link, usePage } from '@inertiajs/react'
+import { Head, Link, useForm } from '@inertiajs/react'
 import AdminLayout from '../Layouts/AdminLayout'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 interface Contact {
   id: number
@@ -14,86 +14,33 @@ interface Contact {
   created_at: string
 }
 
-interface FormErrors {
-  [key: string]: string
+interface Props {
+  contact: Contact
 }
 
-export default function ShowContact() {
-  const { props } = usePage()
-  const contactId = (props as any).contactId || 1
+export default function ShowContact({ contact: initialContact }: Props) {
+  const [contact, setContact] = useState<Contact>(initialContact)
+  const [successMessage, setSuccessMessage] = useState('')
+  
+  const { data, setData, post, processing, errors, reset } = useForm({
+    status: 'replied' as const,
+    admin_reply: initialContact.admin_reply || '',
+    _method: 'PUT' as const,
+  })
 
-  const [contact, setContact] = useState<Contact | null>(null)
-  const [replyText, setReplyText] = useState('')
-  const [loading, setLoading] = useState(true)
-  const [submitting, setSubmitting] = useState(false)
-  const [errors, setErrors] = useState<FormErrors>({})
-
-  useEffect(() => {
-    fetch(`/api/admin/contacts/${contactId}`)
-      .then((res) => res.json())
-      .then((data: Contact) => {
-        setContact(data)
-        setReplyText(data.admin_reply || '')
-        setLoading(false)
-      })
-  }, [contactId])
-
-  const handleReply = async (e: React.FormEvent) => {
+  const handleReply = (e: React.FormEvent) => {
     e.preventDefault()
-    setErrors({})
-    setSubmitting(true)
-
-    try {
-      const response = await fetch(`/api/admin/contacts/${contactId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({
-          status: 'replied',
-          admin_reply: replyText,
-        }),
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        setErrors(errorData.errors || { general: 'Failed to send reply' })
-        setSubmitting(false)
-        return
-      }
-
-      // Refresh the contact
-      const updatedContact = await response.json()
-      setContact(updatedContact)
-      setReplyText(updatedContact.admin_reply || '')
-      setSubmitting(false)
-    } catch (error) {
-      setErrors({ general: 'Error sending reply' })
-      setSubmitting(false)
-    }
-  }
-
-  if (loading) {
-    return (
-      <AdminLayout>
-        <Head title="View Contact" />
-        <div className="text-center py-8">
-          <p className="text-gray-500">Loading contact...</p>
-        </div>
-      </AdminLayout>
-    )
-  }
-
-  if (!contact) {
-    return (
-      <AdminLayout>
-        <Head title="View Contact" />
-        <div className="text-center py-8">
-          <p className="text-gray-500">Contact not found</p>
-        </div>
-      </AdminLayout>
-    )
+    setSuccessMessage('')
+    
+    post(`/admin/contacts/${contact.id}`, {
+      onSuccess: (response: any) => {
+        setSuccessMessage('Reply sent successfully!')
+        // Update local contact state with the response
+        if (response.props?.contact) {
+          setContact(response.props.contact)
+        }
+      },
+    })
   }
 
   return (
@@ -153,6 +100,12 @@ export default function ShowContact() {
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-lg font-bold mb-4">Admin Reply</h2>
 
+          {successMessage && (
+            <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+              {successMessage}
+            </div>
+          )}
+
           {errors.general && (
             <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
               {errors.general}
@@ -161,18 +114,19 @@ export default function ShowContact() {
 
           <form onSubmit={handleReply} className="space-y-4">
             <textarea
-              value={replyText}
-              onChange={(e) => setReplyText(e.currentTarget.value)}
+              value={data.admin_reply}
+              onChange={(e) => setData('admin_reply', e.currentTarget.value)}
               placeholder="Send a reply to the customer..."
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               rows={6}
             />
+            {errors.admin_reply && <p className="text-red-500 text-sm">{errors.admin_reply}</p>}
             <button
               type="submit"
-              disabled={submitting}
+              disabled={processing}
               className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
             >
-              {submitting ? 'Sending...' : 'Send Reply'}
+              {processing ? 'Sending...' : 'Send Reply'}
             </button>
           </form>
         </div>

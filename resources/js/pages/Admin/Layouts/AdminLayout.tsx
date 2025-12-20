@@ -1,12 +1,33 @@
-import { PropsWithChildren } from 'react'
+import { PropsWithChildren, useEffect } from 'react'
 import { usePage, Link, router } from '@inertiajs/react'
 import { LogOut, Menu, X } from 'lucide-react'
 import { useState } from 'react'
 
+interface PageProps {
+  auth: {
+    user?: {
+      name: string
+    }
+  }
+  flash?: {
+    success?: string
+    error?: string
+  }
+}
+
 export default function AdminLayout({ children }: PropsWithChildren) {
-  const { auth } = usePage().props
+  const { auth, flash } = usePage<PageProps>().props
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [showFlash, setShowFlash] = useState(false)
+
+  useEffect(() => {
+    if (flash?.success || flash?.error) {
+      setShowFlash(true)
+      const timer = setTimeout(() => setShowFlash(false), 5000)
+      return () => clearTimeout(timer)
+    }
+  }, [flash])
 
   const handleLogout = () => {
     router.post('/logout')
@@ -87,6 +108,34 @@ export default function AdminLayout({ children }: PropsWithChildren) {
             </div>
           </div>
         </header>
+
+        {/* Flash Messages */}
+        {showFlash && (flash?.success || flash?.error) && (
+          <div className="px-6 pt-4">
+            {flash.success && (
+              <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative flex justify-between items-center">
+                <span>{flash.success}</span>
+                <button
+                  onClick={() => setShowFlash(false)}
+                  className="text-green-700 font-bold text-xl leading-none hover:text-green-900"
+                >
+                  ×
+                </button>
+              </div>
+            )}
+            {flash.error && (
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative flex justify-between items-center">
+                <span>{flash.error}</span>
+                <button
+                  onClick={() => setShowFlash(false)}
+                  className="text-red-700 font-bold text-xl leading-none hover:text-red-900"
+                >
+                  ×
+                </button>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Page Content */}
         <main className="flex-1 overflow-auto p-6">

@@ -1,90 +1,33 @@
-import { Head, Link, router } from '@inertiajs/react'
+import { Head, Link, useForm } from '@inertiajs/react'
 import AdminLayout from '../Layouts/AdminLayout'
-import { useEffect, useState } from 'react'
 
 interface Category {
   id: number
   name: string
 }
 
-interface FormData {
-  name: string
-  category_id: string
-  price: string
-  sku: string
-  stock: string
-  description: string
-  image: File | null
-  specifications: Record<string, string>
+interface Props {
+  categories: Category[]
 }
 
-interface FormErrors {
-  [key: string]: string
-}
-
-export default function CreateProduct() {
-  const [data, setData] = useState<FormData>({
+export default function CreateProduct({ categories }: Props) {
+  const { data, setData, post, processing, errors } = useForm({
     name: '',
     category_id: '',
     price: '',
     sku: '',
     stock: '',
     description: '',
-    image: null,
-    specifications: {},
+    image: null as File | null,
   })
 
-  const [categories, setCategories] = useState<Category[]>([])
-  const [errors, setErrors] = useState<FormErrors>({})
-  const [loading, setLoading] = useState(false)
-
-  useEffect(() => {
-    fetch('/api/categories')
-      .then((res) => res.json())
-      .then((data) => setCategories(data))
-  }, [])
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    setErrors({})
-    setLoading(true)
-
-    const formData = new FormData()
-    formData.append('name', data.name)
-    formData.append('category_id', data.category_id)
-    formData.append('price', data.price)
-    formData.append('sku', data.sku)
-    formData.append('stock', data.stock)
-    formData.append('description', data.description)
-    if (data.image) {
-      formData.append('image', data.image)
-    }
-    if (Object.keys(data.specifications).length > 0) {
-      formData.append('specifications', JSON.stringify(data.specifications))
-    }
-
-    try {
-      const response = await fetch('/api/admin/products', {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Accept': 'application/json',
-        },
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        setErrors(errorData.errors || { general: 'An error occurred' })
-        setLoading(false)
-        return
-      }
-
-      // Redirect to products list
-      router.visit('/admin/products')
-    } catch (error) {
-      setErrors({ general: 'Failed to create product' })
-      setLoading(false)
-    }
+    post('/admin/products', {
+      onSuccess: () => {
+        // Inertia will handle the redirect
+      },
+    })
   }
 
   return (
@@ -156,15 +99,23 @@ export default function CreateProduct() {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Price *</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={data.price}
-                  onChange={(e) => setData({ ...data, price: e.currentTarget.value })}
-                  placeholder="0.00"
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+                <label className="block text-sm font-medium mb-1">Price (Rp) *</label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium">
+                    Rp
+                  </span>
+                  <input
+                    type="number"
+                    step="1"
+                    value={data.price}
+                    onChange={(e) => setData({ ...data, price: e.currentTarget.value })}
+                    placeholder="15000000"
+                    className="w-full pl-12 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  Masukkan harga dalam Rupiah (contoh: 15000000 untuk Rp 15 juta)
+                </p>
                 {errors.price && <p className="text-red-500 text-sm">{errors.price}</p>}
               </div>
 
@@ -209,10 +160,10 @@ export default function CreateProduct() {
             <div className="flex gap-2">
               <button
                 type="submit"
-                disabled={loading}
+                disabled={processing}
                 className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
               >
-                {loading ? 'Creating...' : 'Create Product'}
+                {processing ? 'Creating...' : 'Create Product'}
               </button>
               <Link href="/admin/products">
                 <button

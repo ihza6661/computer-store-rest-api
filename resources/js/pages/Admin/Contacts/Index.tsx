@@ -1,6 +1,5 @@
 import { Head, Link } from '@inertiajs/react'
 import AdminLayout from '../Layouts/AdminLayout'
-import { useEffect, useState } from 'react'
 
 interface Contact {
   id: number
@@ -11,18 +10,17 @@ interface Contact {
   created_at: string
 }
 
-export default function ContactsIndex() {
-  const [contacts, setContacts] = useState<Contact[]>([])
-  const [loading, setLoading] = useState(true)
+interface Props {
+  contacts: {
+    data: Contact[]
+    total: number
+    per_page: number
+    current_page: number
+  }
+}
 
-  useEffect(() => {
-    fetch('/api/admin/contacts')
-      .then((res) => res.json())
-      .then((data) => {
-        setContacts(data.data || [])
-        setLoading(false)
-      })
-  }, [])
+export default function ContactsIndex({ contacts }: Props) {
+  const contactList = contacts?.data || []
 
   return (
     <AdminLayout>
@@ -35,9 +33,7 @@ export default function ContactsIndex() {
 
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-lg font-bold mb-4">Submissions</h2>
-          {loading ? (
-            <p>Loading...</p>
-          ) : contacts.length === 0 ? (
+          {contactList.length === 0 ? (
             <p className="text-gray-500">No contact submissions yet.</p>
           ) : (
             <div className="overflow-x-auto">
@@ -53,7 +49,7 @@ export default function ContactsIndex() {
                   </tr>
                 </thead>
                 <tbody>
-                  {contacts.map((contact) => (
+                  {contactList.map((contact) => (
                     <tr key={contact.id} className="border-t">
                       <td className="px-4 py-3">{contact.name}</td>
                       <td className="px-4 py-3">{contact.email}</td>
