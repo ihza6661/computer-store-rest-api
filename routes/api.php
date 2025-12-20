@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ContactController;
+use App\Http\Controllers\Api\UserController;
 
 // Public API routes (no authentication required)
 Route::get('/products', [ProductController::class, 'index']);
@@ -30,4 +31,11 @@ Route::middleware(['auth:web'])->group(function () {
     Route::get('/admin/contacts/{contact}', [ContactController::class, 'show']);
     Route::put('/admin/contacts/{contact}', [ContactController::class, 'update']);
     Route::delete('/admin/contacts/{contact}', [ContactController::class, 'destroy']);
+
+    // Users management
+    Route::get('/users', [UserController::class, 'index']);
+    Route::get('/users/{user}', [UserController::class, 'show']);
+    Route::post('/users', [UserController::class, 'store']);
+    Route::put('/users/{user}', [UserController::class, 'update']);
+    Route::delete('/users/{user}', [UserController::class, 'destroy']);
 });

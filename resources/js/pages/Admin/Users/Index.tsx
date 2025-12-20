@@ -11,13 +11,30 @@ interface User {
 
 export default function UsersIndex() {
   const [users, setUsers] = useState<User[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('/api/users')
-      .then((res) => res.json())
-      .then((data) => setUsers(data.data || []))
-      .catch(() => setUsers([]))
+    fetchUsers()
   }, [])
+
+  const fetchUsers = () => {
+    fetch('/api/users', {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setUsers(data.data || [])
+        setLoading(false)
+      })
+      .catch((error) => {
+        console.error('Failed to fetch users:', error)
+        setLoading(false)
+      })
+  }
 
   return (
     <AdminLayout>
@@ -30,7 +47,9 @@ export default function UsersIndex() {
 
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-lg font-bold mb-4">User List</h2>
-          {users.length === 0 ? (
+          {loading ? (
+            <p className="text-gray-500">Loading users...</p>
+          ) : users.length === 0 ? (
             <p className="text-gray-500">No users found.</p>
           ) : (
             <div className="overflow-x-auto">
