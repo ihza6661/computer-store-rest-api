@@ -37,7 +37,7 @@ export default function EditProduct({ product, categories }: Props) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    post(route('admin.products.update', product.id), {
+    post(`/admin/products/${product.id}`, {
       forceFormData: true,
       onSuccess: () => {
         // Inertia will handle the redirect

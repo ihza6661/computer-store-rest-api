@@ -23,7 +23,7 @@ export default function CreateProduct({ categories }: Props) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    post(route('admin.products.store'), {
+    post('/admin/products', {
       forceFormData: true,
       onSuccess: () => {
         // Inertia will handle the redirect
