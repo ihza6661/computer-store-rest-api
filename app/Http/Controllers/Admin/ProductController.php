@@ -24,9 +24,22 @@ class ProductController extends Controller
             'stock' => 'required|integer|min:0',
         ]);
 
-        // Handle image upload
-        $imagePath = $request->file('image')->store('products', 'public');
-        $validated['image_url'] = asset('storage/' . $imagePath);
+        // Handle image upload to Cloudinary
+        if ($request->hasFile('image')) {
+            $uploadedFile = cloudinary()->upload($request->file('image')->getRealPath(), [
+                'folder' => 'r-tech-products',
+                'transformation' => [
+                    'width' => 1000,
+                    'height' => 1000,
+                    'crop' => 'limit',
+                    'quality' => 'auto',
+                    'fetch_format' => 'auto'
+                ]
+            ]);
+            
+            $validated['image_url'] = $uploadedFile->getSecurePath();
+            $validated['image_thumbnail_url'] = $uploadedFile->getSecurePath();
+        }
 
         Product::create($validated);
 
@@ -50,10 +63,21 @@ class ProductController extends Controller
             'stock' => 'required|integer|min:0',
         ]);
 
-        // Handle image upload if provided
+        // Handle image upload to Cloudinary if provided
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('products', 'public');
-            $validated['image_url'] = asset('storage/' . $imagePath);
+            $uploadedFile = cloudinary()->upload($request->file('image')->getRealPath(), [
+                'folder' => 'r-tech-products',
+                'transformation' => [
+                    'width' => 1000,
+                    'height' => 1000,
+                    'crop' => 'limit',
+                    'quality' => 'auto',
+                    'fetch_format' => 'auto'
+                ]
+            ]);
+            
+            $validated['image_url'] = $uploadedFile->getSecurePath();
+            $validated['image_thumbnail_url'] = $uploadedFile->getSecurePath();
         }
 
         $product->update($validated);
