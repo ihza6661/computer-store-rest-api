@@ -62,7 +62,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     // Users management
     Route::get('/admin/users', function () {
-        return Inertia::render('Admin/Users/Index');
+        return Inertia::render('Admin/Users/Index', [
+            'users' => \App\Models\User::select('id', 'name', 'email', 'role', 'created_at')
+                ->paginate(15)
+        ]);
     })->name('admin.users.index');
 
     Route::get('/admin/users/{user}/edit', function ($user) {

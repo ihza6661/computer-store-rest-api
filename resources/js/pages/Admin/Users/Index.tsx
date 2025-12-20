@@ -7,34 +7,29 @@ interface User {
   name: string
   email: string
   role: string
+  created_at: string
 }
 
-export default function UsersIndex() {
-  const [users, setUsers] = useState<User[]>([])
-  const [loading, setLoading] = useState(true)
+interface Props {
+  users: {
+    data: User[]
+    total: number
+    per_page: number
+    current_page: number
+    last_page: number
+  }
+}
+
+export default function UsersIndex({ users: usersData }: Props) {
+  const [users, setUsers] = useState<User[]>(usersData?.data || [])
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    fetchUsers()
-  }, [])
-
-  const fetchUsers = () => {
-    fetch('/api/users', {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setUsers(data.data || [])
-        setLoading(false)
-      })
-      .catch((error) => {
-        console.error('Failed to fetch users:', error)
-        setLoading(false)
-      })
-  }
+    if (usersData?.data) {
+      setUsers(usersData.data)
+      setLoading(false)
+    }
+  }, [usersData])
 
   return (
     <AdminLayout>
