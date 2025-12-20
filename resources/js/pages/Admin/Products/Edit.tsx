@@ -32,7 +32,6 @@ export default function EditProduct({ product, categories }: Props) {
     stock: String(product.stock),
     description: product.description,
     image: null as File | null,
-    _method: 'PUT' as const,
   })
 
   const handleSubmit = (e: React.FormEvent) => {
