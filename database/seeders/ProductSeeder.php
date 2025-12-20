@@ -18,8 +18,8 @@ class ProductSeeder extends Seeder
             'description' => 'Ultra-thin and lightweight laptop with stunning InfinityEdge display. Perfect for professionals and students.',
             'price' => 1299.99,
             'sku' => 'DELL-XPS13-2024',
-            'image_url' => 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=500&h=500&fit=crop',
-            'image_thumbnail_url' => 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=200&h=200&fit=crop',
+            'image_url' => 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=500&h=500&fit=crop&auto=format',
+            'image_thumbnail_url' => 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=200&h=200&fit=crop&auto=format',
             'stock' => 8,
             'specifications' => json_encode([
                 'processor' => 'Intel Core i7-1360P',
