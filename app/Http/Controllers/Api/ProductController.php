@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Http\Request;
@@ -41,7 +42,8 @@ class ProductController extends Controller
         $perPage = $request->get('per_page', 12);
         $products = $query->paginate($perPage);
 
-        return response()->json($products)
+        return ProductResource::collection($products)
+            ->response()
             ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
             ->header('Pragma', 'no-cache')
             ->header('Expires', '0');
@@ -96,7 +98,7 @@ class ProductController extends Controller
 
         $product = Product::create($validated);
 
-        return response()->json($product, Response::HTTP_CREATED);
+        return new ProductResource($product);
     }
 
     /**
@@ -105,7 +107,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return response()->json($product->load('category'));
+        return new ProductResource($product->load('category'));
     }
 
     /**
@@ -158,7 +160,7 @@ class ProductController extends Controller
 
         $product->update($validated);
 
-        return response()->json($product);
+        return new ProductResource($product);
     }
 
     /**
