@@ -14,10 +14,25 @@ class ProductResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        // Ensure specifications is properly decoded as array
+        // Handle both single-encoded and double-encoded JSON strings
+        $specifications = $this->specifications;
+        
+        if (is_string($specifications)) {
+            // First decode attempt
+            $decoded = json_decode($specifications, true);
+            
+            // If result is still a string (double-encoded), decode again
+            if (is_string($decoded)) {
+                $specifications = json_decode($decoded, true) ?? [];
+            } else {
+                $specifications = $decoded ?? [];
+            }
+        }
+
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'slug' => $this->slug,
             'description' => $this->description,
             'price' => $this->price,
             'sku' => $this->sku,
@@ -26,7 +41,7 @@ class ProductResource extends JsonResource
             'image_thumbnail_url' => $this->transformImageUrl($this->image_thumbnail_url),
             'category_id' => $this->category_id,
             'category' => $this->whenLoaded('category'),
-            'specifications' => $this->specifications,
+            'specifications' => $specifications ?? [],
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
@@ -35,13 +50,10 @@ class ProductResource extends JsonResource
     /**
      * Transform relative image URLs to absolute URLs.
      * Leaves external URLs (Cloudinary, etc.) unchanged.
-     *
-     * @param string|null $url
-     * @return string|null
      */
     private function transformImageUrl(?string $url): ?string
     {
-        if (!$url) {
+        if (! $url) {
             return null;
         }
 
