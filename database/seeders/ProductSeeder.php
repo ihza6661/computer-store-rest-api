@@ -23,7 +23,7 @@ class ProductSeeder extends Seeder
             'image_url' => 'https://res.cloudinary.com/drcy0kzdm/image/upload/v1766311990/r-tech-products/zvuoi8p9tulelucbjpi8.jpg',
             'image_thumbnail_url' => 'https://res.cloudinary.com/drcy0kzdm/image/upload/v1766311990/r-tech-products/zvuoi8p9tulelucbjpi8.jpg',
             'stock' => 1,
-            'specifications' => json_encode([
+            'specifications' => [
                 'processor' => 'AMD Ryzen 7-7735HS',
                 'gpu' => 'NVIDIA GeForce RTX 4060 8GB',
                 'ram' => '16GB',
@@ -34,7 +34,7 @@ class ProductSeeder extends Seeder
                 'condition' => 'Used',
                 'extras' => 'Bag, Wireless Mouse, Original Office License',
                 'original_price' => '19970000',
-            ]),
+            ],
             'category_id' => 1,
         ]);
 
@@ -46,7 +46,7 @@ class ProductSeeder extends Seeder
             'image_url' => 'https://res.cloudinary.com/drcy0kzdm/image/upload/v1766311994/r-tech-products/scb7kobsdwfr0r4es389.jpg',
             'image_thumbnail_url' => 'https://res.cloudinary.com/drcy0kzdm/image/upload/v1766311994/r-tech-products/scb7kobsdwfr0r4es389.jpg',
             'stock' => 0,
-            'specifications' => json_encode([
+            'specifications' => [
                 'processor' => 'AMD Ryzen 9-5900HX',
                 'gpu' => 'NVIDIA GeForce RTX 3060 6GB',
                 'ram' => '16GB',
@@ -56,7 +56,7 @@ class ProductSeeder extends Seeder
                 'warranty' => '3 months from store',
                 'condition' => 'Used',
                 'extras' => 'Bag, Wireless Mouse, Original Office License',
-            ]),
+            ],
             'category_id' => 1,
         ]);
 
@@ -69,7 +69,7 @@ class ProductSeeder extends Seeder
             'image_url' => 'https://res.cloudinary.com/drcy0kzdm/image/upload/v1766311997/r-tech-products/ltnhslfg95oeyve5zeot.jpg',
             'image_thumbnail_url' => 'https://res.cloudinary.com/drcy0kzdm/image/upload/v1766311997/r-tech-products/ltnhslfg95oeyve5zeot.jpg',
             'stock' => 0,
-            'specifications' => json_encode([
+            'specifications' => [
                 'processor' => 'AMD Ryzen 5-7520U',
                 'gpu' => 'AMD Radeon Graphics',
                 'ram' => '8GB',
@@ -78,7 +78,7 @@ class ProductSeeder extends Seeder
                 'warranty' => '3 months from store',
                 'condition' => 'Used',
                 'extras' => 'Bag, Wireless Mouse',
-            ]),
+            ],
             'category_id' => 1,
         ]);
 
@@ -90,7 +90,7 @@ class ProductSeeder extends Seeder
             'image_url' => 'https://res.cloudinary.com/drcy0kzdm/image/upload/v1766312004/r-tech-products/jfyludkwm0l7wrko58i9.jpg',
             'image_thumbnail_url' => 'https://res.cloudinary.com/drcy0kzdm/image/upload/v1766312004/r-tech-products/jfyludkwm0l7wrko58i9.jpg',
             'stock' => 1,
-            'specifications' => json_encode([
+            'specifications' => [
                 'processor' => 'AMD Ryzen 3-7320U',
                 'gpu' => 'AMD Radeon Graphics',
                 'ram' => '8GB',
@@ -100,7 +100,7 @@ class ProductSeeder extends Seeder
                 'warranty' => '3 months from store',
                 'condition' => 'Used',
                 'extras' => 'Bag, Wireless Mouse',
-            ]),
+            ],
             'category_id' => 1,
         ]);
 
@@ -112,7 +112,7 @@ class ProductSeeder extends Seeder
             'image_url' => 'https://res.cloudinary.com/drcy0kzdm/image/upload/v1766312013/r-tech-products/vwp1dth0z1ofudnlqgzi.jpg',
             'image_thumbnail_url' => 'https://res.cloudinary.com/drcy0kzdm/image/upload/v1766312013/r-tech-products/vwp1dth0z1ofudnlqgzi.jpg',
             'stock' => 0,
-            'specifications' => json_encode([
+            'specifications' => [
                 'processor' => 'Intel Core i3-1215U',
                 'gpu' => 'Intel UHD Graphics',
                 'ram' => '8GB',
@@ -122,7 +122,7 @@ class ProductSeeder extends Seeder
                 'warranty' => 'Official warranty until March 2027',
                 'condition' => 'Used',
                 'extras' => 'Bag, Wireless Mouse',
-            ]),
+            ],
             'category_id' => 1,
         ]);
 
@@ -134,7 +134,7 @@ class ProductSeeder extends Seeder
             'image_url' => 'https://res.cloudinary.com/drcy0kzdm/image/upload/v1766312023/r-tech-products/rsmsztfqreldj9czimmi.jpg',
             'image_thumbnail_url' => 'https://res.cloudinary.com/drcy0kzdm/image/upload/v1766312023/r-tech-products/rsmsztfqreldj9czimmi.jpg',
             'stock' => 1,
-            'specifications' => json_encode([
+            'specifications' => [
                 'processor' => 'Intel N150',
                 'gpu' => 'Intel Graphics',
                 'ram' => '8GB',
@@ -143,7 +143,7 @@ class ProductSeeder extends Seeder
                 'warranty' => 'Official warranty until April 2026',
                 'condition' => 'Used',
                 'extras' => 'Bag, Wireless Mouse',
-            ]),
+            ],
             'category_id' => 1,
         ]);
 
@@ -155,7 +155,7 @@ class ProductSeeder extends Seeder
             'image_url' => 'https://res.cloudinary.com/drcy0kzdm/image/upload/v1766312028/r-tech-products/hgkdkh4ekt24kxektyv1.jpg',
             'image_thumbnail_url' => 'https://res.cloudinary.com/drcy0kzdm/image/upload/v1766312028/r-tech-products/hgkdkh4ekt24kxektyv1.jpg',
             'stock' => 1,
-            'specifications' => json_encode([
+            'specifications' => [
                 'processor' => 'Intel Celeron N4020',
                 'gpu' => 'Intel UHD Graphics',
                 'ram' => '4GB',
@@ -165,7 +165,7 @@ class ProductSeeder extends Seeder
                 'warranty' => '3 months from store',
                 'condition' => 'Used',
                 'extras' => 'Bag, Wireless Mouse',
-            ]),
+            ],
             'category_id' => 1,
         ]);
 
@@ -177,7 +177,7 @@ class ProductSeeder extends Seeder
             'image_url' => 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80',
             'image_thumbnail_url' => 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=500&q=60',
             'stock' => 1,
-            'specifications' => json_encode([
+            'specifications' => [
                 'processor' => 'Apple M1 Chip (8-core CPU)',
                 'gpu' => 'Apple M1 GPU (7-core)',
                 'ram' => '8GB Unified Memory',
@@ -187,7 +187,7 @@ class ProductSeeder extends Seeder
                 'warranty' => '3 months from store',
                 'condition' => 'Used - Excellent',
                 'extras' => 'Bag, USB-C Hub, Original Charger',
-            ]),
+            ],
             'category_id' => 1,
         ]);
 
