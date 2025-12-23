@@ -38,12 +38,13 @@ class MigrateImagesToCloudinary extends Command
         // Find products with local storage URLs
         $products = Product::where(function ($query) {
             $query->where('image_url', 'like', '%/storage/%')
-                  ->orWhere('image_url', 'like', '%127.0.0.1%')
-                  ->orWhere('image_url', 'like', '%localhost%');
+                ->orWhere('image_url', 'like', '%127.0.0.1%')
+                ->orWhere('image_url', 'like', '%localhost%');
         })->get();
 
         if ($products->isEmpty()) {
             $this->info('✅ No products found with local storage images.');
+
             return Command::SUCCESS;
         }
 
@@ -56,7 +57,7 @@ class MigrateImagesToCloudinary extends Command
             $tableData[] = [
                 'ID' => $product->id,
                 'Name' => substr($product->name, 0, 30),
-                'Current URL' => substr($product->image_url, 0, 50) . '...',
+                'Current URL' => substr($product->image_url, 0, 50).'...',
             ];
         }
         $this->table(['ID', 'Name', 'Current URL'], $tableData);
@@ -68,9 +69,10 @@ class MigrateImagesToCloudinary extends Command
         }
 
         // Confirmation
-        if (!$force && !$isDryRun) {
-            if (!$this->confirm('Do you want to migrate these images to Cloudinary?', true)) {
+        if (! $force && ! $isDryRun) {
+            if (! $this->confirm('Do you want to migrate these images to Cloudinary?', true)) {
                 $this->warn('Migration cancelled.');
+
                 return Command::SUCCESS;
             }
         }
@@ -90,25 +92,27 @@ class MigrateImagesToCloudinary extends Command
             try {
                 // Extract filename from URL
                 $imagePath = $this->extractLocalPath($product->image_url);
-                
-                if (!$imagePath) {
+
+                if (! $imagePath) {
                     $this->newLine();
                     $this->warn("⚠️  Could not extract path from URL: {$product->image_url}");
                     $skippedCount++;
                     $progressBar->advance();
+
                     continue;
                 }
 
                 // Check if file exists
-                if (!Storage::disk('public')->exists($imagePath)) {
+                if (! Storage::disk('public')->exists($imagePath)) {
                     $this->newLine();
                     $this->warn("⚠️  File not found: {$imagePath}");
                     $skippedCount++;
                     $progressBar->advance();
+
                     continue;
                 }
 
-                if (!$isDryRun) {
+                if (! $isDryRun) {
                     // Get full file path
                     $fullPath = Storage::disk('public')->path($imagePath);
 
@@ -120,8 +124,8 @@ class MigrateImagesToCloudinary extends Command
                             'height' => 1000,
                             'crop' => 'limit',
                             'quality' => 'auto',
-                            'fetch_format' => 'auto'
-                        ]
+                            'fetch_format' => 'auto',
+                        ],
                     ]);
 
                     // Update product with new URLs
@@ -142,7 +146,7 @@ class MigrateImagesToCloudinary extends Command
             } catch (\Exception $e) {
                 $this->newLine();
                 $this->error("❌ Failed to migrate product #{$product->id}: {$e->getMessage()}");
-                
+
                 Log::error('Failed to migrate product image to Cloudinary', [
                     'product_id' => $product->id,
                     'product_name' => $product->name,
@@ -175,8 +179,8 @@ class MigrateImagesToCloudinary extends Command
             $this->info('ℹ️  This was a dry run. Run without --dry-run to apply changes.');
         }
 
-        return $successCount > 0 && $failedCount === 0 
-            ? Command::SUCCESS 
+        return $successCount > 0 && $failedCount === 0
+            ? Command::SUCCESS
             : Command::FAILURE;
     }
 
@@ -187,7 +191,7 @@ class MigrateImagesToCloudinary extends Command
     {
         // Handle URLs like: http://127.0.0.1:8000/storage/products/filename.jpg
         // Extract: products/filename.jpg
-        
+
         if (preg_match('/\/storage\/(.+)$/', $url, $matches)) {
             return $matches[1];
         }

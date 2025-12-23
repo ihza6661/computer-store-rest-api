@@ -23,12 +23,12 @@ class ContactController extends Controller
         $query = Contact::query();
 
         // Filter by status
-        if ($request->has('status') && !empty($request->status)) {
+        if ($request->has('status') && ! empty($request->status)) {
             $query->where('status', $request->status);
         }
 
         // Filter by category
-        if ($request->has('category') && !empty($request->category)) {
+        if ($request->has('category') && ! empty($request->category)) {
             $query->where('category', $request->category);
         }
 
@@ -63,7 +63,7 @@ class ContactController extends Controller
             Mail::to($contact->email)->send(new ContactConfirmation($contact));
         } catch (\Exception $e) {
             // Log email error but don't fail the request
-            Log::error('Failed to send contact confirmation email: ' . $e->getMessage());
+            Log::error('Failed to send contact confirmation email: '.$e->getMessage());
         }
 
         // Send notification to admin
@@ -72,7 +72,7 @@ class ContactController extends Controller
             Mail::to($adminEmail)->send(new NewContactSubmission($contact));
         } catch (\Exception $e) {
             // Log email error but don't fail the request
-            Log::error('Failed to send admin notification email: ' . $e->getMessage());
+            Log::error('Failed to send admin notification email: '.$e->getMessage());
         }
 
         return response()->json($contact, Response::HTTP_CREATED);
@@ -106,15 +106,15 @@ class ContactController extends Controller
         $contact->update($validated);
 
         // Mark as replied if admin_reply is provided
-        if (!empty($validated['admin_reply'])) {
+        if (! empty($validated['admin_reply'])) {
             $contact->markAsReplied();
-            
+
             // Send reply email to customer
             try {
                 Mail::to($contact->email)->send(new ContactReply($contact));
             } catch (\Exception $e) {
                 // Log email error but don't fail the request
-                Log::error('Failed to send contact reply email: ' . $e->getMessage());
+                Log::error('Failed to send contact reply email: '.$e->getMessage());
             }
         }
 

@@ -30,7 +30,7 @@ class CorsMiddleware
         }
 
         $origin = $request->header('Origin');
-        
+
         // Check if origin is allowed (including wildcard patterns)
         $isAllowed = false;
         foreach ($allowedOrigins as $allowed) {
@@ -41,7 +41,7 @@ class CorsMiddleware
             // Check wildcard patterns
             if (strpos($allowed, '*') !== false) {
                 $pattern = str_replace('*', '.*', preg_quote($allowed, '/'));
-                if (preg_match('/^' . $pattern . '$/', $origin)) {
+                if (preg_match('/^'.$pattern.'$/', $origin)) {
                     $isAllowed = true;
                     break;
                 }

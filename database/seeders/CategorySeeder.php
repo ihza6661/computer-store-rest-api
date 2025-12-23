@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Category;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
 class CategorySeeder extends Seeder
@@ -15,6 +15,7 @@ class CategorySeeder extends Seeder
     {
         // Define all 10 categories explicitly
         $categories = [
+            ['name' => 'Smartphones', 'description' => 'iPhone dengan garansi resmi TAM dan smartphone Android terpercaya. Cicilan 0% tersedia dari 12+ bank.'],
             ['name' => 'Laptops', 'description' => 'High-performance laptops for gaming, business, and everyday use. From ultraportable notebooks to powerful gaming machines.'],
             ['name' => 'Desktop Computers', 'description' => 'Complete desktop systems and components for professional workstations, gaming rigs, and home offices.'],
             ['name' => 'Monitors & Displays', 'description' => 'Professional monitors, gaming displays, and ultrawide screens. 4K, curved, and high refresh rate options available.'],
@@ -34,12 +35,12 @@ class CategorySeeder extends Seeder
                 'slug' => Str::slug($category['name']),
                 'description' => $category['description'],
             ]);
-            
+
             // Log progress for debugging
             $count = $index + 1;
-            $this->command->info("Created category {$count}/10: {$category['name']}");
+            $this->command->info("Created category {$count}/11: {$category['name']}");
         }
-        
+
         $total = Category::count();
         $this->command->info("Total categories created: {$total}");
     }

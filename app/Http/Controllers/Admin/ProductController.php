@@ -36,21 +36,21 @@ class ProductController extends Controller
                         'height' => 1000,
                         'crop' => 'limit',
                         'quality' => 'auto',
-                        'fetch_format' => 'auto'
-                    ]
+                        'fetch_format' => 'auto',
+                    ],
                 ]);
-                
+
                 $validated['image_url'] = $uploadedFile['secure_url'];
                 $validated['image_thumbnail_url'] = $uploadedFile['secure_url'];
             } catch (\Exception $e) {
-                Log::error('Failed to upload product image to Cloudinary: ' . $e->getMessage(), [
+                Log::error('Failed to upload product image to Cloudinary: '.$e->getMessage(), [
                     'product_name' => $validated['name'],
                     'sku' => $validated['sku'],
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ]);
-                
+
                 return back()->withErrors([
-                    'image' => 'Failed to upload image. Please try again.'
+                    'image' => 'Failed to upload image. Please try again.',
                 ])->withInput();
             }
         }
@@ -72,7 +72,7 @@ class ProductController extends Controller
             'category_id' => 'required|exists:categories,id',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
-            'sku' => 'required|string|unique:products,sku,' . $product->id,
+            'sku' => 'required|string|unique:products,sku,'.$product->id,
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
             'stock' => 'required|integer|min:0',
         ]);
@@ -87,22 +87,22 @@ class ProductController extends Controller
                         'height' => 1000,
                         'crop' => 'limit',
                         'quality' => 'auto',
-                        'fetch_format' => 'auto'
-                    ]
+                        'fetch_format' => 'auto',
+                    ],
                 ]);
-                
+
                 $validated['image_url'] = $uploadedFile['secure_url'];
                 $validated['image_thumbnail_url'] = $uploadedFile['secure_url'];
             } catch (\Exception $e) {
-                Log::error('Failed to upload product image to Cloudinary during update: ' . $e->getMessage(), [
+                Log::error('Failed to upload product image to Cloudinary during update: '.$e->getMessage(), [
                     'product_id' => $product->id,
                     'product_name' => $validated['name'],
                     'sku' => $validated['sku'],
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ]);
-                
+
                 return back()->withErrors([
-                    'image' => 'Failed to upload image. Please try again.'
+                    'image' => 'Failed to upload image. Please try again.',
                 ])->withInput();
             }
         }

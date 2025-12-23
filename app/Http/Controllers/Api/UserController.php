@@ -27,7 +27,7 @@ class UserController extends Controller
     public function show(User $user)
     {
         return response()->json([
-            'data' => $user->only('id', 'name', 'email', 'role', 'created_at', 'updated_at')
+            'data' => $user->only('id', 'name', 'email', 'role', 'created_at', 'updated_at'),
         ]);
     }
 
@@ -48,7 +48,7 @@ class UserController extends Controller
         $user = User::create($validated);
 
         return response()->json([
-            'data' => $user->only('id', 'name', 'email', 'role', 'created_at')
+            'data' => $user->only('id', 'name', 'email', 'role', 'created_at'),
         ], 201);
     }
 
@@ -60,7 +60,7 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|email|unique:users,email,' . $user->id,
+            'email' => 'sometimes|email|unique:users,email,'.$user->id,
             'password' => 'sometimes|string|min:8',
             'role' => 'sometimes|in:admin,editor',
         ]);
@@ -72,7 +72,7 @@ class UserController extends Controller
         $user->update($validated);
 
         return response()->json([
-            'data' => $user->only('id', 'name', 'email', 'role', 'created_at', 'updated_at')
+            'data' => $user->only('id', 'name', 'email', 'role', 'created_at', 'updated_at'),
         ]);
     }
 

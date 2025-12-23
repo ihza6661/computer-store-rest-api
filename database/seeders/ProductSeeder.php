@@ -12,210 +12,188 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-        // === LAPTOPS === //
+        // ===== DATABASE COMPUTER - REAL PRODUCTS ===== //
+        // Official products from Database Computer Pontianak
+        // Apple Authorized Reseller | 12+ Bank Partnerships
+
+        // === SMARTPHONES (Category ID: 1) === //
         
-        // Gaming Laptops
+        // iPhone Products - Apple Authorized Reseller with TAM Warranty
         Product::create([
-            'name' => 'Asus TUF Gaming A15 FA507NV',
-            'description' => 'Powerful gaming laptop with Ryzen 7 and RTX 4060. Features 144Hz FHD display for smooth gaming. Includes official warranty until December 2025. Bonus: Bag, Wireless Mouse, and Original Office License.',
+            'name' => 'iPhone 15 Pro Max 256GB',
+            'description' => 'iPhone 15 Pro Max dengan chipset A17 Pro terbaru dan kamera profesional 48MP. Garansi Resmi TAM 1 Tahun. Cicilan 0% tersedia dari 12+ bank partner kami (BCA, Mandiri, BNI, BRI, CIMB, dll).',
+            'price' => 24999000,
+            'sku' => 'DB-IP15PM-256',
+            'image_url' => 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&q=80&w=800',
+            'image_thumbnail_url' => 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&q=80&w=400',
+            'stock' => 2,
+            'specifications' => [
+                'processor' => 'Apple A17 Pro Chip',
+                'gpu' => '6-core GPU',
+                'storage' => '256GB',
+                'display' => '6.7" Super Retina XDR with ProMotion (120Hz)',
+                'camera' => '48MP Main + 12MP Ultra Wide + 12MP Telephoto',
+                'warranty' => 'Garansi Resmi TAM 1 Tahun',
+                'condition' => 'New',
+                'extras' => 'Cicilan 0% dari 12+ bank • Bonus: Tempered Glass + Case',
+            ],
+            'category_id' => 1,
+        ]);
+
+        Product::create([
+            'name' => 'iPhone 15 128GB',
+            'description' => 'iPhone 15 dengan chipset A16 Bionic dan Dynamic Island. Garansi Resmi TAM 1 Tahun. Cicilan 0% tersedia dari 12+ bank partner. Best seller untuk produktivitas dan gaming.',
+            'price' => 11249000,
+            'sku' => 'DB-IP15-128',
+            'image_url' => 'https://images.unsplash.com/photo-1696446701796-da61225697cc?auto=format&fit=crop&q=80&w=800',
+            'image_thumbnail_url' => 'https://images.unsplash.com/photo-1696446701796-da61225697cc?auto=format&fit=crop&q=80&w=400',
+            'stock' => 3,
+            'specifications' => [
+                'processor' => 'Apple A16 Bionic Chip',
+                'gpu' => '5-core GPU',
+                'storage' => '128GB',
+                'display' => '6.1" Super Retina XDR',
+                'camera' => '48MP Main + 12MP Ultra Wide',
+                'warranty' => 'Garansi Resmi TAM 1 Tahun',
+                'condition' => 'New',
+                'extras' => 'Cicilan 0% dari 12+ bank • Bonus: Tempered Glass + Case',
+            ],
+            'category_id' => 1,
+        ]);
+
+        Product::create([
+            'name' => 'iPhone 13 128GB',
+            'description' => 'iPhone 13 dengan chipset A15 Bionic, pilihan terbaik untuk pelajar dan mahasiswa. Garansi Resmi TAM 1 Tahun. Cicilan 0% tersedia. Value for money terbaik di kelasnya.',
+            'price' => 8249000,
+            'sku' => 'DB-IP13-128',
+            'image_url' => 'https://images.unsplash.com/photo-1632661674596-df8be070a5c5?auto=format&fit=crop&q=80&w=800',
+            'image_thumbnail_url' => 'https://images.unsplash.com/photo-1632661674596-df8be070a5c5?auto=format&fit=crop&q=80&w=400',
+            'stock' => 2,
+            'specifications' => [
+                'processor' => 'Apple A15 Bionic Chip',
+                'gpu' => '4-core GPU',
+                'storage' => '128GB',
+                'display' => '6.1" Super Retina XDR',
+                'camera' => '12MP Dual Camera System',
+                'warranty' => 'Garansi Resmi TAM 1 Tahun',
+                'condition' => 'New',
+                'extras' => 'Best seller pelajar & mahasiswa • Cicilan 0% tersedia',
+            ],
+            'category_id' => 1,
+        ]);
+
+        // === LAPTOPS (Category ID: 2) === //
+        
+        // Gaming & High-Performance Laptops
+        Product::create([
+            'name' => 'Asus TUF Gaming A15 Ryzen 7 RTX 4060',
+            'description' => 'Laptop gaming powerful dengan Ryzen 7 dan RTX 4060 untuk gaming dan content creation. Display 144Hz untuk pengalaman gaming smooth. Garansi toko 3 bulan. Bonus lengkap!',
             'price' => 15100000,
-            'sku' => 'ASUS-TUF-A15-FA507NV',
-            'image_url' => 'https://res.cloudinary.com/drcy0kzdm/image/upload/v1766311990/r-tech-products/zvuoi8p9tulelucbjpi8.jpg',
-            'image_thumbnail_url' => 'https://res.cloudinary.com/drcy0kzdm/image/upload/v1766311990/r-tech-products/zvuoi8p9tulelucbjpi8.jpg',
+            'sku' => 'DB-ASUS-TUF-A15',
+            'image_url' => 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&q=80&w=800',
+            'image_thumbnail_url' => 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&q=80&w=400',
             'stock' => 1,
             'specifications' => [
                 'processor' => 'AMD Ryzen 7-7735HS',
                 'gpu' => 'NVIDIA GeForce RTX 4060 8GB',
-                'ram' => '16GB',
-                'storage' => '512GB SSD',
+                'ram' => '16GB DDR5',
+                'storage' => '512GB NVMe SSD',
                 'display' => '15.6" FHD (1920x1080) 144Hz',
-                'keyboard' => 'Backlit',
-                'warranty' => 'Official warranty until December 2025',
-                'condition' => 'Used',
-                'extras' => 'Bag, Wireless Mouse, Original Office License',
-                'original_price' => '19970000',
-            ],
-            'category_id' => 1,
-        ]);
-
-        Product::create([
-            'name' => 'Asus ROG Strix G513QM',
-            'description' => 'High-performance gaming laptop with AMD Ryzen 9 and RTX 3060. 144Hz FHD display for excellent gaming experience. Quality controlled with 3-month warranty. Bonus: Bag, Wireless Mouse, and Original Office License.',
-            'price' => 14300000,
-            'sku' => 'ASUS-ROG-G513QM',
-            'image_url' => 'https://res.cloudinary.com/drcy0kzdm/image/upload/v1766311994/r-tech-products/scb7kobsdwfr0r4es389.jpg',
-            'image_thumbnail_url' => 'https://res.cloudinary.com/drcy0kzdm/image/upload/v1766311994/r-tech-products/scb7kobsdwfr0r4es389.jpg',
-            'stock' => 0,
-            'specifications' => [
-                'processor' => 'AMD Ryzen 9-5900HX',
-                'gpu' => 'NVIDIA GeForce RTX 3060 6GB',
-                'ram' => '16GB',
-                'storage' => '1TB SSD',
-                'display' => '15.6" FHD (1920x1080) 144Hz',
-                'keyboard' => 'Backlit',
-                'warranty' => '3 months from store',
-                'condition' => 'Used',
-                'extras' => 'Bag, Wireless Mouse, Original Office License',
-            ],
-            'category_id' => 1,
-        ]);
-
-        // Budget & Student Laptops
-        Product::create([
-            'name' => 'Acer Aspire A314-23M',
-            'description' => 'Reliable laptop with AMD Ryzen 5 processor for everyday tasks. Quality controlled with 3-month store warranty. Bonus: Bag and Wireless Mouse.',
-            'price' => 5900000,
-            'sku' => 'ACER-ASP-A314-23M',
-            'image_url' => 'https://res.cloudinary.com/drcy0kzdm/image/upload/v1766311997/r-tech-products/ltnhslfg95oeyve5zeot.jpg',
-            'image_thumbnail_url' => 'https://res.cloudinary.com/drcy0kzdm/image/upload/v1766311997/r-tech-products/ltnhslfg95oeyve5zeot.jpg',
-            'stock' => 0,
-            'specifications' => [
-                'processor' => 'AMD Ryzen 5-7520U',
-                'gpu' => 'AMD Radeon Graphics',
-                'ram' => '8GB',
-                'storage' => '512GB SSD',
-                'display' => '14" FHD (1920x1080)',
-                'warranty' => '3 months from store',
-                'condition' => 'Used',
-                'extras' => 'Bag, Wireless Mouse',
-            ],
-            'category_id' => 1,
-        ]);
-
-        Product::create([
-            'name' => 'HP Laptop 14 EM0014',
-            'description' => 'Compact 14-inch laptop with AMD Ryzen 3 processor. Backlit keyboard and ample storage. Quality controlled with 3-month warranty. Bonus: Bag and Wireless Mouse.',
-            'price' => 5500000,
-            'sku' => 'HP-14-EM0014',
-            'image_url' => 'https://res.cloudinary.com/drcy0kzdm/image/upload/v1766312004/r-tech-products/jfyludkwm0l7wrko58i9.jpg',
-            'image_thumbnail_url' => 'https://res.cloudinary.com/drcy0kzdm/image/upload/v1766312004/r-tech-products/jfyludkwm0l7wrko58i9.jpg',
-            'stock' => 1,
-            'specifications' => [
-                'processor' => 'AMD Ryzen 3-7320U',
-                'gpu' => 'AMD Radeon Graphics',
-                'ram' => '8GB',
-                'storage' => '512GB SSD',
-                'display' => '14" FHD (1920x1080)',
-                'keyboard' => 'Backlit',
-                'warranty' => '3 months from store',
-                'condition' => 'Used',
-                'extras' => 'Bag, Wireless Mouse',
-            ],
-            'category_id' => 1,
-        ]);
-
-        Product::create([
-            'name' => 'Lenovo Ideapad Slim 3i',
-            'description' => 'Sleek and portable 14-inch laptop with Intel Core i3. Official warranty until March 2027. Perfect for students and office work. Bonus: Bag and Wireless Mouse.',
-            'price' => 5000000,
-            'sku' => 'LENOVO-SLIM3I',
-            'image_url' => 'https://res.cloudinary.com/drcy0kzdm/image/upload/v1766312013/r-tech-products/vwp1dth0z1ofudnlqgzi.jpg',
-            'image_thumbnail_url' => 'https://res.cloudinary.com/drcy0kzdm/image/upload/v1766312013/r-tech-products/vwp1dth0z1ofudnlqgzi.jpg',
-            'stock' => 0,
-            'specifications' => [
-                'processor' => 'Intel Core i3-1215U',
-                'gpu' => 'Intel UHD Graphics',
-                'ram' => '8GB',
-                'storage' => '256GB SSD',
-                'display' => '14" FHD (1920x1080)',
-                'keyboard' => 'Backlit',
-                'warranty' => 'Official warranty until March 2027',
-                'condition' => 'Used',
-                'extras' => 'Bag, Wireless Mouse',
-            ],
-            'category_id' => 1,
-        ]);
-
-        Product::create([
-            'name' => 'Acer Aspire Lite 14',
-            'description' => 'Ultra-affordable laptop with Intel N150 processor for basic computing needs. Official warranty until April 2026. Ideal for students. Bonus: Bag and Wireless Mouse.',
-            'price' => 4000000,
-            'sku' => 'ACER-LITE14',
-            'image_url' => 'https://res.cloudinary.com/drcy0kzdm/image/upload/v1766312023/r-tech-products/rsmsztfqreldj9czimmi.jpg',
-            'image_thumbnail_url' => 'https://res.cloudinary.com/drcy0kzdm/image/upload/v1766312023/r-tech-products/rsmsztfqreldj9czimmi.jpg',
-            'stock' => 1,
-            'specifications' => [
-                'processor' => 'Intel N150',
-                'gpu' => 'Intel Graphics',
-                'ram' => '8GB',
-                'storage' => '256GB SSD',
-                'display' => '14" FHD (1920x1080)',
-                'warranty' => 'Official warranty until April 2026',
-                'condition' => 'Used',
-                'extras' => 'Bag, Wireless Mouse',
-            ],
-            'category_id' => 1,
-        ]);
-
-        Product::create([
-            'name' => 'Asus Vivobook E410M',
-            'description' => 'Entry-level laptop with Intel Celeron processor. Features numeric keypad for productivity. Quality controlled with 3-month warranty. Bonus: Bag and Wireless Mouse.',
-            'price' => 3300000,
-            'sku' => 'ASUS-E410M',
-            'image_url' => 'https://res.cloudinary.com/drcy0kzdm/image/upload/v1766312028/r-tech-products/hgkdkh4ekt24kxektyv1.jpg',
-            'image_thumbnail_url' => 'https://res.cloudinary.com/drcy0kzdm/image/upload/v1766312028/r-tech-products/hgkdkh4ekt24kxektyv1.jpg',
-            'stock' => 1,
-            'specifications' => [
-                'processor' => 'Intel Celeron N4020',
-                'gpu' => 'Intel UHD Graphics',
-                'ram' => '4GB',
-                'storage' => '512GB SSD',
-                'display' => '14" HD (1366x768)',
-                'features' => 'Numeric Keypad',
-                'warranty' => '3 months from store',
-                'condition' => 'Used',
-                'extras' => 'Bag, Wireless Mouse',
-            ],
-            'category_id' => 1,
-        ]);
-
-        Product::create([
-            'name' => 'MacBook Pro M1 2020',
-            'description' => 'Premium Apple laptop with M1 chip. Excellent for creative professionals and developers. 13-inch Retina display with True Tone. Quality controlled with 3-month warranty. Bonus: Bag, USB-C Hub, Original Accessories.',
-            'price' => 12500000,
-            'sku' => 'APPLE-MBP-M1-2020',
-            'image_url' => 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80',
-            'image_thumbnail_url' => 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=500&q=60',
-            'stock' => 1,
-            'specifications' => [
-                'processor' => 'Apple M1 Chip (8-core CPU)',
-                'gpu' => 'Apple M1 GPU (7-core)',
-                'ram' => '8GB Unified Memory',
-                'storage' => '256GB SSD',
-                'display' => '13.3" Retina (2560x1600)',
-                'battery' => 'Up to 17 hours',
-                'warranty' => '3 months from store',
+                'keyboard' => 'RGB Backlit',
+                'warranty' => 'Garansi toko 3 bulan',
                 'condition' => 'Used - Excellent',
-                'extras' => 'Bag, USB-C Hub, Original Charger',
+                'extras' => 'Tas Laptop + Mouse Wireless + Cooling Pad',
             ],
-            'category_id' => 1,
+            'category_id' => 2,
         ]);
 
-        // === DESKTOP COMPUTERS === //
-        // Add desktop products here when available
+        Product::create([
+            'name' => 'Lenovo IdeaPad Gaming 3 Ryzen 5 RTX 3050',
+            'description' => 'Gaming laptop value for money dengan performa solid untuk gaming AAA dan editing. Display 120Hz untuk visual smooth. Perfect untuk gamers pemula. Bonus lengkap!',
+            'price' => 9500000,
+            'sku' => 'DB-LENOVO-GAMING3',
+            'image_url' => 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=800',
+            'image_thumbnail_url' => 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400',
+            'stock' => 1,
+            'specifications' => [
+                'processor' => 'AMD Ryzen 5-5600H',
+                'gpu' => 'NVIDIA GeForce RTX 3050 4GB',
+                'ram' => '8GB DDR4 (upgradeable to 16GB)',
+                'storage' => '512GB NVMe SSD',
+                'display' => '15.6" FHD (1920x1080) 120Hz',
+                'keyboard' => 'Backlit',
+                'warranty' => 'Garansi toko 3 bulan',
+                'condition' => 'Used - Excellent',
+                'extras' => 'Tas Laptop + Mouse Wireless',
+            ],
+            'category_id' => 2,
+        ]);
 
-        // === MONITORS === //
-        // Add monitor products here when available
+        // Student & Office Laptops
+        Product::create([
+            'name' => 'Asus Vivobook 14 Core i5 Gen 11',
+            'description' => 'Laptop student & office yang ringan dan powerful. Cocok untuk kuliah online, kerja kantoran, dan multimedia. Display FHD untuk visual jernih. Garansi toko 3 bulan.',
+            'price' => 6500000,
+            'sku' => 'DB-ASUS-VIVO14-I5',
+            'image_url' => 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=800',
+            'image_thumbnail_url' => 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400',
+            'stock' => 2,
+            'specifications' => [
+                'processor' => 'Intel Core i5-1135G7 (Gen 11)',
+                'gpu' => 'Intel Iris Xe Graphics',
+                'ram' => '8GB DDR4',
+                'storage' => '512GB NVMe SSD',
+                'display' => '14" FHD (1920x1080)',
+                'weight' => '1.6kg (Ringan & Portable)',
+                'warranty' => 'Garansi toko 3 bulan',
+                'condition' => 'Used - Very Good',
+                'extras' => 'Tas Laptop + Mouse Wireless',
+            ],
+            'category_id' => 2,
+        ]);
 
-        // === COMPUTER COMPONENTS === //
-        // Add component products here when available
+        Product::create([
+            'name' => 'HP 14s Core i3 Gen 10',
+            'description' => 'Laptop entry-level dengan performa reliable untuk tugas sehari-hari. Perfect untuk pelajar SMA/mahasiswa. Design slim dan elegan. Harga terjangkau dengan kualitas terjamin.',
+            'price' => 4500000,
+            'sku' => 'DB-HP-14S-I3',
+            'image_url' => 'https://images.unsplash.com/photo-1484788984921-03950022c9ef?auto=format&fit=crop&q=80&w=800',
+            'image_thumbnail_url' => 'https://images.unsplash.com/photo-1484788984921-03950022c9ef?auto=format&fit=crop&q=80&w=400',
+            'stock' => 2,
+            'specifications' => [
+                'processor' => 'Intel Core i3-1005G1 (Gen 10)',
+                'gpu' => 'Intel UHD Graphics',
+                'ram' => '4GB DDR4 (upgradeable to 16GB)',
+                'storage' => '256GB SSD',
+                'display' => '14" HD (1366x768)',
+                'weight' => '1.5kg',
+                'warranty' => 'Garansi toko 3 bulan',
+                'condition' => 'Used - Good',
+                'extras' => 'Tas Laptop + Mouse',
+            ],
+            'category_id' => 2,
+        ]);
 
-        // === KEYBOARDS & MICE === //
-        // Add keyboard and mouse products here when available
-
-        // === AUDIO & HEADSETS === //
-        // Add audio products here when available
-
-        // === NETWORKING === //
-        // Add networking products here when available
-
-        // === STORAGE SOLUTIONS === //
-        // Add storage products here when available
-
-        // === SOFTWARE === //
-        // Add software products here when available
-
-        // === GAMING ACCESSORIES === //
-        // Add gaming accessory products here when available
+        Product::create([
+            'name' => 'Lenovo ThinkPad L14 Core i5 Gen 10',
+            'description' => 'Business laptop profesional dengan build quality premium. Keyboard ThinkPad legendaris untuk produktivitas tinggi. Cocok untuk profesional dan pengusaha.',
+            'price' => 7200000,
+            'sku' => 'DB-LENOVO-THINKPAD-L14',
+            'image_url' => 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=800',
+            'image_thumbnail_url' => 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400',
+            'stock' => 1,
+            'specifications' => [
+                'processor' => 'Intel Core i5-10210U (Gen 10)',
+                'gpu' => 'Intel UHD Graphics',
+                'ram' => '8GB DDR4',
+                'storage' => '256GB NVMe SSD',
+                'display' => '14" FHD (1920x1080) IPS',
+                'features' => 'Fingerprint Reader • Webcam Privacy Shutter',
+                'warranty' => 'Garansi toko 3 bulan',
+                'condition' => 'Used - Excellent',
+                'extras' => 'Tas Laptop + Mouse Wireless + Original Charger',
+            ],
+            'category_id' => 2,
+        ]);
     }
 }

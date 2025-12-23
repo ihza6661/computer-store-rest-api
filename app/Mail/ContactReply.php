@@ -16,9 +16,7 @@ class ContactReply extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(public Contact $contact)
-    {
-    }
+    public function __construct(public Contact $contact) {}
 
     /**
      * Get the message envelope.

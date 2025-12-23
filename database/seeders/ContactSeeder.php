@@ -13,7 +13,7 @@ class ContactSeeder extends Seeder
     public function run(): void
     {
         // === SALES INQUIRIES === //
-        
+
         Contact::create([
             'name' => 'Budi Santoso',
             'email' => 'budi.santoso@techcorp.id',

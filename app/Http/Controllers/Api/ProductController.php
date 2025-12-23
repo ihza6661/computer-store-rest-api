@@ -21,15 +21,15 @@ class ProductController extends Controller
         $query = Product::query();
 
         // Search by name, description, or SKU
-        if ($request->has('search') && !empty($request->search)) {
+        if ($request->has('search') && ! empty($request->search)) {
             $search = $request->search;
             $query->where('name', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%")
-                  ->orWhere('sku', 'like', "%{$search}%");
+                ->orWhere('description', 'like', "%{$search}%")
+                ->orWhere('sku', 'like', "%{$search}%");
         }
 
         // Filter by category
-        if ($request->has('category_id') && !empty($request->category_id)) {
+        if ($request->has('category_id') && ! empty($request->category_id)) {
             $query->where('category_id', $request->category_id);
         }
 
@@ -76,22 +76,22 @@ class ProductController extends Controller
                         'height' => 1000,
                         'crop' => 'limit',
                         'quality' => 'auto',
-                        'fetch_format' => 'auto'
-                    ]
+                        'fetch_format' => 'auto',
+                    ],
                 ]);
-                
+
                 $validated['image_url'] = $uploadedFile['secure_url'];
                 $validated['image_thumbnail_url'] = $uploadedFile['secure_url'];
             } catch (\Exception $e) {
-                Log::error('API: Failed to upload product image to Cloudinary: ' . $e->getMessage(), [
+                Log::error('API: Failed to upload product image to Cloudinary: '.$e->getMessage(), [
                     'product_name' => $validated['name'],
                     'sku' => $validated['sku'],
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ]);
-                
+
                 return response()->json([
                     'message' => 'Failed to upload image. Please try again.',
-                    'errors' => ['image' => ['Failed to upload image to Cloudinary.']]
+                    'errors' => ['image' => ['Failed to upload image to Cloudinary.']],
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
         }
@@ -121,7 +121,7 @@ class ProductController extends Controller
             'category_id' => 'required|exists:categories,id',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
-            'sku' => 'required|string|unique:products,sku,' . $product->id,
+            'sku' => 'required|string|unique:products,sku,'.$product->id,
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
             'stock' => 'required|integer|min:0',
             'specifications' => 'nullable|array',
@@ -137,23 +137,23 @@ class ProductController extends Controller
                         'height' => 1000,
                         'crop' => 'limit',
                         'quality' => 'auto',
-                        'fetch_format' => 'auto'
-                    ]
+                        'fetch_format' => 'auto',
+                    ],
                 ]);
-                
+
                 $validated['image_url'] = $uploadedFile['secure_url'];
                 $validated['image_thumbnail_url'] = $uploadedFile['secure_url'];
             } catch (\Exception $e) {
-                Log::error('API: Failed to upload product image to Cloudinary during update: ' . $e->getMessage(), [
+                Log::error('API: Failed to upload product image to Cloudinary during update: '.$e->getMessage(), [
                     'product_id' => $product->id,
                     'product_name' => $validated['name'],
                     'sku' => $validated['sku'],
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ]);
-                
+
                 return response()->json([
                     'message' => 'Failed to upload image. Please try again.',
-                    'errors' => ['image' => ['Failed to upload image to Cloudinary.']]
+                    'errors' => ['image' => ['Failed to upload image to Cloudinary.']],
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
         }

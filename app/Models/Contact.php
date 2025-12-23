@@ -29,12 +29,14 @@ class Contact extends Model
     public function markAsRead()
     {
         $this->update(['status' => 'read']);
+
         return $this;
     }
 
     public function markAsReplied()
     {
         $this->update(['status' => 'replied']);
+
         return $this;
     }
 }

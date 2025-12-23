@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ContactReply;
 use App\Models\Contact;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
-use App\Mail\ContactReply;
+use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
 {
@@ -24,14 +24,14 @@ class ContactController extends Controller
         $contact->update($validated);
 
         // If there's a reply, mark as replied and send email
-        if (!empty($validated['admin_reply'])) {
+        if (! empty($validated['admin_reply'])) {
             $contact->markAsReplied();
-            
+
             try {
                 Mail::to($contact->email)->send(new ContactReply($contact));
             } catch (\Exception $e) {
                 // Log but don't fail the request
-                Log::error('Failed to send contact reply email: ' . $e->getMessage());
+                Log::error('Failed to send contact reply email: '.$e->getMessage());
             }
         }
 
