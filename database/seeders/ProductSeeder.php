@@ -195,5 +195,31 @@ class ProductSeeder extends Seeder
             ],
             'category_id' => 2,
         ]);
+
+        // === STORAGE SOLUTIONS & ACCESSORIES (Category ID: 9) === //
+        
+        Product::create([
+            'name' => 'TP-Link USB 3.0 Type-C Card Reader UA430C',
+            'description' => 'Card reader premium dari TP-Link dengan USB Type-C 3.0 untuk transfer data super cepat hingga 200 MB/s. Mendukung SD dan microSD card sampai 2TB. Body aluminum alloy yang kokoh dengan kabel braided 15cm. Compatible dengan semua sistem operasi.',
+            'price' => 100000,
+            'sku' => 'DB-TPLINK-UA430C',
+            'image_url' => 'https://images.unsplash.com/photo-1625948515291-69613efd103f?auto=format&fit=crop&q=80&w=800',
+            'image_thumbnail_url' => 'https://images.unsplash.com/photo-1625948515291-69613efd103f?auto=format&fit=crop&q=80&w=400',
+            'stock' => 5,
+            'specifications' => [
+                'interface' => 'USB 3.0 Type-C, 5Gbps',
+                'sd_slot' => 'SD Card (UHS-I, up to 200 MB/s, 2TB Max)',
+                'microsd_slot' => 'microSD/TF (UHS-I, up to 200 MB/s, 2TB Max)',
+                'compatibility' => 'Windows, MacOS, iPadOS, iOS, Android, Linux, Chrome OS',
+                'material' => 'Aluminum Alloy Case',
+                'cable' => '150mm (5.9 inch) Braided Cable',
+                'dimensions' => '48.4 x 34.2 x 11.5 mm',
+                'certification' => 'CE, FCC, RoHS, BSMI',
+                'warranty' => 'Garansi resmi TP-Link',
+                'condition' => 'New',
+                'extras' => 'Ready Stock • Cocok untuk photographer & videographer',
+            ],
+            'category_id' => 9,
+        ]);
     }
 }
