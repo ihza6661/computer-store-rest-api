@@ -14,7 +14,7 @@ class ProductController extends Controller
 {
     /**
      * Display a listing of products with pagination and filtering.
-     * GET /api/products?page=1&per_page=12&category_id=2&search=query&sort_by=name&order=asc
+     * GET /api/products?page=1&per_page=12&category_id=2&search=query&sort_by=name&order=asc&min_price=1000000&max_price=5000000&condition=New
      */
     public function index(Request $request)
     {
@@ -23,14 +23,35 @@ class ProductController extends Controller
         // Search by name, description, or SKU
         if ($request->has('search') && ! empty($request->search)) {
             $search = $request->search;
-            $query->where('name', 'like', "%{$search}%")
-                ->orWhere('description', 'like', "%{$search}%")
-                ->orWhere('sku', 'like', "%{$search}%");
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%")
+                  ->orWhere('sku', 'like', "%{$search}%");
+            });
         }
 
         // Filter by category
         if ($request->has('category_id') && ! empty($request->category_id)) {
             $query->where('category_id', $request->category_id);
+        }
+
+        // Filter by price range
+        if ($request->has('min_price') && ! empty($request->min_price)) {
+            $query->where('price', '>=', $request->min_price);
+        }
+
+        if ($request->has('max_price') && ! empty($request->max_price)) {
+            $query->where('price', '<=', $request->max_price);
+        }
+
+        // Filter by condition (stored in specifications JSON)
+        if ($request->has('condition') && ! empty($request->condition)) {
+            $query->whereJsonContains('specifications->condition', $request->condition);
+        }
+
+        // Filter by stock availability
+        if ($request->has('in_stock') && $request->in_stock === 'true') {
+            $query->where('stock', '>', 0);
         }
 
         // Sorting
