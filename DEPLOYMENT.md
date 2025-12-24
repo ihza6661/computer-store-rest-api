@@ -11,7 +11,7 @@ Configure the following environment variables in Heroku:
 APP_NAME="Database Computer"
 APP_ENV=production
 APP_DEBUG=false
-APP_URL=https://computer-store-computer-api-6fc0370b86dc.herokuapp.com
+APP_URL=https://computer-store-api-6fc0370b86dc.herokuapp.com
 
 # Database (automatically set by Heroku Postgres addon)
 # DATABASE_URL is automatically set by Heroku
@@ -52,7 +52,7 @@ MAIL_FROM_NAME="${APP_NAME}"
 
 ```bash
 # Set APP_URL
-heroku config:set APP_URL=https://computer-store-computer-api-6fc0370b86dc.herokuapp.com
+heroku config:set APP_URL=https://computer-store-api-6fc0370b86dc.herokuapp.com
 
 # Set session configuration for production
 heroku config:set SESSION_SECURE_COOKIE=true
@@ -73,7 +73,7 @@ heroku config:set CLOUDINARY_URL=cloudinary://api_key:api_secret@cloud_name
 
 #### Via Heroku Dashboard:
 
-1. Go to your app's dashboard: https://dashboard.heroku.com/apps/computer-store-computer-api
+1. Go to your app's dashboard: https://dashboard.heroku.com/apps/computer-store-api
 2. Navigate to **Settings** tab
 3. Click **Reveal Config Vars**
 4. Add/update the variables listed above
@@ -184,7 +184,7 @@ heroku config
 
 1. **Login Test:**
    ```
-   Visit: https://computer-store-computer-api-6fc0370b86dc.herokuapp.com/login
+   Visit: https://computer-store-api-6fc0370b86dc.herokuapp.com/login
    Login with: admin@store.test / password
    ```
 
