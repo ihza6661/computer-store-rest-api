@@ -11,7 +11,7 @@ Configure the following environment variables in Heroku:
 APP_NAME="Database Computer"
 APP_ENV=production
 APP_DEBUG=false
-APP_URL=https://computer-store-api-6fc0370b86dc.herokuapp.com
+APP_URL=https://computer-store-api-dd14765dc7ef.herokuapp.com
 
 # Database (automatically set by Heroku Postgres addon)
 # DATABASE_URL is automatically set by Heroku
@@ -52,7 +52,7 @@ MAIL_FROM_NAME="${APP_NAME}"
 
 ```bash
 # Set APP_URL
-heroku config:set APP_URL=https://computer-store-api-6fc0370b86dc.herokuapp.com
+heroku config:set APP_URL=https://computer-store-api-dd14765dc7ef.herokuapp.com
 
 # Set session configuration for production
 heroku config:set SESSION_SECURE_COOKIE=true
@@ -89,6 +89,7 @@ heroku config:set CLOUDINARY_URL=cloudinary://api_key:api_secret@cloud_name
 #### Authentication Issue Fix:
 
 The recent fix ensures:
+
 - ✅ Session cookies are automatically secured in production
 - ✅ CORS allows credentials from the app's own URL
 - ✅ API fetch calls include credentials (cookies) for authentication
@@ -96,6 +97,7 @@ The recent fix ensures:
 #### CORS Configuration:
 
 The app automatically allows requests from:
+
 - `http://localhost:5173` (local dev - Vite)
 - `http://localhost:3000` (local dev - alternative)
 - `http://localhost:8000` (local dev - Laravel)
@@ -106,6 +108,7 @@ The app automatically allows requests from:
 ### Database Migrations
 
 Migrations run automatically on deployment via `Procfile`:
+
 ```
 release: php artisan migrate --force
 ```
@@ -147,11 +150,13 @@ heroku config
 #### 401 Unauthorized on Admin Operations:
 
 **Symptoms:**
+
 - Can login but cannot delete/update products
 - API returns 401 Unauthorized
 - Works locally but not in production
 
 **Solutions:**
+
 1. Ensure `SESSION_SECURE_COOKIE=true` is set in Heroku config
 2. Verify `APP_URL` is set to your Heroku URL
 3. Check browser cookies are being saved (DevTools → Application → Cookies)
@@ -160,10 +165,12 @@ heroku config
 #### Session Not Persisting:
 
 **Symptoms:**
+
 - Logged out after navigation
 - Session appears to reset
 
 **Solutions:**
+
 1. Verify `SESSION_DRIVER=database` is set
 2. Ensure `sessions` table exists (run migrations)
 3. Check `APP_KEY` is set in Heroku config
@@ -172,10 +179,12 @@ heroku config
 #### CORS Errors:
 
 **Symptoms:**
+
 - Browser console shows CORS policy errors
 - Preflight requests failing
 
 **Solutions:**
+
 1. Verify your frontend URL is in `CorsMiddleware.php` allowed origins
 2. Check `APP_URL` is correctly set in Heroku
 3. Ensure credentials are included in fetch requests (`credentials: 'include'`)
@@ -183,28 +192,30 @@ heroku config
 ### Testing Production Deployment
 
 1. **Login Test:**
-   ```
-   Visit: https://computer-store-api-6fc0370b86dc.herokuapp.com/login
-   Login with: admin@store.test / password
-   ```
+
+    ```
+    Visit: https://computer-store-api-dd14765dc7ef.herokuapp.com/login
+    Login with: admin@store.test / password
+    ```
 
 2. **Session Test:**
-   - Navigate to different admin pages
-   - Verify you stay logged in
+    - Navigate to different admin pages
+    - Verify you stay logged in
 
 3. **CRUD Operations Test:**
-   - Try creating a category
-   - Try deleting a product
-   - Verify operations succeed (no 401 errors)
+    - Try creating a category
+    - Try deleting a product
+    - Verify operations succeed (no 401 errors)
 
 4. **Cookie Verification:**
-   - Open DevTools → Application → Cookies
-   - Look for `computer-store-computer-session` cookie
-   - Verify it has: `Secure=true`, `SameSite=Lax`
+    - Open DevTools → Application → Cookies
+    - Look for `computer-store-computer-session` cookie
+    - Verify it has: `Secure=true`, `SameSite=Lax`
 
 ### Support
 
 For deployment issues:
+
 - Check Heroku logs: `heroku logs --tail`
 - Review Laravel logs: `heroku run tail storage/logs/laravel.log`
 - Check database connection: `heroku run php artisan tinker`
