@@ -68,7 +68,7 @@ class ContactController extends Controller
 
         // Send notification to admin
         try {
-            $adminEmail = config('mail.admin_email', 'admin@rtech.test');
+            $adminEmail = config('mail.admin_email', 'admin@store.test');
             Mail::to($adminEmail)->send(new NewContactSubmission($contact));
         } catch (\Exception $e) {
             // Log email error but don't fail the request

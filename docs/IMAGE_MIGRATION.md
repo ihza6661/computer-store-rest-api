@@ -57,7 +57,7 @@ This will migrate all products without asking for confirmation (useful for scrip
    - Skips missing files
 
 3. **Uploads to Cloudinary**:
-   - Uploads to `r-tech-products` folder
+   - Uploads to `computer-store-products` folder
    - Applies transformations (1000x1000, limit crop, auto quality)
    - Uses HTTPS secure URLs
 
@@ -183,7 +183,7 @@ ls -la storage/app/public/products/
 
 ### Cloudinary Settings
 
-- **Folder**: `r-tech-products`
+- **Folder**: `computer-store-products`
 - **Max Dimensions**: 1000x1000 pixels
 - **Crop Mode**: limit (maintains aspect ratio)
 - **Quality**: auto
@@ -209,7 +209,7 @@ Example log entry:
   "product_id": 17,
   "product_name": "Laptop Baru",
   "old_url": "http://127.0.0.1:8000/storage/products/ITASxgpCg4Y...",
-  "new_url": "https://res.cloudinary.com/drcy0kzdm/image/upload/v1766253874/r-tech-products/imama3vxieeu0xtrindg.jpg"
+  "new_url": "https://res.cloudinary.com/drcy0kzdm/image/upload/v1766253874/computer-store-products/imama3vxieeu0xtrindg.jpg"
 }
 ```
 

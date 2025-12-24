@@ -61,7 +61,7 @@
         </div>
         
         <div class="footer">
-            <p>R-Tech Computer Admin System</p>
+            <p>Database Computer Admin System</p>
             <p>This is an automated message. Please do not reply to this email.</p>
         </div>
     </div>

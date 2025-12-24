@@ -15,7 +15,7 @@ class AdminSeeder extends Seeder
         // Super Admin
         User::create([
             'name' => 'Ihza Mahendra',
-            'email' => 'ihza@rtech.com',
+            'email' => 'ihza@store.com',
             'password' => bcrypt('ihza123'),
             'role' => 'admin',
             'email_verified_at' => now(),
@@ -24,7 +24,7 @@ class AdminSeeder extends Seeder
         // Admin - Operations Manager
         User::create([
             'name' => 'Sarah Chen',
-            'email' => 'sarah.chen@rtech.com',
+            'email' => 'sarah.chen@store.com',
             'password' => bcrypt('admin123'),
             'role' => 'admin',
             'email_verified_at' => now(),
@@ -33,7 +33,7 @@ class AdminSeeder extends Seeder
         // Editor - Content Manager
         User::create([
             'name' => 'Dewi Lestari',
-            'email' => 'dewi.lestari@rtech.com',
+            'email' => 'dewi.lestari@store.com',
             'password' => bcrypt('editor123'),
             'role' => 'editor',
             'email_verified_at' => now(),
@@ -42,7 +42,7 @@ class AdminSeeder extends Seeder
         // Editor - Product Specialist
         User::create([
             'name' => 'Michael Wijaya',
-            'email' => 'michael.wijaya@rtech.com',
+            'email' => 'michael.wijaya@store.com',
             'password' => bcrypt('editor123'),
             'role' => 'editor',
             'email_verified_at' => now(),
@@ -51,7 +51,7 @@ class AdminSeeder extends Seeder
         // Test Admin Account (for development)
         User::create([
             'name' => 'Test Admin',
-            'email' => 'admin@rtech.test',
+            'email' => 'admin@store.test',
             'password' => bcrypt('password'),
             'role' => 'admin',
             'email_verified_at' => now(),
@@ -60,7 +60,7 @@ class AdminSeeder extends Seeder
         // Test Editor Account (for development)
         User::create([
             'name' => 'Test Editor',
-            'email' => 'editor@rtech.test',
+            'email' => 'editor@store.test',
             'password' => bcrypt('password'),
             'role' => 'editor',
             'email_verified_at' => now(),

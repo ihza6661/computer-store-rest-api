@@ -70,7 +70,7 @@ class ProductController extends Controller
         if ($request->hasFile('image')) {
             try {
                 $uploadedFile = Cloudinary::uploadApi()->upload($request->file('image')->getRealPath(), [
-                    'folder' => 'r-tech-products',
+                    'folder' => 'computer-store-products',
                     'transformation' => [
                         'width' => 1000,
                         'height' => 1000,
@@ -131,7 +131,7 @@ class ProductController extends Controller
         if ($request->hasFile('image')) {
             try {
                 $uploadedFile = Cloudinary::uploadApi()->upload($request->file('image')->getRealPath(), [
-                    'folder' => 'r-tech-products',
+                    'folder' => 'computer-store-products',
                     'transformation' => [
                         'width' => 1000,
                         'height' => 1000,

@@ -18,7 +18,7 @@ export default function Login() {
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
         <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
           <div className="mb-8">
-            <h1 className="text-2xl font-bold">R-Tech Computer</h1>
+            <h1 className="text-2xl font-bold">Database Computer</h1>
             <p className="text-gray-600">Admin Dashboard Login</p>
           </div>
 
@@ -29,7 +29,7 @@ export default function Login() {
                 type="email"
                 value={data.email}
                 onChange={(e) => setData('email', e.currentTarget.value)}
-                placeholder="admin@rtech.test"
+                placeholder="admin@store.test"
                 className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                   errors.email ? 'border-red-500' : 'border-gray-300'
                 }`}
@@ -61,7 +61,7 @@ export default function Login() {
 
           <div className="mt-6 p-4 bg-blue-50 rounded-lg text-sm">
             <p className="font-semibold mb-2">Demo Credentials:</p>
-            <p>Email: admin@rtech.test</p>
+            <p>Email: admin@store.test</p>
             <p>Password: password</p>
           </div>
         </div>

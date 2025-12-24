@@ -48,7 +48,7 @@ class ContactSeeder extends Seeder
             'category' => 'sales_inquiry',
             'message' => 'Hello, I run a digital marketing agency and need to equip our new office. Looking for: 15x Lenovo ThinkPad X1 Carbon, 3x Synology NAS DS923+, 20x Dell P2723DE monitors, and various peripherals (keyboards, mice, headsets). Can you prepare a complete package quote? Budget is flexible for quality products. Need delivery by end of next month.',
             'status' => 'read',
-            'admin_reply' => 'Hi Jennifer, thank you for your interest! We\'ve prepared a comprehensive quote for your office setup. Our sales team will contact you within 24 hours with detailed pricing, volume discounts (approximately 12-15% off), and delivery schedule. We can definitely meet your end-of-month deadline. For a purchase of this size, we also offer free installation and 1-year premium support. Best regards, R-Tech Sales Team',
+            'admin_reply' => 'Hi Jennifer, thank you for your interest! We\'ve prepared a comprehensive quote for your office setup. Our sales team will contact you within 24 hours with detailed pricing, volume discounts (approximately 12-15% off), and delivery schedule. We can definitely meet your end-of-month deadline. For a purchase of this size, we also offer free installation and 1-year premium support. Best regards, Database Computer Sales Team',
         ]);
 
         Contact::create([
@@ -126,7 +126,7 @@ class ContactSeeder extends Seeder
             'category' => 'general',
             'message' => 'Hi! I\'m a tech blogger writing an article about "Best Laptops for Content Creators in 2024". Would love to feature some of your products (MacBook Pro M3, Dell XPS 15, MSI Raider). Can I use product images from your website? Will include links and proper attribution. Also, any chance of getting review units for hands-on testing? My blog gets 50K monthly visitors.',
             'status' => 'read',
-            'admin_reply' => 'Hi Lisa, thank you for your interest in featuring our products! You\'re welcome to use our product images with proper attribution and links to our store. Regarding review units, please send us your media kit and previous work samples to marketing@rtech.com. We\'ll review your request and get back to you within 3-5 business days. Looking forward to potential collaboration!',
+            'admin_reply' => 'Hi Lisa, thank you for your interest in featuring our products! You\'re welcome to use our product images with proper attribution and links to our store. Regarding review units, please send us your media kit and previous work samples to marketing@store.com. We\'ll review your request and get back to you within 3-5 business days. Looking forward to potential collaboration!',
         ]);
 
         Contact::create([
@@ -143,9 +143,9 @@ class ContactSeeder extends Seeder
             'email' => 'dewi.lestari@foundation.or.id',
             'phone' => '+62-814-3333-4444',
             'category' => 'general',
-            'message' => 'Yayasan kami bergerak di bidang pendidikan untuk anak kurang mampu di Indonesia Timur. Kami ingin melengkapi 5 computer labs (total 150 komputer). Apakah R-Tech punya CSR program atau educational discount? Kami juga terbuka untuk partnership jangka panjang. Budget terbatas tapi komitmen jangka panjang tinggi. Mohon info lebih lanjut. Terima kasih banyak.',
+            'message' => 'Yayasan kami bergerak di bidang pendidikan untuk anak kurang mampu di Indonesia Timur. Kami ingin melengkapi 5 computer labs (total 150 komputer). Apakah Database Computer punya CSR program atau educational discount? Kami juga terbuka untuk partnership jangka panjang. Budget terbatas tapi komitmen jangka panjang tinggi. Mohon info lebih lanjut. Terima kasih banyak.',
             'status' => 'read',
-            'admin_reply' => 'Dear Ibu Dewi, terima kasih atas kepercayaan kepada R-Tech. Kami sangat menghargai misi mulia yayasan Ibu. R-Tech memiliki program CSR untuk institusi pendidikan dengan diskon up to 25% dan payment terms yang fleksibel. Tim kami akan menghubungi Ibu untuk diskusi lebih detail mengenai kebutuhan dan solusi yang kami tawarkan. Mari kita bersama membangun pendidikan Indonesia. Salam, R-Tech CSR Team',
+            'admin_reply' => 'Dear Ibu Dewi, terima kasih atas kepercayaan kepada Database Computer. Kami sangat menghargai misi mulia yayasan Ibu. Database Computer memiliki program CSR untuk institusi pendidikan dengan diskon up to 25% dan payment terms yang fleksibel. Tim kami akan menghubungi Ibu untuk diskusi lebih detail mengenai kebutuhan dan solusi yang kami tawarkan. Mari kita bersama membangun pendidikan Indonesia. Salam, Database Computer CSR Team',
         ]);
 
         Contact::create([
@@ -162,9 +162,9 @@ class ContactSeeder extends Seeder
             'email' => 'putri.w@webagency.co.id',
             'phone' => '+62-822-4444-5555',
             'category' => 'general',
-            'message' => 'Halo R-Tech! Kami digital agency yang sedang develop website untuk client kami. Bolehkah kami menggunakan beberapa product photos dari website R-Tech sebagai mockup/demo content? Tentu dengan watermark dan credit to R-Tech. Website tersebut untuk portfolio kami saja, non-commercial. Mohon izin dan approval. Thank you!',
+            'message' => 'Halo Database Computer! Kami digital agency yang sedang develop website untuk client kami. Bolehkah kami menggunakan beberapa product photos dari website Database Computer sebagai mockup/demo content? Tentu dengan watermark dan credit to Database Computer. Website tersebut untuk portfolio kami saja, non-commercial. Mohon izin dan approval. Thank you!',
             'status' => 'read',
-            'admin_reply' => 'Hi Putri, terima kasih sudah menghubungi kami. Untuk penggunaan product photos sebagai mockup/demo content non-commercial, kami perbolehkan dengan syarat: 1) Include watermark/credit to R-Tech, 2) Include link to website kami, 3) Kirim preview ke marketing@rtech.com untuk approval. Senang bisa membantu project Anda. Good luck!',
+            'admin_reply' => 'Hi Putri, terima kasih sudah menghubungi kami. Untuk penggunaan product photos sebagai mockup/demo content non-commercial, kami perbolehkan dengan syarat: 1) Include watermark/credit to Database Computer, 2) Include link to website kami, 3) Kirim preview ke marketing@store.com untuk approval. Senang bisa membantu project Anda. Good luck!',
         ]);
 
         Contact::create([
@@ -192,7 +192,7 @@ class ContactSeeder extends Seeder
             'category' => 'general',
             'message' => 'Hello! I\'m a commercial photographer looking to shoot product photography for tech brands. Saw your product range and would love to collaborate. Can provide high-quality lifestyle shots, studio photography, and creative content for your website/social media. Portfolio: sophiewang.com. Let me know if you\'re interested in upgrading your product visuals. Competitive rates available!',
             'status' => 'read',
-            'admin_reply' => 'Hi Sophie, thank you for reaching out! We\'re actually planning a product photography refresh for Q1 2024. Your portfolio looks impressive. Please send your rate card and available packages to marketing@rtech.com. Our marketing team will review and schedule a meeting to discuss potential collaboration. Looking forward to working together!',
+            'admin_reply' => 'Hi Sophie, thank you for reaching out! We\'re actually planning a product photography refresh for Q1 2024. Your portfolio looks impressive. Please send your rate card and available packages to marketing@store.com. Our marketing team will review and schedule a meeting to discuss potential collaboration. Looking forward to working together!',
         ]);
 
         Contact::create([
@@ -200,7 +200,7 @@ class ContactSeeder extends Seeder
             'email' => 'hendra.g@distributor.co.id',
             'phone' => '+62-825-1111-2222',
             'category' => 'general',
-            'message' => 'Selamat siang, saya distributor elektronik di Kalimantan dengan 15 retail stores. Tertarik menjadi authorized dealer R-Tech untuk wilayah Kalimantan. Punya pengalaman 10 tahun di industri IT retail. Mohon info mengenai dealer program, margin, MOQ, dan support yang diberikan. Bisa schedule meeting untuk discuss partnership? Terima kasih.',
+            'message' => 'Selamat siang, saya distributor elektronik di Kalimantan dengan 15 retail stores. Tertarik menjadi authorized dealer Database Computer untuk wilayah Kalimantan. Punya pengalaman 10 tahun di industri IT retail. Mohon info mengenai dealer program, margin, MOQ, dan support yang diberikan. Bisa schedule meeting untuk discuss partnership? Terima kasih.',
             'status' => 'new',
         ]);
     }

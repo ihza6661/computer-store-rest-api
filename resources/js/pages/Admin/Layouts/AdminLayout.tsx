@@ -50,7 +50,7 @@ export default function AdminLayout({ children }: PropsWithChildren) {
         } fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 text-white transform transition-transform duration-200 lg:translate-x-0 lg:static`}
       >
         <div className="flex items-center justify-between h-16 px-4 border-b border-slate-700">
-          <h1 className="text-xl font-bold">R-Tech</h1>
+          <h1 className="text-xl font-bold">Database</h1>
           <button
             onClick={() => setSidebarOpen(false)}
             className="lg:hidden"

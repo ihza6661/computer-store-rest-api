@@ -24,7 +24,7 @@ class ContactConfirmation extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'We Received Your Message - R-Tech Computer',
+            subject: 'We Received Your Message - Database Computer',
         );
     }
 

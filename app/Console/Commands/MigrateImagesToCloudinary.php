@@ -118,7 +118,7 @@ class MigrateImagesToCloudinary extends Command
 
                     // Upload to Cloudinary
                     $uploadedFile = Cloudinary::uploadApi()->upload($fullPath, [
-                        'folder' => 'r-tech-products',
+                        'folder' => 'computer-store-products',
                         'transformation' => [
                             'width' => 1000,
                             'height' => 1000,

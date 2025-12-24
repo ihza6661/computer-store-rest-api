@@ -20,8 +20,8 @@ class CorsMiddleware
             'http://localhost:5173',
             'http://localhost:3000',
             'http://localhost:8000',
-            'https://r-tech-pontianak-landing.vercel.app',
-            'https://r-tech-pontianak-landing-*.vercel.app',
+            'https://computer-store-pontianak-landing.vercel.app',
+            'https://computer-store-pontianak-landing-*.vercel.app',
         ];
 
         // Add the app's own URL for Inertia admin panel

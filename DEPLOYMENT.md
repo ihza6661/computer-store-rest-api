@@ -1,4 +1,4 @@
-# Deployment Guide - R-Tech Computer Backend
+# Deployment Guide - Database Computer Backend
 
 ## Heroku Deployment
 
@@ -8,10 +8,10 @@ Configure the following environment variables in Heroku:
 
 ```bash
 # Application Settings
-APP_NAME="R-Tech Computer"
+APP_NAME="Database Computer"
 APP_ENV=production
 APP_DEBUG=false
-APP_URL=https://r-tech-computer-api-6fc0370b86dc.herokuapp.com
+APP_URL=https://computer-store-computer-api-6fc0370b86dc.herokuapp.com
 
 # Database (automatically set by Heroku Postgres addon)
 # DATABASE_URL is automatically set by Heroku
@@ -42,7 +42,7 @@ MAIL_HOST=smtp.sendgrid.net
 MAIL_PORT=587
 MAIL_USERNAME=apikey
 MAIL_PASSWORD=SG.your_sendgrid_api_key
-MAIL_FROM_ADDRESS="noreply@rtech.com"
+MAIL_FROM_ADDRESS="noreply@store.com"
 MAIL_FROM_NAME="${APP_NAME}"
 ```
 
@@ -52,7 +52,7 @@ MAIL_FROM_NAME="${APP_NAME}"
 
 ```bash
 # Set APP_URL
-heroku config:set APP_URL=https://r-tech-computer-api-6fc0370b86dc.herokuapp.com
+heroku config:set APP_URL=https://computer-store-computer-api-6fc0370b86dc.herokuapp.com
 
 # Set session configuration for production
 heroku config:set SESSION_SECURE_COOKIE=true
@@ -73,7 +73,7 @@ heroku config:set CLOUDINARY_URL=cloudinary://api_key:api_secret@cloud_name
 
 #### Via Heroku Dashboard:
 
-1. Go to your app's dashboard: https://dashboard.heroku.com/apps/r-tech-computer-api
+1. Go to your app's dashboard: https://dashboard.heroku.com/apps/computer-store-computer-api
 2. Navigate to **Settings** tab
 3. Click **Reveal Config Vars**
 4. Add/update the variables listed above
@@ -99,8 +99,8 @@ The app automatically allows requests from:
 - `http://localhost:5173` (local dev - Vite)
 - `http://localhost:3000` (local dev - alternative)
 - `http://localhost:8000` (local dev - Laravel)
-- `https://r-tech-pontianak-landing.vercel.app` (production landing)
-- `https://r-tech-pontianak-landing-*.vercel.app` (Vercel preview deployments)
+- `https://computer-store-pontianak-landing.vercel.app` (production landing)
+- `https://computer-store-pontianak-landing-*.vercel.app` (Vercel preview deployments)
 - **APP_URL** (the Heroku backend itself for Inertia admin panel)
 
 ### Database Migrations
@@ -184,8 +184,8 @@ heroku config
 
 1. **Login Test:**
    ```
-   Visit: https://r-tech-computer-api-6fc0370b86dc.herokuapp.com/login
-   Login with: admin@rtech.test / password
+   Visit: https://computer-store-computer-api-6fc0370b86dc.herokuapp.com/login
+   Login with: admin@store.test / password
    ```
 
 2. **Session Test:**
@@ -199,7 +199,7 @@ heroku config
 
 4. **Cookie Verification:**
    - Open DevTools → Application → Cookies
-   - Look for `r-tech-computer-session` cookie
+   - Look for `computer-store-computer-session` cookie
    - Verify it has: `Secure=true`, `SameSite=Lax`
 
 ### Support
