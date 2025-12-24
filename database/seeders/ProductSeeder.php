@@ -14,11 +14,11 @@ class ProductSeeder extends Seeder
     {
         // ===== DATABASE COMPUTER - REAL PRODUCTS ===== //
         // Official products from Database Computer Pontianak
-        // Apple Authorized Reseller | 12+ Bank Partnerships
+        // Gold Merchant Tokopedia & Shopee Mall | 12+ Bank Partnerships
 
         // === SMARTPHONES (Category ID: 1) === //
         
-        // iPhone Products - Apple Authorized Reseller with TAM Warranty
+        // iPhone Products - Original products with TAM Warranty
         Product::create([
             'name' => 'iPhone 15 Pro Max 256GB',
             'description' => 'iPhone 15 Pro Max dengan chipset A17 Pro terbaru dan kamera profesional 48MP. Garansi Resmi TAM 1 Tahun. Cicilan 0% tersedia dari 12+ bank partner kami (BCA, Mandiri, BNI, BRI, CIMB, dll).',
