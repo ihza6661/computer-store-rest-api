@@ -43,6 +43,18 @@ class ProductResource extends JsonResource
             'category_id' => $this->category_id,
             'category' => $this->whenLoaded('category'),
             'specifications' => $specifications ?? [],
+            // Include product images gallery
+            'images' => $this->whenLoaded('images', function () {
+                return $this->images->map(function ($image) {
+                    return [
+                        'id' => $image->id,
+                        'url' => $this->transformImageUrl($image->image_url),
+                        'thumbnail_url' => $this->transformImageUrl($image->image_thumbnail_url),
+                        'is_primary' => $image->is_primary,
+                        'sort_order' => $image->sort_order,
+                    ];
+                });
+            }),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
