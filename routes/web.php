@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ProductImageController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
@@ -53,7 +54,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     })->name('admin.products.create');
 
     Route::get('/admin/products/{product}/edit', function ($product) {
-        $productData = \App\Models\Product::with('category')->findOrFail($product);
+        $productData = \App\Models\Product::with(['category', 'images'])->findOrFail($product);
         $categories = \App\Models\Category::select('id', 'name')->get();
 
         return Inertia::render('Admin/Products/Edit', [
@@ -122,6 +123,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
         ->name('admin.products.update');
     Route::delete('/admin/products/{product}', [ProductController::class, 'destroy'])
         ->name('admin.products.destroy');
+
+    // Product Image Management Routes
+    Route::delete('/admin/products/{product}/images/{image}', [ProductImageController::class, 'destroy'])
+        ->name('admin.products.images.destroy');
+    Route::post('/admin/products/{product}/images/{image}/set-primary', [ProductImageController::class, 'setPrimary'])
+        ->name('admin.products.images.setPrimary');
 
     // Categories CRUD routes (POST/PUT/DELETE)
     Route::post('/admin/categories', [CategoryController::class, 'store'])

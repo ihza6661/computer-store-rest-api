@@ -19,10 +19,10 @@ export default function CreateProduct({ categories }: Props) {
     sku: '',
     stock: '',
     description: '',
-    image: null as File | null,
+    images: [] as File[],
   })
 
-  const [imagePreview, setImagePreview] = React.useState<string | null>(null)
+  const [imagePreviews, setImagePreviews] = React.useState<string[]>([])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -35,17 +35,34 @@ export default function CreateProduct({ categories }: Props) {
   }
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.currentTarget.files?.[0]
-    if (file) {
-      setData({ ...data, image: file })
-      
-      // Create preview URL
+    const files = Array.from(e.currentTarget.files || [])
+    
+    if (files.length > 10) {
+      alert('Maximum 10 images allowed')
+      return
+    }
+    
+    setData({ ...data, images: files })
+    
+    // Create preview URLs
+    const previews: string[] = []
+    files.forEach((file) => {
       const reader = new FileReader()
       reader.onloadend = () => {
-        setImagePreview(reader.result as string)
+        previews.push(reader.result as string)
+        if (previews.length === files.length) {
+          setImagePreviews(previews)
+        }
       }
       reader.readAsDataURL(file)
-    }
+    })
+  }
+
+  const removeImage = (index: number) => {
+    const newImages = data.images.filter((_, i) => i !== index)
+    const newPreviews = imagePreviews.filter((_, i) => i !== index)
+    setData({ ...data, images: newImages })
+    setImagePreviews(newPreviews)
   }
 
   return (
@@ -64,12 +81,6 @@ export default function CreateProduct({ categories }: Props) {
 
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-lg font-bold mb-6">Product Details</h2>
-
-          {errors.general && (
-            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
-              {errors.general}
-            </div>
-          )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -162,23 +173,44 @@ export default function CreateProduct({ categories }: Props) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">Image *</label>
+              <label className="block text-sm font-medium mb-1">Images * (1-10 images)</label>
               <input
                 type="file"
                 accept="image/*"
+                multiple
                 onChange={handleImageChange}
                 className="block w-full px-3 py-2 border rounded-lg"
               />
-              {errors.image && <p className="text-red-500 text-sm">{errors.image}</p>}
+              {errors.images && <p className="text-red-500 text-sm">{errors.images}</p>}
               
-              {imagePreview && (
+              {imagePreviews.length > 0 && (
                 <div className="mt-3">
-                  <p className="text-sm text-gray-600 mb-2">Preview:</p>
-                  <img
-                    src={imagePreview}
-                    alt="Preview"
-                    className="w-48 h-48 object-cover border rounded-lg"
-                  />
+                  <p className="text-sm text-gray-600 mb-2">
+                    {imagePreviews.length} image(s) selected. First image will be the primary.
+                  </p>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {imagePreviews.map((preview, index) => (
+                      <div key={index} className="relative group">
+                        <img
+                          src={preview}
+                          alt={`Preview ${index + 1}`}
+                          className="w-full h-32 object-cover border rounded-lg"
+                        />
+                        {index === 0 && (
+                          <div className="absolute top-2 left-2 bg-blue-600 text-white text-xs px-2 py-1 rounded">
+                            Primary
+                          </div>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => removeImage(index)}
+                          className="absolute top-2 right-2 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
