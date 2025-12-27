@@ -21,6 +21,7 @@ class ProductSeeder extends Seeder
         // iPhone Products - Original products with TAM Warranty
         Product::create([
             'name' => 'iPhone 15 Pro Max 256GB',
+            'brand' => 'Apple',
             'description' => 'iPhone 15 Pro Max dengan chipset A17 Pro terbaru dan kamera profesional 48MP. Garansi Resmi TAM 1 Tahun. Cicilan 0% tersedia dari 12+ bank partner kami (BCA, Mandiri, BNI, BRI, CIMB, dll).',
             'price' => 24999000,
             'sku' => 'DB-IP15PM-256',
@@ -42,6 +43,7 @@ class ProductSeeder extends Seeder
 
         Product::create([
             'name' => 'iPhone 15 128GB',
+            'brand' => 'Apple',
             'description' => 'iPhone 15 dengan chipset A16 Bionic dan Dynamic Island. Garansi Resmi TAM 1 Tahun. Cicilan 0% tersedia dari 12+ bank partner. Best seller untuk produktivitas dan gaming.',
             'price' => 11249000,
             'sku' => 'DB-IP15-128',
@@ -63,6 +65,7 @@ class ProductSeeder extends Seeder
 
         Product::create([
             'name' => 'iPhone 13 128GB',
+            'brand' => 'Apple',
             'description' => 'iPhone 13 dengan chipset A15 Bionic, pilihan terbaik untuk pelajar dan mahasiswa. Garansi Resmi TAM 1 Tahun. Cicilan 0% tersedia. Value for money terbaik di kelasnya.',
             'price' => 8249000,
             'sku' => 'DB-IP13-128',
@@ -87,6 +90,7 @@ class ProductSeeder extends Seeder
         // Gaming & High-Performance Laptops
         Product::create([
             'name' => 'Asus TUF Gaming A15 Ryzen 7 RTX 4060',
+            'brand' => 'ASUS',
             'description' => 'Laptop gaming powerful dengan Ryzen 7 dan RTX 4060 untuk gaming dan content creation. Display 144Hz untuk pengalaman gaming smooth. Garansi toko 3 bulan. Bonus lengkap!',
             'price' => 15100000,
             'sku' => 'DB-ASUS-TUF-A15',
@@ -109,6 +113,7 @@ class ProductSeeder extends Seeder
 
         Product::create([
             'name' => 'Lenovo IdeaPad Gaming 3 Ryzen 5 RTX 3050',
+            'brand' => 'Lenovo',
             'description' => 'Gaming laptop value for money dengan performa solid untuk gaming AAA dan editing. Display 120Hz untuk visual smooth. Perfect untuk gamers pemula. Bonus lengkap!',
             'price' => 9500000,
             'sku' => 'DB-LENOVO-GAMING3',
@@ -132,6 +137,7 @@ class ProductSeeder extends Seeder
         // Student & Office Laptops
         Product::create([
             'name' => 'Asus Vivobook 14 Core i5 Gen 11',
+            'brand' => 'ASUS',
             'description' => 'Laptop student & office yang ringan dan powerful. Cocok untuk kuliah online, kerja kantoran, dan multimedia. Display FHD untuk visual jernih. Garansi toko 3 bulan.',
             'price' => 6500000,
             'sku' => 'DB-ASUS-VIVO14-I5',
@@ -154,6 +160,7 @@ class ProductSeeder extends Seeder
 
         Product::create([
             'name' => 'HP 14s Core i3 Gen 10',
+            'brand' => 'HP',
             'description' => 'Laptop entry-level dengan performa reliable untuk tugas sehari-hari. Perfect untuk pelajar SMA/mahasiswa. Design slim dan elegan. Harga terjangkau dengan kualitas terjamin.',
             'price' => 4500000,
             'sku' => 'DB-HP-14S-I3',
@@ -176,6 +183,7 @@ class ProductSeeder extends Seeder
 
         Product::create([
             'name' => 'Lenovo ThinkPad L14 Core i5 Gen 10',
+            'brand' => 'Lenovo',
             'description' => 'Business laptop profesional dengan build quality premium. Keyboard ThinkPad legendaris untuk produktivitas tinggi. Cocok untuk profesional dan pengusaha.',
             'price' => 7200000,
             'sku' => 'DB-LENOVO-THINKPAD-L14',
@@ -200,6 +208,7 @@ class ProductSeeder extends Seeder
         
         Product::create([
             'name' => 'TP-Link USB 3.0 Type-C Card Reader UA430C',
+            'brand' => 'TP-Link',
             'description' => 'Card reader premium dari TP-Link dengan USB Type-C 3.0 untuk transfer data super cepat hingga 200 MB/s. Mendukung SD dan microSD card sampai 2TB. Body aluminum alloy yang kokoh dengan kabel braided 15cm. Compatible dengan semua sistem operasi.',
             'price' => 100000,
             'sku' => 'DB-TPLINK-UA430C',

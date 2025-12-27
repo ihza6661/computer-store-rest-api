@@ -14,7 +14,7 @@ class ProductController extends Controller
 {
     /**
      * Display a listing of products with pagination and filtering.
-     * GET /api/products?page=1&per_page=12&category_id=2&search=query&sort_by=name&order=asc&min_price=1000000&max_price=5000000&condition=New
+     * GET /api/products?page=1&per_page=12&category_id=2&search=query&sort_by=name&order=asc&min_price=1000000&max_price=5000000&condition=New&brand[]=ASUS&brand[]=Lenovo
      */
     public function index(Request $request)
     {
@@ -33,6 +33,12 @@ class ProductController extends Controller
         // Filter by category
         if ($request->has('category_id') && ! empty($request->category_id)) {
             $query->where('category_id', $request->category_id);
+        }
+
+        // Filter by brand (supports multiple brands)
+        if ($request->has('brand') && ! empty($request->brand)) {
+            $brands = is_array($request->brand) ? $request->brand : [$request->brand];
+            $query->whereIn('brand', $brands);
         }
 
         // Filter by price range
@@ -79,6 +85,7 @@ class ProductController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
+            'brand' => 'nullable|string|max:50',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'sku' => 'required|string|unique:products,sku',
@@ -140,6 +147,7 @@ class ProductController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
+            'brand' => 'nullable|string|max:50',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'sku' => 'required|string|unique:products,sku,'.$product->id,
