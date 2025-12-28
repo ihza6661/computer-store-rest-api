@@ -13,35 +13,46 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        // Define all 10 categories explicitly
+        // Define all 11 categories in Indonesian with their old slugs for mapping
         $categories = [
-            ['name' => 'Smartphones', 'description' => 'iPhone dengan garansi resmi TAM dan smartphone Android terpercaya. Cicilan 0% tersedia dari 12+ bank.'],
-            ['name' => 'Laptops', 'description' => 'High-performance laptops for gaming, business, and everyday use. From ultraportable notebooks to powerful gaming machines.'],
-            ['name' => 'Desktop Computers', 'description' => 'Complete desktop systems and components for professional workstations, gaming rigs, and home offices.'],
-            ['name' => 'Monitors & Displays', 'description' => 'Professional monitors, gaming displays, and ultrawide screens. 4K, curved, and high refresh rate options available.'],
-            ['name' => 'Computer Components', 'description' => 'CPU processors, graphics cards, RAM, motherboards, storage drives, and PC cases for custom builds.'],
-            ['name' => 'Keyboards & Mice', 'description' => 'Mechanical keyboards, wireless mice, gaming peripherals, and ergonomic input devices from top brands.'],
-            ['name' => 'Audio & Headsets', 'description' => 'Gaming headsets, studio headphones, microphones, and speakers for immersive audio experiences.'],
-            ['name' => 'Networking Equipment', 'description' => 'Routers, switches, WiFi mesh systems, and network accessories for home and office connectivity.'],
-            ['name' => 'Storage Solutions', 'description' => 'External hard drives, SSDs, NAS systems, and cloud storage solutions for backup and expansion.'],
-            ['name' => 'Software & Licenses', 'description' => 'Operating systems, productivity suites, creative software, antivirus, and professional development tools.'],
-            ['name' => 'Gaming Accessories', 'description' => 'Controllers, racing wheels, VR headsets, gaming chairs, and streaming equipment for gamers.'],
+            ['old_slug' => 'smartphones', 'name' => 'Smartphone', 'description' => 'iPhone dengan garansi resmi TAM dan smartphone Android terpercaya. Cicilan 0% tersedia dari 12+ bank.'],
+            ['old_slug' => 'laptops', 'name' => 'Laptop', 'description' => 'Laptop performa tinggi untuk gaming, bisnis, dan penggunaan sehari-hari. Dari notebook portabel hingga mesin gaming bertenaga.'],
+            ['old_slug' => 'desktop-computers', 'name' => 'Komputer Desktop', 'description' => 'Sistem desktop lengkap dan komponen untuk workstation profesional, gaming rig, dan kantor rumah.'],
+            ['old_slug' => 'monitors-displays', 'name' => 'Monitor & Display', 'description' => 'Monitor profesional, display gaming, dan layar ultrawide. Tersedia pilihan 4K, curved, dan high refresh rate.'],
+            ['old_slug' => 'computer-components', 'name' => 'Komponen Komputer', 'description' => 'Prosesor CPU, kartu grafis, RAM, motherboard, storage drive, dan casing PC untuk rakit custom.'],
+            ['old_slug' => 'keyboards-mice', 'name' => 'Keyboard & Mouse', 'description' => 'Keyboard mechanical, mouse wireless, peripheral gaming, dan perangkat input ergonomis dari brand ternama.'],
+            ['old_slug' => 'audio-headsets', 'name' => 'Audio & Headset', 'description' => 'Headset gaming, headphone studio, mikrofon, dan speaker untuk pengalaman audio yang imersif.'],
+            ['old_slug' => 'networking-equipment', 'name' => 'Perangkat Jaringan', 'description' => 'Router, switch, sistem WiFi mesh, dan aksesori jaringan untuk konektivitas rumah dan kantor.'],
+            ['old_slug' => 'storage-solutions', 'name' => 'Penyimpanan Data', 'description' => 'Hard drive eksternal, SSD, sistem NAS, dan solusi cloud storage untuk backup dan ekspansi.'],
+            ['old_slug' => 'software-licenses', 'name' => 'Software & Lisensi', 'description' => 'Sistem operasi, productivity suite, software kreatif, antivirus, dan tools pengembangan profesional.'],
+            ['old_slug' => 'gaming-accessories', 'name' => 'Aksesori Gaming', 'description' => 'Controller, racing wheel, VR headset, kursi gaming, dan peralatan streaming untuk para gamers.'],
         ];
 
-        // Create each category individually to ensure all 10 are created
-        foreach ($categories as $index => $category) {
-            Category::create([
-                'name' => $category['name'],
-                'slug' => Str::slug($category['name']),
-                'description' => $category['description'],
-            ]);
-
-            // Log progress for debugging
-            $count = $index + 1;
-            $this->command->info("Created category {$count}/11: {$category['name']}");
+        // Update existing categories in-place (preserves foreign key relationships)
+        foreach ($categories as $index => $categoryData) {
+            $category = Category::where('slug', $categoryData['old_slug'])->first();
+            
+            if ($category) {
+                // Update existing category
+                $category->update([
+                    'name' => $categoryData['name'],
+                    'slug' => Str::slug($categoryData['name']),
+                    'description' => $categoryData['description'],
+                ]);
+                $this->command->info("✅ Updated: {$categoryData['old_slug']} → {$categoryData['name']}");
+            } else {
+                // Create new category if not found
+                Category::create([
+                    'name' => $categoryData['name'],
+                    'slug' => Str::slug($categoryData['name']),
+                    'description' => $categoryData['description'],
+                ]);
+                $this->command->info("➕ Created: {$categoryData['name']}");
+            }
         }
 
         $total = Category::count();
-        $this->command->info("Total categories created: {$total}");
+        $this->command->info("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+        $this->command->info("✨ Total categories: {$total}");
     }
 }
