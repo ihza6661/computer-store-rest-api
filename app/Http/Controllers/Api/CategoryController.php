@@ -13,10 +13,12 @@ class CategoryController extends Controller
     /**
      * Display a listing of categories (no pagination - should be small list).
      * GET /api/categories
+     * 
+     * Returns categories with product_count field for each category
      */
     public function index()
     {
-        $categories = Category::all();
+        $categories = Category::withCount('products')->get();
 
         return response()->json($categories);
     }
@@ -43,9 +45,13 @@ class CategoryController extends Controller
     /**
      * Display the specified category.
      * GET /api/categories/{id}
+     * 
+     * Returns category with its products and products_count
      */
     public function show(Category $category)
     {
+        $category->loadCount('products');
+        
         return response()->json($category->load('products'));
     }
 

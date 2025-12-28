@@ -16,6 +16,21 @@ class Category extends Model
         'description',
     ];
 
+    /**
+     * Append products_count to JSON serialization
+     * This ensures the count is always included when using withCount()
+     */
+    protected $appends = [];
+
+    /**
+     * Cast attributes to specific types
+     */
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
+    ];
+
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);
