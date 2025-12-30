@@ -22,12 +22,26 @@ class ProductController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
+            'brand' => 'nullable|string|max:50',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'sku' => 'required|string|unique:products,sku',
             'images' => 'required|array|min:1|max:10',
             'images.*' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120',
             'stock' => 'required|integer|min:0',
+            'specifications' => 'nullable|array',
+            'specifications.processor' => 'nullable|string|max:255',
+            'specifications.gpu' => 'nullable|string|max:255',
+            'specifications.ram' => 'nullable|string|max:100',
+            'specifications.storage' => 'nullable|string|max:255',
+            'specifications.display' => 'nullable|string|max:255',
+            'specifications.keyboard' => 'nullable|string|max:255',
+            'specifications.battery' => 'nullable|string|max:255',
+            'specifications.warranty' => 'nullable|string|max:255',
+            'specifications.condition' => 'nullable|string|in:excellent,good,fair',
+            'specifications.extras' => 'nullable|string|max:500',
+            'specifications.original_price' => 'nullable|numeric|min:0',
+            'specifications.features' => 'nullable|string|max:1000',
         ]);
 
         $primaryImageUrl = null;
@@ -37,10 +51,12 @@ class ProductController extends Controller
         $product = Product::create([
             'name' => $validated['name'],
             'category_id' => $validated['category_id'],
+            'brand' => $validated['brand'] ?? null,
             'description' => $validated['description'] ?? null,
             'price' => $validated['price'],
             'sku' => $validated['sku'],
             'stock' => $validated['stock'],
+            'specifications' => $validated['specifications'] ?? null,
             'image_url' => '', // Temporary, will be updated with primary image
             'image_thumbnail_url' => null,
         ]);
@@ -119,12 +135,26 @@ class ProductController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
+            'brand' => 'nullable|string|max:50',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'sku' => 'required|string|unique:products,sku,'.$product->id,
             'images' => 'nullable|array|max:10',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
             'stock' => 'required|integer|min:0',
+            'specifications' => 'nullable|array',
+            'specifications.processor' => 'nullable|string|max:255',
+            'specifications.gpu' => 'nullable|string|max:255',
+            'specifications.ram' => 'nullable|string|max:100',
+            'specifications.storage' => 'nullable|string|max:255',
+            'specifications.display' => 'nullable|string|max:255',
+            'specifications.keyboard' => 'nullable|string|max:255',
+            'specifications.battery' => 'nullable|string|max:255',
+            'specifications.warranty' => 'nullable|string|max:255',
+            'specifications.condition' => 'nullable|string|in:excellent,good,fair',
+            'specifications.extras' => 'nullable|string|max:500',
+            'specifications.original_price' => 'nullable|numeric|min:0',
+            'specifications.features' => 'nullable|string|max:1000',
         ]);
 
         // Handle new image uploads if provided
