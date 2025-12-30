@@ -128,7 +128,7 @@ class ProductController extends Controller
      * PUT /admin/products/{product}
      * 
      * Supports adding new images (up to 10 total per product)
-     * New images will NOT be set as primary by default
+     * First new image becomes primary automatically
      */
     public function update(Request $request, Product $product)
     {
@@ -186,14 +186,26 @@ class ProductController extends Controller
                     ]);
 
                     $imageUrl = $uploadedFile['secure_url'];
+                    $isPrimary = ($index === 0); // First new image becomes primary
 
-                    // Create product_image entry (NOT primary by default)
+                    // If setting as primary, unset current primary
+                    if ($isPrimary) {
+                        $product->images()->update(['is_primary' => false]);
+                    }
+
+                    // Create product_image entry
                     $product->images()->create([
                         'image_url' => $imageUrl,
                         'image_thumbnail_url' => $imageUrl,
                         'sort_order' => $nextSortOrder + $index,
-                        'is_primary' => false,
+                        'is_primary' => $isPrimary,
                     ]);
+
+                    // Update products table with new primary image
+                    if ($isPrimary) {
+                        $validated['image_url'] = $imageUrl;
+                        $validated['image_thumbnail_url'] = $imageUrl;
+                    }
                 } catch (\Exception $e) {
                     Log::error('Admin: Failed to upload product image to Cloudinary during update: '.$e->getMessage(), [
                         'product_id' => $product->id,
@@ -207,12 +219,15 @@ class ProductController extends Controller
                     ])->withInput();
                 }
             }
+        }
 
-            // Ensure primary image URL in products table is still valid
-            $primaryImage = $product->images()->where('is_primary', true)->first();
-            if ($primaryImage) {
-                $validated['image_url'] = $primaryImage->image_url;
-                $validated['image_thumbnail_url'] = $primaryImage->image_thumbnail_url;
+        // Fallback: If no primary image exists, set first image as primary
+        if (!isset($validated['image_url']) || empty($validated['image_url'])) {
+            $firstImage = $product->images()->orderBy('sort_order')->first();
+            if ($firstImage) {
+                $firstImage->update(['is_primary' => true]);
+                $validated['image_url'] = $firstImage->image_url;
+                $validated['image_thumbnail_url'] = $firstImage->image_thumbnail_url;
             }
         }
 

@@ -62,14 +62,24 @@ export default function EditProduct({ product, categories }: Props) {
 
   const [imagePreviews, setImagePreviews] = React.useState<string[]>([])
   const [deletingImageId, setDeletingImageId] = React.useState<number | null>(null)
+  const [uploadingImages, setUploadingImages] = React.useState(false)
   const [sectionsOpen, setSectionsOpen] = React.useState({
     hardware: true,
     additional: true,
     pricing: true,
   })
+  const fileInputRef = React.useRef<HTMLInputElement>(null)
 
   const toggleSection = (section: keyof typeof sectionsOpen) => {
     setSectionsOpen({ ...sectionsOpen, [section]: !sectionsOpen[section] })
+  }
+
+  const clearFileInput = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
+    setData({ ...data, images: [] })
+    setImagePreviews([])
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -87,9 +97,24 @@ export default function EditProduct({ product, categories }: Props) {
 
     post(`/admin/products/${product.id}`, {
       forceFormData: true,
+      onStart: () => {
+        if (data.images.length > 0) {
+          setUploadingImages(true)
+        }
+      },
       onSuccess: () => {
+        clearFileInput()
         // Inertia will handle the redirect
       },
+      onError: (errors) => {
+        // If image upload fails, clear the input
+        if (errors.images) {
+          clearFileInput()
+        }
+      },
+      onFinish: () => {
+        setUploadingImages(false)
+      }
     })
   }
 
@@ -101,6 +126,7 @@ export default function EditProduct({ product, categories }: Props) {
     
     if (totalImages > 10) {
       alert(`Maximum 10 images allowed. You currently have ${currentImageCount} images.`)
+      clearFileInput()
       return
     }
     
@@ -594,6 +620,7 @@ export default function EditProduct({ product, categories }: Props) {
                   Add New Images {product.images && `(${product.images.length + data.images.length}/10)`}
                 </label>
                 <input
+                  ref={fileInputRef}
                   type="file"
                   accept="image/*"
                   multiple
@@ -601,7 +628,19 @@ export default function EditProduct({ product, categories }: Props) {
                   className="block w-full px-3 py-2 border rounded-lg"
                   disabled={(product.images?.length || 0) >= 10}
                 />
-                {errors.images && <p className="text-red-500 text-sm">{errors.images}</p>}
+                {errors.images && (
+                  <div className="mt-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <p className="text-red-600 text-sm font-medium">❌ Image Upload Error:</p>
+                    <p className="text-red-600 text-sm">{errors.images}</p>
+                    <button
+                      type="button"
+                      onClick={clearFileInput}
+                      className="text-red-600 underline text-sm mt-1 hover:text-red-800"
+                    >
+                      Clear and try again
+                    </button>
+                  </div>
+                )}
                 
                 {imagePreviews.length > 0 && (
                   <div className="mt-3">
@@ -646,10 +685,12 @@ export default function EditProduct({ product, categories }: Props) {
             <div className="flex gap-2 pt-4 border-t">
               <button
                 type="submit"
-                disabled={processing}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
+                disabled={processing || uploadingImages}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {processing ? 'Saving...' : 'Save Changes'}
+                {uploadingImages ? `Uploading ${data.images.length} image(s)...` : 
+                 processing ? 'Saving...' : 
+                 'Save Changes'}
               </button>
               <Link href="/admin/products">
                 <button
