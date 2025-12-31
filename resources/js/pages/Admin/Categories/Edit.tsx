@@ -1,5 +1,6 @@
 import { Head, Link, useForm } from '@inertiajs/react'
 import AdminLayout from '../Layouts/AdminLayout'
+import { Button } from '@/components/ui/Button'
 
 interface Category {
   id: number
@@ -33,7 +34,7 @@ export default function EditCategory({ category }: Props) {
       <div className="space-y-6">
         <div className="flex items-center gap-4">
           <Link href="/admin/categories">
-            <button className="px-3 py-2 border border-gray-300 rounded hover:bg-gray-100">← Back</button>
+            <Button variant="secondary" size="sm">← Back</Button>
           </Link>
           <div>
             <h1 className="text-3xl font-bold">Edit Category</h1>
@@ -45,7 +46,7 @@ export default function EditCategory({ category }: Props) {
           <h2 className="text-lg font-bold mb-6">Category Details</h2>
 
           {errors.general && (
-            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+            <div className="mb-4 p-3 border border-red-200 text-red-700 rounded-lg bg-red-50">
               {errors.general}
             </div>
           )}
@@ -58,7 +59,7 @@ export default function EditCategory({ category }: Props) {
                 value={data.name}
                 onChange={(e) => setData({ ...data, name: e.currentTarget.value })}
                 placeholder="Category name"
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
               />
               {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
             </div>
@@ -69,26 +70,26 @@ export default function EditCategory({ category }: Props) {
                 value={data.description}
                 onChange={(e) => setData({ ...data, description: e.currentTarget.value })}
                 placeholder="Category description"
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
                 rows={4}
               />
             </div>
 
             <div className="flex gap-2">
-              <button
+              <Button
                 type="submit"
                 disabled={processing}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
+                variant="primary"
               >
                 {processing ? 'Saving...' : 'Save Changes'}
-              </button>
+              </Button>
               <Link href="/admin/categories">
-                <button
+                <Button
                   type="button"
-                  className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors"
+                  variant="secondary"
                 >
                   Cancel
-                </button>
+                </Button>
               </Link>
             </div>
           </form>

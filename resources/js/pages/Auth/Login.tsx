@@ -1,5 +1,6 @@
 import { FormEvent } from 'react'
 import { Head, useForm } from '@inertiajs/react'
+import { Button } from '@/components/ui/Button'
 
 export default function Login() {
   const { data, setData, post, errors } = useForm({
@@ -15,8 +16,8 @@ export default function Login() {
   return (
     <>
       <Head title="Login" />
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
-        <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+        <div className="w-full max-w-md bg-white rounded-lg shadow p-8">
           <div className="mb-8">
             <h1 className="text-2xl font-bold">Database Computer</h1>
             <p className="text-gray-600">Admin Dashboard Login</p>
@@ -30,7 +31,7 @@ export default function Login() {
                 value={data.email}
                 onChange={(e) => setData('email', e.currentTarget.value)}
                 placeholder="admin@store.test"
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071e3] ${
                   errors.email ? 'border-red-500' : 'border-gray-300'
                 }`}
               />
@@ -44,22 +45,23 @@ export default function Login() {
                 value={data.password}
                 onChange={(e) => setData('password', e.currentTarget.value)}
                 placeholder="••••••••"
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071e3] ${
                   errors.password ? 'border-red-500' : 'border-gray-300'
                 }`}
               />
               {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
             </div>
 
-            <button
+            <Button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+              variant="primary"
+              className="w-full"
             >
               Sign In
-            </button>
+            </Button>
           </form>
 
-          <div className="mt-6 p-4 bg-blue-50 rounded-lg text-sm">
+          <div className="mt-6 p-4 bg-gray-50 rounded-lg text-sm">
             <p className="font-semibold mb-2">Demo Credentials:</p>
             <p>Email: admin@store.test</p>
             <p>Password: password</p>

@@ -1,9 +1,19 @@
 import { Head, Link } from '@inertiajs/react'
 import AdminLayout from '../Layouts/AdminLayout'
-import { Plus, Edit2, Trash2, Search, X } from 'lucide-react'
+import { Plus, Edit2, Trash2, Search, X, Package } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { formatPriceWithCurrency } from '@/lib/utils'
 import { apiDelete } from '@/lib/api'
+import { Button } from '@/components/ui/Button'
+import { Input } from '@/components/ui/Input'
+import { Select } from '@/components/ui/Select'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table'
+import { ConfirmModal } from '@/components/ui/ConfirmModal'
+import { Spinner } from '@/components/ui/Spinner'
+import { EmptyState } from '@/components/ui/EmptyState'
+import { TableSkeleton } from '@/components/ui/Skeleton'
+import { PageHeader } from '@/components/layout/PageHeader'
 
 interface Product {
   id: number
@@ -29,28 +39,33 @@ interface PaginationMeta {
 }
 
 export default function ProductsIndex() {
-  const [products, setProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(true)
-  
-  // Pagination state
-  const [pagination, setPagination] = useState<PaginationMeta>({
-    current_page: 1,
-    last_page: 1,
-    per_page: 10,
-    total: 0,
-    from: 0,
-    to: 0,
-  })
+    const [products, setProducts] = useState<Product[]>([])
+    const [loading, setLoading] = useState(true)
 
-  // Filter and search state
-  const [searchQuery, setSearchQuery] = useState('')
-  const [searchInput, setSearchInput] = useState('')
-  const [categoryFilter, setCategoryFilter] = useState('')
-  const [sortBy, setSortBy] = useState('created_at')
-  const [sortOrder, setSortOrder] = useState('desc')
-  
-  // Categories for filter dropdown
-  const [categories, setCategories] = useState<Category[]>([])
+    // Pagination state
+    const [pagination, setPagination] = useState<PaginationMeta>({
+        current_page: 1,
+        last_page: 1,
+        per_page: 10,
+        total: 0,
+        from: 0,
+        to: 0,
+    })
+
+    // Filter and search state
+    const [searchQuery, setSearchQuery] = useState('')
+    const [searchInput, setSearchInput] = useState('')
+    const [categoryFilter, setCategoryFilter] = useState('')
+    const [sortBy, setSortBy] = useState('created_at')
+    const [sortOrder, setSortOrder] = useState('desc')
+
+    // Categories for filter dropdown
+    const [categories, setCategories] = useState<Category[]>([])
+
+    // Delete modal state
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false)
+    const [productToDelete, setProductToDelete] = useState<number | null>(null)
+    const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
     fetchCategories()
@@ -119,28 +134,36 @@ export default function ProductsIndex() {
     setSearchQuery('')
   }
 
-  const handleDelete = async (id: number) => {
-    if (!window.confirm('Are you sure you want to delete this product?')) {
-      return
+    const handleDelete = async (id: number) => {
+        setProductToDelete(id)
+        setDeleteModalOpen(true)
     }
 
-    try {
-      const response = await apiDelete(`/api/admin/products/${id}`)
+    const confirmDelete = async () => {
+        if (!productToDelete) return
 
-      if (!response.ok) {
-        alert('Failed to delete product')
-        return
-      }
+        setDeleting(true)
+        try {
+            const response = await apiDelete(`/api/admin/products/${productToDelete}`)
 
-      // Smart page navigation: if last item on page, go to previous page
-      const isLastItemOnPage = products.length === 1 && pagination.current_page > 1
-      const targetPage = isLastItemOnPage ? pagination.current_page - 1 : pagination.current_page
-      
-      fetchProducts(targetPage)
-    } catch {
-      alert('Error deleting product')
+            if (!response.ok) {
+                alert('Failed to delete product')
+                return
+            }
+
+            // Smart page navigation: if last item on page, go to previous page
+            const isLastItemOnPage = products.length === 1 && pagination.current_page > 1
+            const targetPage = isLastItemOnPage ? pagination.current_page - 1 : pagination.current_page
+
+            fetchProducts(targetPage)
+            setDeleteModalOpen(false)
+            setProductToDelete(null)
+        } catch {
+            alert('Error deleting product')
+        } finally {
+            setDeleting(false)
+        }
     }
-  }
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= pagination.last_page) {
@@ -182,192 +205,265 @@ export default function ProductsIndex() {
     return pages
   }
 
-  return (
-    <AdminLayout>
-      <Head title="Products" />
-      <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold">Products</h1>
-            <p className="text-gray-600">Manage your product inventory</p>
-          </div>
-          <Link href="/admin/products/create">
-            <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg flex items-center gap-2 transition-colors">
-              <Plus size={18} />
-              Add Product
-            </button>
-          </Link>
-        </div>
+    return (
+        <AdminLayout>
+            <Head title="Products" />
+            <div className="space-y-6">
+                <PageHeader
+                    title="Products"
+                    description="Manage your product inventory"
+                    actions={
+                        <Link href="/admin/products/create">
+                            <Button variant="primary" size="md">
+                                <Plus size={18} />
+                                Add Product
+                            </Button>
+                        </Link>
+                    }
+                />
 
-        {/* Search and Filter Section */}
-        <div className="bg-white rounded-lg shadow p-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Search */}
-            <form onSubmit={handleSearch} className="relative">
-              <input
-                type="text"
-                placeholder="Search products..."
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
-              {searchInput && (
-                <button
-                  type="button"
-                  onClick={clearSearch}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  <X size={18} />
-                </button>
-              )}
-            </form>
+                {/* Search and Filter Section */}
+                <Card>
+                    <CardContent className="p-4 md:p-6">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            {/* Search */}
+                            <form onSubmit={handleSearch} className="relative">
+                                <Input
+                                    type="text"
+                                    placeholder="Search products..."
+                                    value={searchInput}
+                                    onChange={(e) => setSearchInput(e.target.value)}
+                                    className="pl-10 pr-10"
+                                />
+                                <Search
+                                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                                    size={18}
+                                />
+                                {searchInput && (
+                                    <button
+                                        type="button"
+                                        onClick={clearSearch}
+                                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1"
+                                    >
+                                        <X size={18} />
+                                    </button>
+                                )}
+                            </form>
 
-            {/* Category Filter */}
-            <select
-              value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              <option value="">All Categories</option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
+                            {/* Category Filter */}
+                            <Select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
+                                <option value="">All Categories</option>
+                                {categories.map((category) => (
+                                    <option key={category.id} value={category.id}>
+                                        {category.name}
+                                    </option>
+                                ))}
+                            </Select>
 
-            {/* Sort Options */}
-            <div className="flex gap-2">
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="created_at">Date Added</option>
-                <option value="name">Name</option>
-                <option value="price">Price</option>
-                <option value="stock">Stock</option>
-              </select>
-              <select
-                value={sortOrder}
-                onChange={(e) => setSortOrder(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="asc">Ascending</option>
-                <option value="desc">Descending</option>
-              </select>
-            </div>
-          </div>
-        </div>
+                            {/* Sort Options */}
+                            <div className="flex gap-2">
+                                <Select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="flex-1">
+                                    <option value="created_at">Date Added</option>
+                                    <option value="name">Name</option>
+                                    <option value="price">Price</option>
+                                    <option value="stock">Stock</option>
+                                </Select>
+                                <Select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
+                                    <option value="asc">Ascending</option>
+                                    <option value="desc">Descending</option>
+                                </Select>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
 
-        <div className="bg-white rounded-lg shadow">
-          <div className="p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-bold">Product List</h2>
-              {pagination.total > 0 && (
-                <p className="text-sm text-gray-600">
-                  Showing {pagination.from}-{pagination.to} of {pagination.total} products
-                </p>
-              )}
-            </div>
-            
-            {loading ? (
-              <div className="text-center py-8">
-                <p className="text-gray-500">Loading products...</p>
-              </div>
-            ) : products.length === 0 ? (
-              <div className="text-center py-8">
-                <p className="text-gray-500">
-                  {searchQuery || categoryFilter 
-                    ? 'No products found matching your filters.' 
-                    : 'No products yet. Create your first product!'}
-                </p>
-              </div>
-            ) : (
-              <>
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-4 py-2 text-left">Name</th>
-                        <th className="px-4 py-2 text-left">Price</th>
-                        <th className="px-4 py-2 text-left">Stock</th>
-                        <th className="px-4 py-2 text-left">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {products.map((product) => (
-                        <tr key={product.id} className="border-t">
-                          <td className="px-4 py-3">{product.name}</td>
-                          <td className="px-4 py-3">{formatPriceWithCurrency(product.price)}</td>
-                          <td className="px-4 py-3">{product.stock} units</td>
-                          <td className="px-4 py-3 space-x-2">
-                            <Link href={`/admin/products/${product.id}/edit`}>
-                              <button className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-100 inline-flex items-center gap-1">
-                                <Edit2 size={16} />
-                              </button>
-                            </Link>
-                            <button
-                              onClick={() => handleDelete(product.id)}
-                              className="px-3 py-1 border border-red-300 text-red-600 rounded hover:bg-red-50 inline-flex items-center gap-1"
-                            >
-                              <Trash2 size={16} />
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                {/* Pagination */}
-                {pagination.last_page > 1 && (
-                  <div className="mt-6 flex justify-center items-center gap-2">
-                    <button
-                      onClick={() => handlePageChange(pagination.current_page - 1)}
-                      disabled={pagination.current_page === 1}
-                      className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white transition-colors"
-                    >
-                      Previous
-                    </button>
-
-                    <div className="flex gap-2">
-                      {getPageNumbers().map((page, index) => (
-                        page === '...' ? (
-                          <span key={`ellipsis-${index}`} className="px-3 py-2 text-gray-500">
-                            ...
-                          </span>
+                <Card>
+                    <CardHeader>
+                        <div className="flex flex-col gap-2 md:flex-row md:justify-between md:items-center">
+                            <CardTitle>Product List</CardTitle>
+                            {pagination.total > 0 && (
+                                <p className="text-sm text-gray-600">
+                                    Showing {pagination.from}-{pagination.to} of {pagination.total} products
+                                </p>
+                            )}
+                        </div>
+                    </CardHeader>
+                    <CardContent>
+                        {loading ? (
+                            <TableSkeleton rows={5} />
+                        ) : products.length === 0 ? (
+                            <EmptyState
+                                icon={<Package size={48} />}
+                                title={
+                                    searchQuery || categoryFilter
+                                        ? 'No products found'
+                                        : 'No products yet'
+                                }
+                                description={
+                                    searchQuery || categoryFilter
+                                        ? 'Try adjusting your search or filter criteria.'
+                                        : 'Create your first product to get started.'
+                                }
+                                action={
+                                    !searchQuery && !categoryFilter ? (
+                                        <Link href="/admin/products/create">
+                                            <Button variant="primary">
+                                                <Plus size={18} />
+                                                Add Product
+                                            </Button>
+                                        </Link>
+                                    ) : undefined
+                                }
+                            />
                         ) : (
-                          <button
-                            key={page}
-                            onClick={() => handlePageChange(page as number)}
-                            className={`px-4 py-2 border rounded-lg transition-colors ${
-                              pagination.current_page === page
-                                ? 'bg-blue-600 text-white border-blue-600'
-                                : 'border-gray-300 hover:bg-gray-50'
-                            }`}
-                          >
-                            {page}
-                          </button>
-                        )
-                      ))}
-                    </div>
+                            <>
+                                {/* Desktop/Tablet Table (≥768px) */}
+                                <div className="hidden md:block overflow-x-auto">
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead>Name</TableHead>
+                                                <TableHead>Price</TableHead>
+                                                <TableHead>Stock</TableHead>
+                                                <TableHead className="text-right">Actions</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {products.map((product) => (
+                                                <TableRow key={product.id}>
+                                                    <TableCell className="font-medium">{product.name}</TableCell>
+                                                    <TableCell>{formatPriceWithCurrency(product.price)}</TableCell>
+                                                    <TableCell>{product.stock} units</TableCell>
+                                                    <TableCell className="text-right">
+                                                        <div className="flex justify-end gap-2">
+                                                            <Link href={`/admin/products/${product.id}/edit`}>
+                                                                <Button variant="secondary" size="sm">
+                                                                    <Edit2 size={16} />
+                                                                    Edit
+                                                                </Button>
+                                                            </Link>
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="sm"
+                                                                onClick={() => handleDelete(product.id)}
+                                                            >
+                                                                <Trash2 size={16} />
+                                                                Delete
+                                                            </Button>
+                                                        </div>
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </div>
 
-                    <button
-                      onClick={() => handlePageChange(pagination.current_page + 1)}
-                      disabled={pagination.current_page === pagination.last_page}
-                      className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white transition-colors"
-                    >
-                      Next
-                    </button>
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-    </AdminLayout>
-  )
+                                {/* Mobile Card Layout (<768px) */}
+                                <div className="md:hidden space-y-3">
+                                    {products.map((product) => (
+                                        <Card key={product.id} className="border border-gray-200">
+                                            <CardContent className="p-4">
+                                                <div className="space-y-3">
+                                                    <div>
+                                                        <p className="font-semibold text-gray-900">{product.name}</p>
+                                                        <div className="mt-2 space-y-1 text-sm">
+                                                            <div className="flex justify-between">
+                                                                <span className="text-gray-600">Price:</span>
+                                                                <span className="font-medium text-gray-900">
+                                                                    {formatPriceWithCurrency(product.price)}
+                                                                </span>
+                                                            </div>
+                                                            <div className="flex justify-between">
+                                                                <span className="text-gray-600">Stock:</span>
+                                                                <span className="font-medium text-gray-900">
+                                                                    {product.stock} units
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex gap-2 pt-2 border-t border-gray-200">
+                                                        <Link href={`/admin/products/${product.id}/edit`} className="flex-1">
+                                                            <Button variant="secondary" size="sm" className="w-full">
+                                                                <Edit2 size={16} />
+                                                                Edit
+                                                            </Button>
+                                                        </Link>
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            onClick={() => handleDelete(product.id)}
+                                                            className="flex-1"
+                                                        >
+                                                            <Trash2 size={16} />
+                                                            Delete
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    ))}
+                                </div>
+
+                                {/* Pagination */}
+                                {pagination.last_page > 1 && (
+                                    <div className="mt-6 flex flex-col sm:flex-row justify-center items-center gap-2">
+                                        <Button
+                                            variant="secondary"
+                                            size="sm"
+                                            onClick={() => handlePageChange(pagination.current_page - 1)}
+                                            disabled={pagination.current_page === 1}
+                                        >
+                                            Previous
+                                        </Button>
+
+                                        <div className="flex gap-2 flex-wrap justify-center">
+                                            {getPageNumbers().map((page, index) =>
+                                                page === '...' ? (
+                                                    <span key={`ellipsis-${index}`} className="px-3 py-2 text-gray-500">
+                                                        ...
+                                                    </span>
+                                                ) : (
+                                                    <Button
+                                                        key={page}
+                                                        variant={pagination.current_page === page ? 'primary' : 'secondary'}
+                                                        size="sm"
+                                                        onClick={() => handlePageChange(page as number)}
+                                                    >
+                                                        {page}
+                                                    </Button>
+                                                )
+                                            )}
+                                        </div>
+
+                                        <Button
+                                            variant="secondary"
+                                            size="sm"
+                                            onClick={() => handlePageChange(pagination.current_page + 1)}
+                                            disabled={pagination.current_page === pagination.last_page}
+                                        >
+                                            Next
+                                        </Button>
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </CardContent>
+                </Card>
+            </div>
+
+            {/* Delete Confirmation Modal */}
+            <ConfirmModal
+                open={deleteModalOpen}
+                onClose={() => {
+                    setDeleteModalOpen(false)
+                    setProductToDelete(null)
+                }}
+                onConfirm={confirmDelete}
+                title="Delete Product"
+                description="Are you sure you want to delete this product? This action cannot be undone."
+                confirmText="Delete"
+                loading={deleting}
+            />
+        </AdminLayout>
+    )
 }

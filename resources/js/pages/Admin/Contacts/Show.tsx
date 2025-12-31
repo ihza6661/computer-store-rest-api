@@ -1,6 +1,8 @@
 import { Head, Link, useForm } from '@inertiajs/react'
 import AdminLayout from '../Layouts/AdminLayout'
 import { useState } from 'react'
+import { Button } from '@/components/ui/Button'
+import { Badge } from '@/components/ui/Badge'
 
 interface Contact {
   id: number
@@ -49,7 +51,7 @@ export default function ShowContact({ contact: initialContact }: Props) {
       <div className="space-y-6">
         <div className="flex items-center gap-4">
           <Link href="/admin/contacts">
-            <button className="px-3 py-2 border border-gray-300 rounded hover:bg-gray-100">← Back</button>
+            <Button variant="secondary" size="sm">← Back</Button>
           </Link>
           <h1 className="text-3xl font-bold">Contact Submission</h1>
         </div>
@@ -76,13 +78,9 @@ export default function ShowContact({ contact: initialContact }: Props) {
               </div>
               <div>
                 <label className="text-sm text-gray-600">Status</label>
-                <span className={`inline-block px-2 py-1 rounded text-xs mt-1 ${
-                  contact.status === 'new' ? 'bg-blue-100 text-blue-800' :
-                  contact.status === 'read' ? 'bg-yellow-100 text-yellow-800' :
-                  'bg-green-100 text-green-800'
-                }`}>
-                  {contact.status}
-                </span>
+                <div className="mt-1">
+                  <Badge>{contact.status}</Badge>
+                </div>
               </div>
               <div>
                 <label className="text-sm text-gray-600">Submitted</label>
@@ -101,7 +99,7 @@ export default function ShowContact({ contact: initialContact }: Props) {
           <h2 className="text-lg font-bold mb-4">Admin Reply</h2>
 
           {successMessage && (
-            <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+            <div className="mb-4 p-3 bg-gray-100 border border-gray-300 text-gray-700 rounded-lg">
               {successMessage}
             </div>
           )}
@@ -117,17 +115,17 @@ export default function ShowContact({ contact: initialContact }: Props) {
               value={data.admin_reply}
               onChange={(e) => setData('admin_reply', e.currentTarget.value)}
               placeholder="Send a reply to the customer..."
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
               rows={6}
             />
             {errors.admin_reply && <p className="text-red-500 text-sm">{errors.admin_reply}</p>}
-            <button
+            <Button
               type="submit"
               disabled={processing}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
+              variant="primary"
             >
               {processing ? 'Sending...' : 'Send Reply'}
-            </button>
+            </Button>
           </form>
         </div>
       </div>

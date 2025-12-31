@@ -1,5 +1,6 @@
 import { Head, Link, useForm } from '@inertiajs/react'
 import AdminLayout from '../Layouts/AdminLayout'
+import { Button } from '@/components/ui/Button'
 
 interface User {
   id: number
@@ -37,7 +38,7 @@ export default function EditUser({ user }: Props) {
       <div className="space-y-6">
         <div className="flex items-center gap-4">
           <Link href="/admin/users">
-            <button className="px-3 py-2 border border-gray-300 rounded hover:bg-gray-100">← Back</button>
+            <Button variant="secondary" size="sm">← Back</Button>
           </Link>
           <div>
             <h1 className="text-3xl font-bold">Edit User</h1>
@@ -49,7 +50,7 @@ export default function EditUser({ user }: Props) {
           <h2 className="text-lg font-bold mb-6">User Details</h2>
 
           {errors.general && (
-            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+            <div className="mb-4 p-3 border border-red-200 text-red-700 rounded-lg bg-red-50">
               {errors.general}
             </div>
           )}
@@ -62,7 +63,7 @@ export default function EditUser({ user }: Props) {
                 value={data.name}
                 onChange={(e) => setData({ ...data, name: e.currentTarget.value })}
                 placeholder="Full name"
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
               />
               {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
             </div>
@@ -74,7 +75,7 @@ export default function EditUser({ user }: Props) {
                 value={data.email}
                 onChange={(e) => setData({ ...data, email: e.currentTarget.value })}
                 placeholder="user@example.com"
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
               />
               {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
             </div>
@@ -84,7 +85,7 @@ export default function EditUser({ user }: Props) {
               <select
                 value={data.role}
                 onChange={(e) => setData({ ...data, role: e.currentTarget.value })}
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
               >
                 <option value="admin">Admin</option>
                 <option value="editor">Editor</option>
@@ -100,27 +101,27 @@ export default function EditUser({ user }: Props) {
                 value={data.password}
                 onChange={(e) => setData({ ...data, password: e.currentTarget.value })}
                 placeholder="Leave blank to keep current password"
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
               />
               <p className="text-xs text-gray-500 mt-1">Leave blank if you don't want to change the password</p>
               {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
             </div>
 
             <div className="flex gap-2">
-              <button
+              <Button
                 type="submit"
                 disabled={processing}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
+                variant="primary"
               >
                 {processing ? 'Saving...' : 'Save Changes'}
-              </button>
+              </Button>
               <Link href="/admin/users">
-                <button
+                <Button
                   type="button"
-                  className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors"
+                  variant="secondary"
                 >
                   Cancel
-                </button>
+                </Button>
               </Link>
             </div>
           </form>

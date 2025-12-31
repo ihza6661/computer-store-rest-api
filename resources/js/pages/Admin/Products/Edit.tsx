@@ -1,6 +1,7 @@
 import { Head, Link, useForm, router } from '@inertiajs/react'
 import React from 'react'
 import AdminLayout from '../Layouts/AdminLayout'
+import { Button } from '@/components/ui/Button'
 
 interface Category {
   id: number
@@ -186,7 +187,7 @@ export default function EditProduct({ product, categories }: Props) {
       <div className="space-y-6">
         <div className="flex items-center gap-4">
           <Link href="/admin/products">
-            <button className="px-3 py-2 border border-gray-300 rounded hover:bg-gray-100">← Back</button>
+            <Button variant="secondary" size="sm">← Back</Button>
           </Link>
           <div>
             <h1 className="text-3xl font-bold">Edit Product</h1>
@@ -209,7 +210,7 @@ export default function EditProduct({ product, categories }: Props) {
                   value={data.name}
                   onChange={(e) => setData({ ...data, name: e.currentTarget.value })}
                   placeholder="Product name"
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
                 />
                 {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
               </div>
@@ -220,7 +221,7 @@ export default function EditProduct({ product, categories }: Props) {
                   <select
                     value={data.category_id}
                     onChange={(e) => setData({ ...data, category_id: e.currentTarget.value })}
-                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
                   >
                     <option value="">Select category</option>
                     {categories.map((cat) => (
@@ -239,7 +240,7 @@ export default function EditProduct({ product, categories }: Props) {
                     value={data.brand}
                     onChange={(e) => setData({ ...data, brand: e.currentTarget.value })}
                     placeholder="e.g., ASUS, Lenovo, Dell, HP"
-                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
                   />
                   {errors.brand && <p className="text-red-500 text-sm">{errors.brand}</p>}
                 </div>
@@ -253,7 +254,7 @@ export default function EditProduct({ product, categories }: Props) {
                     value={data.sku}
                     onChange={(e) => setData({ ...data, sku: e.currentTarget.value })}
                     placeholder="Unique product code"
-                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
                   />
                   {errors.sku && <p className="text-red-500 text-sm">{errors.sku}</p>}
                 </div>
@@ -265,7 +266,7 @@ export default function EditProduct({ product, categories }: Props) {
                     value={data.stock}
                     onChange={(e) => setData({ ...data, stock: e.currentTarget.value })}
                     placeholder="0"
-                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
                   />
                   {errors.stock && <p className="text-red-500 text-sm">{errors.stock}</p>}
                 </div>
@@ -277,7 +278,7 @@ export default function EditProduct({ product, categories }: Props) {
                   value={data.description}
                   onChange={(e) => setData({ ...data, description: e.currentTarget.value })}
                   placeholder="Product description"
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
                   rows={4}
                 />
               </div>
@@ -288,81 +289,81 @@ export default function EditProduct({ product, categories }: Props) {
               <button
                 type="button"
                 onClick={() => toggleSection('hardware')}
-                className="w-full bg-gray-50 px-4 py-3 flex items-center justify-between hover:bg-gray-100 transition-colors"
+                className="w-full bg-gray-50 px-4 py-3 flex items-center justify-between hover:bg-gray-100/60 transition-colors"
               >
                 <h3 className="text-md font-semibold text-gray-800">
-                  ⚙️ Hardware Specifications
+                  Hardware Specifications
                   <span className="text-xs text-gray-500 font-normal ml-2">(Recommended)</span>
                 </h3>
                 <span className="text-gray-500">{sectionsOpen.hardware ? '▼' : '▶'}</span>
               </button>
               
               {sectionsOpen.hardware && (
-                <div className="p-4 space-y-4 bg-gray-50">
+                <div className="p-4 space-y-4 bg-white">
                   <div>
                     <label className="block text-sm font-medium mb-1">
-                      Processor <span className="text-gray-500 text-xs">(⚙️ CPU - Recommended)</span>
+                      Processor <span className="text-gray-500 text-xs">(CPU - Recommended)</span>
                     </label>
                     <input
                       type="text"
                       value={data.specifications.processor}
                       onChange={(e) => setData({ ...data, specifications: { ...data.specifications, processor: e.currentTarget.value } })}
                       placeholder="e.g., Intel Core i5-8250U, AMD Ryzen 5 5500U"
-                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium mb-1">
-                      GPU <span className="text-gray-500 text-xs">(✨ Graphics Card)</span>
+                      GPU <span className="text-gray-500 text-xs">(Graphics Card)</span>
                     </label>
                     <input
                       type="text"
                       value={data.specifications.gpu}
                       onChange={(e) => setData({ ...data, specifications: { ...data.specifications, gpu: e.currentTarget.value } })}
                       placeholder="e.g., NVIDIA GTX 1050 2GB, Intel UHD Graphics"
-                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-1">
-                        RAM <span className="text-gray-500 text-xs">(💾 Recommended)</span>
+                        RAM <span className="text-gray-500 text-xs">(Recommended)</span>
                       </label>
                       <input
                         type="text"
                         value={data.specifications.ram}
                         onChange={(e) => setData({ ...data, specifications: { ...data.specifications, ram: e.currentTarget.value } })}
                         placeholder="e.g., 8GB DDR4, 16GB"
-                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
                       />
                     </div>
 
                     <div>
                       <label className="block text-sm font-medium mb-1">
-                        Storage <span className="text-gray-500 text-xs">(💿 Recommended)</span>
+                        Storage <span className="text-gray-500 text-xs">(Recommended)</span>
                       </label>
                       <input
                         type="text"
                         value={data.specifications.storage}
                         onChange={(e) => setData({ ...data, specifications: { ...data.specifications, storage: e.currentTarget.value } })}
                         placeholder="e.g., 256GB SSD NVMe, 512GB"
-                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
                       />
                     </div>
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium mb-1">
-                      Display <span className="text-gray-500 text-xs">(🖥️ Screen)</span>
+                      Display <span className="text-gray-500 text-xs">(Screen)</span>
                     </label>
                     <input
                       type="text"
                       value={data.specifications.display}
                       onChange={(e) => setData({ ...data, specifications: { ...data.specifications, display: e.currentTarget.value } })}
                       placeholder="e.g., 14 inch FHD IPS, 15.6 inch Full HD"
-                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
                     />
                   </div>
 
@@ -376,7 +377,7 @@ export default function EditProduct({ product, categories }: Props) {
                         value={data.specifications.keyboard}
                         onChange={(e) => setData({ ...data, specifications: { ...data.specifications, keyboard: e.currentTarget.value } })}
                         placeholder="e.g., Backlit Keyboard, RGB"
-                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
                       />
                     </div>
 
@@ -389,7 +390,7 @@ export default function EditProduct({ product, categories }: Props) {
                         value={data.specifications.battery}
                         onChange={(e) => setData({ ...data, specifications: { ...data.specifications, battery: e.currentTarget.value } })}
                         placeholder="e.g., 50Wh, 4-5 hours"
-                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
                       />
                     </div>
                   </div>
@@ -402,24 +403,24 @@ export default function EditProduct({ product, categories }: Props) {
               <button
                 type="button"
                 onClick={() => toggleSection('additional')}
-                className="w-full bg-blue-50 px-4 py-3 flex items-center justify-between hover:bg-blue-100 transition-colors"
+                className="w-full bg-gray-50 px-4 py-3 flex items-center justify-between hover:bg-gray-100/60 transition-colors"
               >
                 <h3 className="text-md font-semibold text-gray-800">
-                  🎯 Additional Details
+                  Additional Details
                 </h3>
                 <span className="text-gray-500">{sectionsOpen.additional ? '▼' : '▶'}</span>
               </button>
               
               {sectionsOpen.additional && (
-                <div className="p-4 space-y-4 bg-blue-50">
+                <div className="p-4 space-y-4 bg-white">
                   <div>
                     <label className="block text-sm font-medium mb-1">
-                      Condition * <span className="text-red-500">(Required)</span>
+                      Condition <span className="text-gray-400">*</span>
                     </label>
                     <select
                       value={data.specifications.condition}
                       onChange={(e) => setData({ ...data, specifications: { ...data.specifications, condition: e.currentTarget.value } })}
-                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
                     >
                       <option value="">Select condition</option>
                       <option value="excellent">Excellent (Sangat Baik)</option>
@@ -433,14 +434,14 @@ export default function EditProduct({ product, categories }: Props) {
 
                   <div>
                     <label className="block text-sm font-medium mb-1">
-                      Warranty <span className="text-gray-500 text-xs">(🛡️ Displayed in green)</span>
+                      Warranty <span className="text-gray-500 text-xs">(Displayed as label)</span>
                     </label>
                     <input
                       type="text"
                       value={data.specifications.warranty}
                       onChange={(e) => setData({ ...data, specifications: { ...data.specifications, warranty: e.currentTarget.value } })}
                       placeholder="e.g., Garansi 1 Bulan Toko, Garansi 3 Bulan"
-                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
                     />
                     <p className="text-xs text-gray-600 mt-1">
                       Leave empty if no warranty
@@ -449,14 +450,14 @@ export default function EditProduct({ product, categories }: Props) {
 
                   <div>
                     <label className="block text-sm font-medium mb-1">
-                      Extras <span className="text-gray-500 text-xs">(🎁 Bonus items - Displayed in orange)</span>
+                      Extras <span className="text-gray-500 text-xs">(Bonus items)</span>
                     </label>
                     <input
                       type="text"
                       value={data.specifications.extras}
                       onChange={(e) => setData({ ...data, specifications: { ...data.specifications, extras: e.currentTarget.value } })}
                       placeholder="e.g., Bonus Tas Laptop + Mouse Wireless"
-                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
                     />
                   </div>
 
@@ -468,7 +469,7 @@ export default function EditProduct({ product, categories }: Props) {
                       value={data.specifications.features}
                       onChange={(e) => setData({ ...data, specifications: { ...data.specifications, features: e.currentTarget.value } })}
                       placeholder="e.g., Fingerprint reader, USB-C port, etc."
-                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
                       rows={3}
                     />
                   </div>
@@ -481,16 +482,16 @@ export default function EditProduct({ product, categories }: Props) {
               <button
                 type="button"
                 onClick={() => toggleSection('pricing')}
-                className="w-full bg-green-50 px-4 py-3 flex items-center justify-between hover:bg-green-100 transition-colors"
+                className="w-full bg-gray-50 px-4 py-3 flex items-center justify-between hover:bg-gray-100/60 transition-colors"
               >
                 <h3 className="text-md font-semibold text-gray-800">
-                  💰 Pricing & Discount
+                  Pricing & Discount
                 </h3>
                 <span className="text-gray-500">{sectionsOpen.pricing ? '▼' : '▶'}</span>
               </button>
               
               {sectionsOpen.pricing && (
-                <div className="p-4 space-y-4 bg-green-50">
+                <div className="p-4 space-y-4 bg-white">
                   <div>
                     <label className="block text-sm font-medium mb-1">Current Price (Rp) *</label>
                     <div className="relative">
@@ -503,7 +504,7 @@ export default function EditProduct({ product, categories }: Props) {
                         value={data.price}
                         onChange={(e) => setData({ ...data, price: e.currentTarget.value })}
                         placeholder="15000000"
-                        className="w-full pl-12 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full pl-12 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
                       />
                     </div>
                     <p className="text-xs text-gray-500 mt-1">
@@ -526,32 +527,32 @@ export default function EditProduct({ product, categories }: Props) {
                         value={data.specifications.original_price}
                         onChange={(e) => setData({ ...data, specifications: { ...data.specifications, original_price: e.currentTarget.value } })}
                         placeholder="20000000"
-                        className="w-full pl-12 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full pl-12 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
                       />
                     </div>
                     <p className="text-xs text-gray-500 mt-1">
                       Leave empty if no discount. When filled, shows strikethrough price and savings amount.
                     </p>
                     {data.specifications.original_price && data.price && parseFloat(data.specifications.original_price) < parseFloat(data.price) && (
-                      <p className="text-orange-600 text-sm mt-1">
-                        ⚠️ Original price should be greater than current price
+                      <p className="text-gray-600 text-sm mt-1">
+                        Original price should be greater than current price
                       </p>
                     )}
                   </div>
 
                   {data.specifications.original_price && data.price && parseFloat(data.specifications.original_price) >= parseFloat(data.price) && (
-                    <div className="bg-white rounded p-3 border border-green-200">
+                    <div className="bg-white rounded p-3 border border-gray-200">
                       <p className="text-sm font-medium text-gray-700">Discount Preview:</p>
                       <p className="text-lg">
                         <span className="line-through text-gray-500">
                           Rp {parseFloat(data.specifications.original_price).toLocaleString('id-ID')}
                         </span>
                         {' → '}
-                        <span className="text-green-600 font-bold">
+                        <span className="text-gray-700 font-semibold">
                           Rp {parseFloat(data.price).toLocaleString('id-ID')}
                         </span>
                       </p>
-                      <p className="text-sm text-green-600 font-semibold">
+                      <p className="text-sm text-gray-600 font-medium">
                         Save Rp {(parseFloat(data.specifications.original_price) - parseFloat(data.price)).toLocaleString('id-ID')}
                         {' '}
                         ({Math.round(((parseFloat(data.specifications.original_price) - parseFloat(data.price)) / parseFloat(data.specifications.original_price)) * 100)}% OFF)
@@ -581,20 +582,20 @@ export default function EditProduct({ product, categories }: Props) {
                           className="w-full h-32 object-cover border rounded-lg"
                         />
                         {img.is_primary && (
-                          <div className="absolute top-2 left-2 bg-blue-600 text-white text-xs px-2 py-1 rounded flex items-center gap-1">
-                            ★ Primary
+                          <div className="absolute top-2 left-2 bg-gray-800 text-white text-xs px-2 py-1 rounded flex items-center gap-1">
+                            Primary
                           </div>
                         )}
                         <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                           {!img.is_primary && (
-                            <button
-                              type="button"
+                            <Button
+                              variant="primary"
+                              size="sm"
                               onClick={() => setPrimaryImage(img.id)}
-                              className="bg-blue-600 text-white rounded px-2 py-1 text-xs hover:bg-blue-700"
-                              title="Set as primary"
+                              className="text-xs"
                             >
-                              ★
-                            </button>
+                              Set Primary
+                            </Button>
                           )}
                           {product.images!.length > 1 && (
                             <button
@@ -630,7 +631,7 @@ export default function EditProduct({ product, categories }: Props) {
                 />
                 {errors.images && (
                   <div className="mt-2 p-3 bg-red-50 border border-red-200 rounded-lg">
-                    <p className="text-red-600 text-sm font-medium">❌ Image Upload Error:</p>
+                    <p className="text-red-600 text-sm font-medium">Image Upload Error:</p>
                     <p className="text-red-600 text-sm">{errors.images}</p>
                     <button
                       type="button"
@@ -672,9 +673,9 @@ export default function EditProduct({ product, categories }: Props) {
 
             {/* Validation Warnings */}
             {(!data.specifications.processor || !data.specifications.ram || !data.specifications.storage) && (
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                <p className="text-sm font-medium text-yellow-800 mb-2">⚠️ Recommendation:</p>
-                <ul className="text-sm text-yellow-700 space-y-1 ml-4 list-disc">
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                <p className="text-sm font-medium text-gray-700 mb-2">Recommendation:</p>
+                <ul className="text-sm text-gray-600 space-y-1 ml-4 list-disc">
                   {!data.specifications.processor && <li>Add Processor for better product display</li>}
                   {!data.specifications.ram && <li>Add RAM for better product display</li>}
                   {!data.specifications.storage && <li>Add Storage for better product display</li>}
@@ -683,22 +684,22 @@ export default function EditProduct({ product, categories }: Props) {
             )}
 
             <div className="flex gap-2 pt-4 border-t">
-              <button
+              <Button
                 type="submit"
                 disabled={processing || uploadingImages}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                variant="primary"
               >
                 {uploadingImages ? `Uploading ${data.images.length} image(s)...` : 
                  processing ? 'Saving...' : 
                  'Save Changes'}
-              </button>
+              </Button>
               <Link href="/admin/products">
-                <button
+                <Button
                   type="button"
-                  className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors"
+                  variant="secondary"
                 >
                   Cancel
-                </button>
+                </Button>
               </Link>
             </div>
           </form>

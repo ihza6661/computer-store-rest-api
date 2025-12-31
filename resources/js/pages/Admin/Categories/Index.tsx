@@ -1,8 +1,15 @@
 import { Head, Link } from '@inertiajs/react'
 import AdminLayout from '../Layouts/AdminLayout'
-import { Plus } from 'lucide-react'
+import { Plus, FolderKanban } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { apiDelete } from '@/lib/api'
+import { Button } from '@/components/ui/Button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
+import { ConfirmModal } from '@/components/ui/ConfirmModal'
+import { Spinner } from '@/components/ui/Spinner'
+import { EmptyState } from '@/components/ui/EmptyState'
+import { CardSkeleton } from '@/components/ui/Skeleton'
+import { PageHeader } from '@/components/layout/PageHeader'
 
 interface Category {
   id: number
@@ -12,88 +19,133 @@ interface Category {
 }
 
 export default function CategoriesIndex() {
-  const [categories, setCategories] = useState<Category[]>([])
-  const [loading, setLoading] = useState(true)
+    const [categories, setCategories] = useState<Category[]>([])
+    const [loading, setLoading] = useState(true)
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false)
+    const [categoryToDelete, setCategoryToDelete] = useState<number | null>(null)
+    const [deleting, setDeleting] = useState(false)
 
-  useEffect(() => {
-    fetchCategories()
-  }, [])
+    useEffect(() => {
+        fetchCategories()
+    }, [])
 
-  const fetchCategories = () => {
-    fetch('/api/categories')
-      .then((res) => res.json())
-      .then((data) => {
-        setCategories(data)
-        setLoading(false)
-      })
-  }
-
-  const handleDelete = async (id: number) => {
-    if (!window.confirm('Are you sure you want to delete this category?')) {
-      return
+    const fetchCategories = () => {
+        setLoading(true)
+        fetch('/api/categories')
+            .then((res) => res.json())
+            .then((data) => {
+                setCategories(data)
+                setLoading(false)
+            })
     }
 
-    try {
-      const response = await apiDelete(`/api/admin/categories/${id}`)
-
-      if (!response.ok) {
-        alert('Failed to delete category')
-        return
-      }
-
-      // Refresh the list
-      fetchCategories()
-    } catch {
-      alert('Error deleting category')
+    const handleDelete = (id: number) => {
+        setCategoryToDelete(id)
+        setDeleteModalOpen(true)
     }
-  }
 
-  return (
-    <AdminLayout>
-      <Head title="Categories" />
-      <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold">Categories</h1>
-            <p className="text-gray-600">Manage product categories</p>
-          </div>
-          <Link href="/admin/categories/create">
-            <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg flex items-center gap-2 transition-colors">
-              <Plus size={18} />
-              Add Category
-            </button>
-          </Link>
-        </div>
+    const confirmDelete = async () => {
+        if (!categoryToDelete) return
 
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-bold mb-4">Category List</h2>
-          {loading ? (
-            <p>Loading...</p>
-          ) : categories.length === 0 ? (
-            <p className="text-gray-500">No categories yet.</p>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {categories.map((cat) => (
-                <div key={cat.id} className="border rounded-lg p-4">
-                  <h3 className="text-lg font-bold">{cat.name}</h3>
-                  <p className="text-sm text-gray-600">{cat.description}</p>
-                   <div className="mt-4 space-x-2">
-                     <Link href={`/admin/categories/${cat.id}/edit`}>
-                       <button className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-100">Edit</button>
-                     </Link>
-                     <button
-                       onClick={() => handleDelete(cat.id)}
-                       className="px-3 py-1 border border-red-300 text-red-600 rounded hover:bg-red-50"
-                     >
-                       Delete
-                     </button>
-                   </div>
-                </div>
-              ))}
+        setDeleting(true)
+        try {
+            const response = await apiDelete(`/api/admin/categories/${categoryToDelete}`)
+
+            if (!response.ok) {
+                alert('Failed to delete category')
+                return
+            }
+
+            fetchCategories()
+            setDeleteModalOpen(false)
+            setCategoryToDelete(null)
+        } catch {
+            alert('Error deleting category')
+        } finally {
+            setDeleting(false)
+        }
+    }
+
+    return (
+        <AdminLayout>
+            <Head title="Categories" />
+            <div className="space-y-6">
+                <PageHeader
+                    title="Categories"
+                    description="Manage product categories"
+                    actions={
+                        <Link href="/admin/categories/create">
+                            <Button variant="primary" size="md">
+                                <Plus size={18} />
+                                Add Category
+                            </Button>
+                        </Link>
+                    }
+                />
+
+                {loading ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {[...Array(6)].map((_, i) => (
+                            <CardSkeleton key={i} />
+                        ))}
+                    </div>
+                ) : categories.length === 0 ? (
+                    <Card>
+                        <CardContent>
+                            <EmptyState
+                                icon={<FolderKanban size={48} />}
+                                title="No categories yet"
+                                description="Create your first product category to get started."
+                                action={
+                                    <Link href="/admin/categories/create">
+                                        <Button variant="primary">
+                                            <Plus size={18} />
+                                            Add Category
+                                        </Button>
+                                    </Link>
+                                }
+                            />
+                        </CardContent>
+                    </Card>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {categories.map((cat) => (
+                            <Card key={cat.id}>
+                                <CardHeader>
+                                    <CardTitle className="text-lg">{cat.name}</CardTitle>
+                                    <CardDescription>{cat.description || 'No description'}</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="flex gap-2">
+                                        <Link href={`/admin/categories/${cat.id}/edit`} className="flex-1">
+                                            <Button variant="secondary" size="sm" className="w-full">
+                                                Edit
+                                            </Button>
+                                        </Link>
+                                        <Button variant="ghost" size="sm" onClick={() => handleDelete(cat.id)} className="flex-1">
+                                            Delete
+                                        </Button>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </div>
+                )}
             </div>
-          )}
-        </div>
-      </div>
-    </AdminLayout>
-  )
+
+            {/* Delete Confirmation Modal */}
+            <ConfirmModal
+                open={deleteModalOpen}
+                onClose={() => {
+                    setDeleteModalOpen(false)
+                    setCategoryToDelete(null)
+                }}
+                onConfirm={confirmDelete}
+                title="Delete Category"
+                description="Are you sure you want to delete this category? This action cannot be undone."
+                confirmText="Delete"
+                loading={deleting}
+            />
+        </AdminLayout>
+    )
 }

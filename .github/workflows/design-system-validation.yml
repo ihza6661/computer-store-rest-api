@@ -1,0 +1,40 @@
+name: Design System Validation
+
+on:
+  pull_request:
+    paths:
+      - 'resources/js/**/*.tsx'
+      - 'resources/css/**/*.css'
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'resources/js/**/*.tsx'
+      - 'resources/css/**/*.css'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Run design system validator
+        run: bash scripts/validate-design-system.sh --full
+        
+      - name: Report failure
+        if: failure()
+        run: |
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "⛔ DESIGN SYSTEM VIOLATIONS DETECTED"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo ""
+          echo "This PR introduces design system violations."
+          echo "Review the validator output above."
+          echo ""
+          echo "Fix by using gray tokens or approved components."
+          echo "See DESIGN_SYSTEM.md for allowed patterns."
+          echo ""
+          exit 1

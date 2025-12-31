@@ -10,7 +10,8 @@
         "format:check": "prettier --check resources/",
         "lint": "eslint . --fix",
         "types": "tsc --noEmit",
-        "postinstall": "npm run build"
+        "postinstall": "npm run build",
+        "audit:design-system": "bash scripts/validate-design-system.sh --full"
     },
     "devDependencies": {
         "@eslint/js": "^9.19.0",
