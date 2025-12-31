@@ -1,4 +1,5 @@
 # Apple Standard Design System
+
 ## Version 1.0 - Enforcement Constitution
 
 This is not a style guide. This is a constraint system.
@@ -6,6 +7,7 @@ This is not a style guide. This is a constraint system.
 Violations of this document are regressions, not creative decisions.
 
 **Related Documents:**
+
 - [Enforcement & Automation](DESIGN_SYSTEM.md#appendix-b-enforcement--automation) - Pre-commit validation
 - [Future Evolution](DESIGN_SYSTEM_ROADMAP.md) - Token-only mode, CI hardening (non-urgent)
 - [Agent Rules](AGENTS.md) - AI agent operating constraints
@@ -36,46 +38,51 @@ Hardcoded color values are **PERMANENTLY BANNED** in UI code.
 
 ```tsx
 // ❌ FORBIDDEN - Hardcoded hex values
-className="bg-[#0071e3] text-[#ffffff]"
+className = 'bg-[#0071e3] text-[#ffffff]';
 
 // ❌ FORBIDDEN - Raw Tailwind semantic colors
-className="bg-blue-500 text-green-600"
+className = 'bg-blue-500 text-green-600';
 
 // ❌ FORBIDDEN - Direct gray utilities (use tokens)
-className="bg-gray-50 text-gray-600"
+className = 'bg-gray-50 text-gray-600';
 ```
 
 #### Required Pattern
 
 ```tsx
 // ✅ CORRECT - Design tokens only
-className="bg-accent text-text-primary"
-className="bg-surface-muted text-text-secondary"
-className="border-border hover:bg-surface-hover"
+className = 'bg-accent text-text-primary';
+className = 'bg-surface-muted text-text-secondary';
+className = 'border-border hover:bg-surface-hover';
 ```
 
 #### Available Design Tokens
 
 **Accent (Apple Blue)**:
+
 - `accent` - Primary accent color
 - `accent-hover` - Hover state
 
 **Surface**:
+
 - `surface` - White background
 - `surface-muted` - Light gray background (gray-50)
 - `surface-hover` - Hover state (gray-100/60)
 
 **Border**:
+
 - `border` - Standard border (gray-200)
 - `border-muted` - Subtle border (gray-200/60)
 
 **Text**:
+
 - `text-primary` - Primary text (gray-900)
 - `text-secondary` - Secondary text (gray-700)
 - `text-tertiary` - Tertiary text (gray-600)
 - `text-muted` - Muted text (gray-400)
 
 **Danger (Destructive/Error)**:
+
 - `danger` - Danger color (red-500)
 - `danger-hover` - Hover state (red-600)
 - `danger-bg` - Error background (red-50)
@@ -85,6 +92,7 @@ className="border-border hover:bg-surface-hover"
 #### Enforcement Rule
 
 If a required color does not exist in the token system:
+
 1. **STOP** - Do not implement
 2. **REPORT** - Request new token
 3. **DOCUMENT** - Update this section
@@ -103,12 +111,11 @@ This is the **ONLY** accent color in the system.
 Apple Blue may **ONLY** appear in:
 
 1. **Primary action buttons**
-   - `bg-[#0071e3]`
-   - Hover: `bg-[#0077ED]`
-   
+    - `bg-[#0071e3]`
+    - Hover: `bg-[#0077ED]`
 2. **Focus rings**
-   - `ring-[#0071e3]`
-   - No other ring colors permitted
+    - `ring-[#0071e3]`
+    - No other ring colors permitted
 
 **That is the complete list.**
 
@@ -136,19 +143,20 @@ Apple Blue is **FORBIDDEN** in:
 Red may **ONLY** appear in:
 
 1. **Destructive action buttons**
-   - Delete actions
-   - Irreversible modifications
-   - `bg-red-600`, `hover:bg-red-700`
+    - Delete actions
+    - Irreversible modifications
+    - `bg-red-600`, `hover:bg-red-700`
 
 2. **Error states**
-   - Form validation errors: `text-red-500` or `text-red-600`
-   - Error containers: `bg-red-50`, `border-red-200`
-   - Error text: `text-red-600` or `text-red-700`
+    - Form validation errors: `text-red-500` or `text-red-600`
+    - Error containers: `bg-red-50`, `border-red-200`
+    - Error text: `text-red-600` or `text-red-700`
 
 3. **Inline validation feedback**
-   - Field-level error messages only
+    - Field-level error messages only
 
 **Constraint**: Red must never be used for:
+
 - Warnings
 - Recommendations
 - Tips
@@ -179,6 +187,7 @@ Allowed grays (Tailwind scale):
 The following color families are **PERMANENTLY BANNED** from this system:
 
 #### Semantic Colors (Forbidden)
+
 - `blue-50` through `blue-900` (except `#0071e3`)
 - `green-*` (all shades)
 - `yellow-*` (all shades)
@@ -190,6 +199,7 @@ The following color families are **PERMANENTLY BANNED** from this system:
 - `cyan-*` (all shades)
 
 #### Specifically Forbidden Patterns
+
 - Success green backgrounds
 - Warning yellow backgrounds
 - Info blue backgrounds
@@ -210,25 +220,25 @@ The following color families are **PERMANENTLY BANNED** from this system:
 Backgrounds may **ONLY** use:
 
 1. **White** (`bg-white`, `#ffffff`)
-   - Primary surface color
-   - Card backgrounds
-   - Form inputs
-   - Modals
+    - Primary surface color
+    - Card backgrounds
+    - Form inputs
+    - Modals
 
 2. **Gray-50** (`bg-gray-50`)
-   - Sidebar
-   - Table headers (optional)
-   - Collapsed section headers
-   - Page backgrounds (when not white)
+    - Sidebar
+    - Table headers (optional)
+    - Collapsed section headers
+    - Page backgrounds (when not white)
 
 3. **Gray-100** with opacity (`bg-gray-100/40` to `bg-gray-100/60`)
-   - Hover states on secondary buttons
-   - Hover states on table rows (if needed)
-   - Subtle hover feedback
+    - Hover states on secondary buttons
+    - Hover states on table rows (if needed)
+    - Subtle hover feedback
 
 4. **Red-50** (`bg-red-50`)
-   - Error containers ONLY
-   - Must include `border-red-200`
+    - Error containers ONLY
+    - Must include `border-red-200`
 
 **Opacity constraint**: When using opacity, range is `40` to `60` only. No other values.
 
@@ -268,20 +278,19 @@ The following backgrounds are **PERMANENTLY BANNED**:
 Only **3 weights** are permitted:
 
 1. **Normal** (`font-normal`, `400`)
-   - Default weight
-   - Body text
-   - Labels
-   
+    - Default weight
+    - Body text
+    - Labels
 2. **Medium** (`font-medium`, `500`)
-   - Emphasis within text
-   - Subheadings
-   
+    - Emphasis within text
+    - Subheadings
 3. **Semibold** (`font-semibold`, `600`)
-   - Headings
-   - Section titles
-   - Button text (if needed)
+    - Headings
+    - Section titles
+    - Button text (if needed)
 
 **Forbidden weights**:
+
 - `font-light` (300)
 - `font-bold` (700)
 - `font-extrabold` (800)
@@ -292,30 +301,26 @@ Only **3 weights** are permitted:
 Text may **ONLY** use these colors:
 
 1. **Black** (`text-black`, `text-gray-900`)
-   - Primary headings
-   
+    - Primary headings
 2. **Gray-700** (`text-gray-700`)
-   - Body text
-   - Primary labels
-   
+    - Body text
+    - Primary labels
 3. **Gray-600** (`text-gray-600`)
-   - Secondary text
-   - Descriptions
-   - Captions
-   
+    - Secondary text
+    - Descriptions
+    - Captions
 4. **Gray-500** (`text-gray-500`)
-   - Tertiary text
-   - Placeholders
-   
+    - Tertiary text
+    - Placeholders
 5. **Gray-400** (`text-gray-400`)
-   - Disabled text
-   - De-emphasized labels
-   - Asterisk indicators
-   
+    - Disabled text
+    - De-emphasized labels
+    - Asterisk indicators
 6. **Red-500/600** (`text-red-500`, `text-red-600`)
-   - Error messages ONLY
+    - Error messages ONLY
 
 **Forbidden text colors**:
+
 - `text-blue-600` (except Apple Blue in buttons)
 - `text-green-600` (common violation)
 - `text-yellow-600`
@@ -330,10 +335,12 @@ Text may **ONLY** use these colors:
 ### 4.4 Text Decoration
 
 Allowed:
+
 - `underline` (for links)
 - `line-through` (for strikethrough prices)
 
 Forbidden:
+
 - Colored underlines
 - Background highlights on text
 - Text shadows
@@ -352,27 +359,26 @@ Forbidden:
 **Only 3 variants exist**:
 
 1. **Primary** (`variant="primary"`)
-   - Background: `bg-[#0071e3]`
-   - Text: `text-white`
-   - Hover: `bg-[#0077ED]`
-   - Shadow: `shadow-sm` (minimal)
-   - Shape: `rounded-full` (pill-shaped)
-   
+    - Background: `bg-[#0071e3]`
+    - Text: `text-white`
+    - Hover: `bg-[#0077ED]`
+    - Shadow: `shadow-sm` (minimal)
+    - Shape: `rounded-full` (pill-shaped)
 2. **Secondary** (`variant="secondary"`)
-   - Background: transparent
-   - Text: `text-gray-700`
-   - Border: `border-gray-200/0` → `border-gray-200/60` on hover
-   - Hover: `bg-gray-100/60`
-   - Shape: `rounded-full`
-   
+    - Background: transparent
+    - Text: `text-gray-700`
+    - Border: `border-gray-200/0` → `border-gray-200/60` on hover
+    - Hover: `bg-gray-100/60`
+    - Shape: `rounded-full`
 3. **Ghost** (`variant="ghost"`)
-   - Background: transparent
-   - Text: `text-gray-600`
-   - Hover: `bg-gray-100/40`
-   - No border
-   - Shape: `rounded-full`
+    - Background: transparent
+    - Text: `text-gray-600`
+    - Hover: `bg-gray-100/40`
+    - No border
+    - Shape: `rounded-full`
 
 **Destructive actions** (delete, remove):
+
 - Use inline button with `bg-red-600`, `hover:bg-red-700`
 - Shape: `rounded-full` or `rounded` (context-dependent)
 - Text: `text-white`
@@ -406,11 +412,11 @@ Buttons are functional, not expressive. If a button "draws the eye", it should b
 **Only 1 variant exists**:
 
 1. **Default** (`variant="default"`)
-   - Text: `text-gray-600`
-   - Background: none
-   - Border: none
-   - Size: `text-xs`
-   - Weight: `font-normal`
+    - Text: `text-gray-600`
+    - Background: none
+    - Border: none
+    - Size: `text-xs`
+    - Weight: `font-normal`
 
 #### Forbidden Variants
 
@@ -434,7 +440,81 @@ Badges communicate categorical information through text, not color. If color is 
 
 **Correct pattern**: Text-only labels with clear wording.
 
-### 5.3 Card Component
+### 5.3 BackLink Component
+
+**Location**: `resources/js/components/ui/BackLink.tsx`
+
+#### Required Pattern (Mandatory for Detail Pages)
+
+BackLink is **MANDATORY** for all detail views (Show, Edit pages).
+
+**Usage**:
+
+```tsx
+<BackLink href="/admin/contacts">Contacts</BackLink>
+```
+
+**Visual Specification**:
+
+- Text: `text-sm text-gray-500 hover:text-gray-700`
+- Arrow: `←` (included automatically)
+- Spacing: `inline-flex items-center gap-1 mb-2`
+- Position: Directly above page title, left-aligned
+
+#### Placement Rule
+
+Back navigation must appear in this **EXACT** structure:
+
+```tsx
+<div>
+    <BackLink href="/admin/contacts">Contacts</BackLink>
+    <h1 className="text-3xl font-bold">Contact Submission</h1>
+    <p className="text-gray-600">Optional subtitle</p>
+</div>
+```
+
+**Not this** (forbidden):
+
+```tsx
+<div className="flex items-center gap-4">
+    <Link href="/admin/contacts">
+        <Button variant="secondary" size="sm">
+            ← Back
+        </Button>
+    </Link>
+    <h1 className="text-3xl font-bold">Contact Submission</h1>
+</div>
+```
+
+#### Label Rules
+
+Labels must be **contextual destination names**, never generic verbs:
+
+**Correct**:
+
+- `<BackLink href="/admin/contacts">Contacts</BackLink>`
+- `<BackLink href="/admin/products">Products</BackLink>`
+- `<BackLink href="/admin/users">Users</BackLink>`
+
+**Forbidden**:
+
+- `← Back` (generic, assumes browser history)
+- `← Return` (vague)
+- `← Go Back` (redundant)
+
+#### Intent
+
+Back navigation is **contextual wayfinding**, not a browser action.
+
+It must:
+
+- Be visually subordinate to the page title
+- Indicate destination, not action
+- Work independently of browser history (bookmarks, refresh)
+
+**Relationship to title**: Back is navigation context for the title, not a peer element. The hierarchy is: navigation → title → content.
+
+### 5.4 Card Component
 
 **Location**: `resources/js/components/ui/Card.tsx`
 
@@ -583,6 +663,68 @@ The following sidebar patterns are **FORBIDDEN**:
 
 Sidebars are wayfinding, not branding. They should disappear into the periphery.
 
+### 5.8 Select/Dropdown Component
+
+**Location**: `resources/js/components/ui/Select.tsx`
+
+#### Required Pattern (Mandatory)
+
+Select dropdowns must **ALWAYS** use:
+
+**Visual Specification**:
+
+- Background: `bg-white`
+- Border: `border-gray-300`
+- Text: `text-gray-700` (selected value must be clearly visible)
+- Height: `h-11`, `min-h-[44px]`
+- Padding: `px-3 py-2 pr-10` (right padding for icon)
+- Border radius: `rounded-lg`
+- Native styling: `appearance-none` (remove browser defaults)
+
+**Dropdown Indicator**:
+
+- Icon: ChevronDown from lucide-react
+- Size: `h-4 w-4`
+- Color: `text-gray-400` (muted)
+- Position: Absolute right, vertically centered
+- Non-interactive: `pointer-events-none`
+
+**Focus State**:
+
+- Ring: `focus:ring-2 focus:ring-[#0071e3]`
+- Border: `focus:border-transparent`
+- Outline: `focus:outline-none`
+
+**Structure**:
+
+```tsx
+<div className="relative">
+    <select className="...appearance-none pr-10 text-gray-700">
+        <option value="option1">Label 1</option>
+    </select>
+    <ChevronDown className="pointer-events-none absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
+</div>
+```
+
+#### Forbidden Patterns
+
+The following select patterns are **FORBIDDEN**:
+
+- Native browser styling (missing `appearance-none`)
+- Colored dropdown indicators (blue, green, etc.)
+- Multiple colored states based on selection
+- Custom colored borders
+- Animated dropdown indicators
+- Icon-only selects without visible selected value
+- Gradient backgrounds
+- Heavy shadows
+
+#### Intent
+
+Dropdowns are functional inputs, not decorative elements. The selected value must be immediately visible without interaction. The dropdown indicator is subordinate visual feedback, not a design feature.
+
+**Critical Rule**: If the user cannot see what is currently selected without clicking, the dropdown is broken.
+
 ---
 
 ## 6. Interaction Standards
@@ -604,6 +746,7 @@ focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1
 - No colored ring-offset backgrounds
 
 **Forbidden**:
+
 - `ring-blue-500` (use hex value)
 - `ring-green-500`
 - `ring-red-500` (even for errors)
@@ -615,19 +758,17 @@ focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1
 **Allowed patterns**:
 
 1. **Button hover** (secondary/ghost):
-   - `hover:bg-gray-100/40` to `hover:bg-gray-100/60`
-   
+    - `hover:bg-gray-100/40` to `hover:bg-gray-100/60`
 2. **Link hover**:
-   - `hover:text-gray-900` (darken)
-   - `hover:underline`
-   
+    - `hover:text-gray-900` (darken)
+    - `hover:underline`
 3. **Card hover** (if interactive):
-   - `hover:border-gray-300` (subtle border darken)
-   
+    - `hover:border-gray-300` (subtle border darken)
 4. **Table row hover**:
-   - `hover:bg-gray-50`
+    - `hover:bg-gray-50`
 
 **Forbidden patterns**:
+
 - Colored hover backgrounds
 - Accent color hovers (except primary button)
 - Shadow changes on hover
@@ -640,13 +781,13 @@ focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1
 **Allowed patterns**:
 
 1. **Button active**:
-   - Slightly darken background (1 shade)
-   - No animation
-   
+    - Slightly darken background (1 shade)
+    - No animation
 2. **Input active**:
-   - Focus ring only (see 6.1)
+    - Focus ring only (see 6.1)
 
 **Forbidden patterns**:
+
 - Animated active states
 - Colored active backgrounds
 - Scale animations
@@ -658,14 +799,14 @@ focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1
 **Allowed patterns**:
 
 1. **Button loading**:
-   - Spinner in `text-current` (inherits button text color)
-   - Disable button, reduce opacity to `opacity-40`
-   
+    - Spinner in `text-current` (inherits button text color)
+    - Disable button, reduce opacity to `opacity-40`
 2. **Page loading**:
-   - Gray skeleton screens
-   - Gray progress bars
+    - Gray skeleton screens
+    - Gray progress bars
 
 **Forbidden patterns**:
+
 - Colored spinners
 - Colored progress bars
 - Animated gradient loaders
@@ -680,16 +821,14 @@ focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1
 Icons may **ONLY** be used:
 
 1. **In buttons** (optional, not required)
-   - Size: `h-4 w-4` or `h-5 w-5`
-   - Color: inherits from button text
-   
+    - Size: `h-4 w-4` or `h-5 w-5`
+    - Color: inherits from button text
 2. **In navigation**
-   - Size: `h-5 w-5`
-   - Color: `text-gray-400` or `text-gray-500`
-   
+    - Size: `h-5 w-5`
+    - Color: `text-gray-400` or `text-gray-500`
 3. **As status indicators** (rare)
-   - Size: `h-4 w-4`
-   - Color: `text-gray-400`
+    - Size: `h-4 w-4`
+    - Color: `text-gray-400`
 
 ### 7.2 Icon Color Constraints
 
@@ -701,6 +840,7 @@ Icons must **ONLY** use:
 - `text-current` (inherits from parent)
 
 **Forbidden icon colors**:
+
 - `text-blue-500`
 - `text-green-500`
 - `text-yellow-500`
@@ -712,12 +852,14 @@ Icons must **ONLY** use:
 ### 7.3 Icon Size Constraints
 
 Allowed sizes:
+
 - `h-3 w-3` (rare, inline)
 - `h-4 w-4` (default)
 - `h-5 w-5` (navigation, headers)
 - `h-6 w-6` (large, rare)
 
 **Forbidden**:
+
 - Icons larger than `h-6 w-6`
 - Decorative large icons
 - Icon-only pages
@@ -727,6 +869,7 @@ Allowed sizes:
 **Emojis are PERMANENTLY BANNED from structural UI.**
 
 Emojis may **NOT** appear in:
+
 - Section headers
 - Button labels
 - Form field labels
@@ -753,9 +896,10 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 ### 8.1 Color-Coded Sections
 
 **Forbidden**:
+
 ```tsx
-<div className="bg-blue-50 border-blue-200">
-  <h3>💼 Business Details</h3>
+<div className="border-blue-200 bg-blue-50">
+    <h3>💼 Business Details</h3>
 </div>
 ```
 
@@ -766,6 +910,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 ### 8.2 Emoji Headers
 
 **Forbidden**:
+
 ```tsx
 <h3>⚙️ Hardware Specifications</h3>
 <h3>💰 Pricing & Discount</h3>
@@ -779,6 +924,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 ### 8.3 Colored Status Badges
 
 **Forbidden**:
+
 ```tsx
 <Badge variant="success">Active</Badge>
 <Badge variant="warning">Pending</Badge>
@@ -792,9 +938,10 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 ### 8.4 Semantic Background Colors
 
 **Forbidden**:
+
 ```tsx
-<div className="bg-green-50 border-green-200">
-  <p className="text-green-700">✓ Success message</p>
+<div className="border-green-200 bg-green-50">
+    <p className="text-green-700">✓ Success message</p>
 </div>
 ```
 
@@ -805,6 +952,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 ### 8.5 Colored Text Emphasis
 
 **Forbidden**:
+
 ```tsx
 <p className="text-blue-600 font-bold">Important information</p>
 <span className="text-green-600">Discount: 20% OFF</span>
@@ -818,9 +966,10 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 ### 8.6 Expressive Warning Boxes
 
 **Forbidden**:
+
 ```tsx
-<div className="bg-yellow-50 border-yellow-200">
-  <p className="text-yellow-800">⚠️ Recommendation: Add processor</p>
+<div className="border-yellow-200 bg-yellow-50">
+    <p className="text-yellow-800">⚠️ Recommendation: Add processor</p>
 </div>
 ```
 
@@ -831,6 +980,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 ### 8.7 Colored Hover States
 
 **Forbidden**:
+
 ```tsx
 <button className="hover:bg-blue-100 hover:text-blue-700">
 ```
@@ -842,6 +992,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 ### 8.8 Multiple Accent Colors
 
 **Forbidden**:
+
 ```tsx
 <Button className="bg-blue-600">Primary</Button>
 <Button className="bg-green-600">Success</Button>
@@ -855,8 +1006,11 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 ### 8.9 Decorative Icons
 
 **Forbidden**:
+
 ```tsx
-<h2><Sparkles className="text-yellow-500" /> Premium Features</h2>
+<h2>
+    <Sparkles className="text-yellow-500" /> Premium Features
+</h2>
 ```
 
 **Reason**: Icons are for function, not decoration.
@@ -866,6 +1020,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 ### 8.10 Gradient Backgrounds
 
 **Forbidden**:
+
 ```tsx
 <div className="bg-gradient-to-r from-blue-500 to-purple-600">
 ```
@@ -877,6 +1032,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 ### 8.11 Shadow Elevation System
 
 **Forbidden**:
+
 ```tsx
 <Card className="shadow-lg hover:shadow-xl transition-shadow">
 ```
@@ -888,6 +1044,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 ### 8.12 Colored Form Labels
 
 **Forbidden**:
+
 ```tsx
 <label className="text-blue-600">Email Address *</label>
 ```
@@ -899,9 +1056,10 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 ### 8.13 Required Field Indicators (Verbose)
 
 **Forbidden**:
+
 ```tsx
 <label>
-  Name * <span className="text-red-500">(Required)</span>
+    Name * <span className="text-red-500">(Required)</span>
 </label>
 ```
 
@@ -912,6 +1070,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 ### 8.14 Colored Progress Bars
 
 **Forbidden**:
+
 ```tsx
 <div className="bg-green-500" style="width: 70%"></div>
 ```
@@ -923,10 +1082,9 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 ### 8.15 Animated Notifications
 
 **Forbidden**:
+
 ```tsx
-<Toast className="animate-bounce bg-green-500">
-  Success! 🎉
-</Toast>
+<Toast className="animate-bounce bg-green-500">Success! 🎉</Toast>
 ```
 
 **Reason**: Confirmation does not require celebration.
@@ -936,6 +1094,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 ### 8.16 Colored Link Underlines
 
 **Forbidden**:
+
 ```tsx
 <a className="text-blue-600 underline decoration-blue-600">
 ```
@@ -947,9 +1106,10 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 ### 8.17 Colored Table Rows
 
 **Forbidden**:
+
 ```tsx
 <tr className="bg-green-50">
-  <td>Active Order</td>
+    <td>Active Order</td>
 </tr>
 ```
 
@@ -960,9 +1120,10 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 ### 8.18 Icon Buttons with Colored Backgrounds
 
 **Forbidden**:
+
 ```tsx
-<button className="bg-blue-100 text-blue-700 rounded-full p-2">
-  <Icon />
+<button className="rounded-full bg-blue-100 p-2 text-blue-700">
+    <Icon />
 </button>
 ```
 
@@ -973,6 +1134,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 ### 8.19 Colored Section Dividers
 
 **Forbidden**:
+
 ```tsx
 <div className="border-t-4 border-blue-500"></div>
 ```
@@ -984,6 +1146,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 ### 8.20 Tooltip with Colored Backgrounds
 
 **Forbidden**:
+
 ```tsx
 <Tooltip className="bg-blue-600 text-white">
 ```
@@ -995,6 +1158,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 ### 8.21 Colored Placeholder Text
 
 **Forbidden**:
+
 ```tsx
 <input placeholder="Enter email" className="placeholder:text-blue-400" />
 ```
@@ -1006,9 +1170,10 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 ### 8.22 "Helper" Hint Boxes
 
 **Forbidden**:
+
 ```tsx
-<div className="bg-blue-50 border-blue-200 p-3">
-  <p className="text-blue-700">💡 Pro Tip: You can...</p>
+<div className="border-blue-200 bg-blue-50 p-3">
+    <p className="text-blue-700">💡 Pro Tip: You can...</p>
 </div>
 ```
 
@@ -1097,6 +1262,7 @@ While this document is the authoritative source, the following tools can help de
 ### 10.1 ESLint Rules
 
 Configure ESLint to warn on:
+
 - String literals containing `bg-blue-`, `bg-green-`, `bg-yellow-`, `bg-orange-`, `bg-purple-`
 - String literals containing `text-blue-`, `text-green-`, `text-orange-`, `text-yellow-`, `text-purple-`
 - Emoji unicode characters in JSX
@@ -1104,6 +1270,7 @@ Configure ESLint to warn on:
 ### 10.2 Stylelint Rules
 
 Configure Stylelint (if using CSS modules) to forbid:
+
 - Color values outside the allowed palette
 - Gradient functions
 - Box-shadow properties
@@ -1137,6 +1304,7 @@ Include this in your PR template:
 ### 10.5 Code Review Guidelines
 
 Reviewers must reject PRs that:
+
 - Introduce colored backgrounds for sections
 - Add new button variants
 - Use emojis in interface elements
@@ -1172,16 +1340,13 @@ If you are considering loosening a rule, the default answer is no.
 Before merging any UI changes, ask:
 
 1. **Does this component use color to convey information?**
-   - If yes: Can it use text or hierarchy instead?
-   
+    - If yes: Can it use text or hierarchy instead?
 2. **Does this component "feel designed"?**
-   - If yes: Reduce it.
-   
+    - If yes: Reduce it.
 3. **Would an AI agent misinterpret this as permission to add color elsewhere?**
-   - If yes: It's not specific enough.
-   
+    - If yes: It's not specific enough.
 4. **If I removed all color except gray, would the UI still function?**
-   - If no: The design is broken.
+    - If no: The design is broken.
 
 **When in doubt, use gray.**
 
@@ -1202,6 +1367,7 @@ The validator runs automatically before every commit and blocks violations.
 The following patterns will fail commits:
 
 **Colors:**
+
 - `bg-blue-*` (except Button.tsx primary)
 - `bg-green-*`, `bg-yellow-*`, `bg-orange-*`
 - `text-blue-*` (except Button.tsx)
@@ -1211,16 +1377,19 @@ The following patterns will fail commits:
 - Hardcoded hex colors (except `#0071e3`)
 
 **Shadows:**
+
 - `shadow-md`, `shadow-lg`, `shadow-xl`, `shadow-2xl`
 - `hover:shadow-*` (all hover shadows)
 
 **Other:**
+
 - `style=` inline attributes (rare exceptions documented in validator)
 - Emojis in JSX/TSX source code
 
 #### Running Manual Audits
 
 Monthly audit command:
+
 ```bash
 npm run audit:design-system
 ```
@@ -1230,6 +1399,7 @@ This runs a full scan of all TypeScript React files.
 #### Bypass (Not Recommended)
 
 To bypass the pre-commit check:
+
 ```bash
 git commit --no-verify
 ```
@@ -1253,6 +1423,7 @@ If a technical requirement demands an exception (e.g., SVG blend modes):
 ### Colors (Complete List)
 
 **Allowed**:
+
 - Apple Blue: `#0071e3` (buttons, focus rings ONLY)
 - Red: `#ef4444` (destructive actions, errors ONLY)
 - Gray scale: `gray-50` through `gray-900`
