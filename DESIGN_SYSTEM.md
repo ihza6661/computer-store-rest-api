@@ -857,6 +857,35 @@ Every admin page MUST follow this order:
 - Icons or actions competing with the title
 - Centered headers on desktop admin pages
 
+#### 7.2.2 Page Header Responsiveness
+
+On mobile viewports (<640px), page headers with primary actions MUST stack vertically.
+
+**Rule**: If a header contains both text blocks and an action, it must degrade to vertical before text wraps.
+
+**Pattern**:
+
+```tsx
+<div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+    <PageHeader title="..." description="..." />
+    <Link href="...">
+        <Button variant="primary">Action Text</Button>
+    </Link>
+</div>
+```
+
+**Behavior**:
+
+- **Mobile (<640px)**: Vertical stack, action below description
+- **Desktop (≥640px)**: Side-by-side, action top-right
+
+**Forbidden on mobile**:
+
+- Icon-only buttons without text labels
+- Buttons smaller than 44x44px touch targets
+- Truncated or wrapped button text
+- Side-by-side layouts that cause text wrapping
+
 ---
 
 ### 7.3 Layout Rules (Desktop)

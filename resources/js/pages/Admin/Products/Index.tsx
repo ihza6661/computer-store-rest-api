@@ -209,7 +209,7 @@ export default function ProductsIndex() {
             <Head title="Products" />
             <div className="space-y-6">
                 {/* Header with title and action button in separate flex container */}
-                <div className="flex items-start justify-between gap-4">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     <PageHeader title="Products" description="Manage your product inventory" />
                     <Link href="/admin/products/create">
                         <Button variant="primary" size="md">

@@ -69,7 +69,7 @@ export default function CategoriesIndex() {
         <AdminLayout>
             <Head title="Categories" />
             <div className="space-y-6">
-                <div className="flex items-start justify-between gap-4">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     <PageHeader title="Categories" description="Manage product categories" />
                     <Link href="/admin/categories/create">
                         <Button variant="primary" size="md">
