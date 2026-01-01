@@ -2,13 +2,15 @@
 
 ## 📋 Overview
 
-Fitur import produk memungkinkan Anda untuk menambahkan banyak produk sekaligus melalui file Excel (.xlsx, .xls, .csv).
+Fitur import produk memungkinkan Anda untuk menambahkan atau memperbarui banyak produk sekaligus melalui file Excel (.xlsx, .xls, .csv).
 
 ## ✨ Fitur Utama
 
 - **Preview & Validasi**: Preview data sebelum import dengan validasi real-time
+- **Duplicate Detection**: Deteksi duplikat SKU dalam file dan database secara otomatis
+- **Update Mode**: Opsi untuk memperbarui produk existing dengan SKU yang sama
 - **Background Processing**: Import dijalankan di background menggunakan queue jobs
-- **Error Reporting**: Detail error per baris untuk memudahkan debugging
+- **Error Reporting**: Detail error per baris dengan link ke produk existing
 - **Template Excel**: Download template dengan format yang benar dan contoh data
 - **Progress Tracking**: Real-time progress update saat import berjalan
 
@@ -66,10 +68,13 @@ Buka template Excel dan isi data produk dengan kolom berikut:
 ### 4. Upload dan Preview
 
 1. Klik **"Choose File"** dan pilih file Excel Anda
-2. Klik **"Preview Data"** untuk validasi
-3. Review hasil validasi:
+2. **(Opsional)** Centang **"Update existing products with same SKU"** jika ingin memperbarui produk existing
+3. Klik **"Preview Data"** untuk validasi
+4. Review hasil validasi:
+    - **Action Column**: Menunjukkan apakah row akan **Create** (buat baru) atau **Update** (perbarui existing)
     - ✅ **Valid**: Baris siap diimport
     - ❌ **Error**: Baris memiliki kesalahan (lihat kolom Message)
+    - 🔗 **Link**: Jika SKU sudah ada, klik "View existing product" untuk melihat produk yang akan di-update
 
 ### 5. Confirm Import
 
@@ -80,6 +85,24 @@ Jika semua data valid (tidak ada error):
 3. Lihat summary hasil import
 
 ## ⚠️ Penting: Aturan Validasi
+
+### Duplicate Detection
+
+**Dalam File:**
+
+- Jika SKU yang sama muncul lebih dari sekali dalam file yang sama, **seluruh import akan ditolak**
+- Sistem akan menampilkan semua baris dengan SKU duplikat
+- Fix: Pastikan setiap SKU unik dalam file
+
+**Dalam Database:**
+
+- Jika "Update existing products" **tidak dicentang**:
+    - Produk dengan SKU existing akan di-skip
+    - Error message: "SKU 'XXX' already exists in database"
+    - Link ke produk existing ditampilkan
+- Jika "Update existing products" **dicentang**:
+    - Produk dengan SKU existing akan di-update
+    - Hanya field tertentu yang diperbarui (lihat Update Mode)
 
 ### Category
 
@@ -103,9 +126,43 @@ Jika semua data valid (tidak ada error):
 
 ### SKU (Stock Keeping Unit)
 
-- SKU **HARUS unique**
-- Jika SKU sudah ada di database, baris akan di-skip
-- Tidak ada auto-update untuk SKU existing
+- SKU **HARUS unique** dalam file yang diupload
+- Jika duplikat SKU ditemukan dalam file, seluruh import ditolak
+- Untuk produk existing di database:
+    - Default: Skip dengan error message
+    - Dengan "Update mode": Update produk existing
+
+### Update Mode (Optional)
+
+Ketika checkbox **"Update existing products with same SKU"** dicentang:
+
+**Field yang diupdate:**
+
+- `price` - Harga produk
+- `stock` - Jumlah stok
+- `description` - Deskripsi produk
+
+**Field yang TIDAK diupdate (tetap seperti existing):**
+
+- `sku` - SKU tidak bisa diubah
+- `name` - Nama produk tetap
+- `category_id` - Kategori tetap
+- `brand` - Brand tetap
+- `images` - Gambar tidak terpengaruh
+- `specifications` - Spesifikasi detail tetap
+- Relasi lainnya
+
+**Use Case:**
+
+- Update harga bulk untuk sale/promo
+- Update stok setelah stock opname
+- Update deskripsi produk secara massal
+
+**Warning:**
+
+- Update mode tidak bisa undo secara otomatis
+- Backup data sebelum update massal
+- Preview dulu untuk memastikan produk yang benar akan diupdate
 
 ### Image Upload
 
@@ -145,6 +202,37 @@ Setelah import selesai, Anda akan melihat summary:
 
 ## 🐛 Troubleshooting
 
+### "Duplicate SKU 'XXX' found in file at rows: 2, 5, 8"
+
+**Penyebab**: SKU yang sama muncul di beberapa baris dalam file yang diupload
+
+**Solusi**:
+
+- Edit file Excel dan pastikan setiap SKU unik
+- Tentukan mana data yang benar jika ada duplikat
+- Hapus atau ubah SKU yang duplikat
+- Upload ulang file yang sudah diperbaiki
+
+### "SKU 'XXX' already exists in database"
+
+**Penyebab**: Produk dengan SKU tersebut sudah ada di database
+
+**Solusi (Pilih salah satu):**
+
+1. **Jika ingin membuat produk baru:**
+    - Ubah SKU di file Excel menjadi SKU baru yang unik
+    - Upload ulang
+
+2. **Jika ingin update produk existing:**
+    - Centang checkbox "Update existing products with same SKU"
+    - Preview ulang untuk memastikan
+    - Confirm import
+
+3. **Jika ingin melihat produk existing:**
+    - Klik link "View existing product" di error message
+    - Review produk existing
+    - Putuskan apakah mau update atau buat baru dengan SKU berbeda
+
 ### "Category not found"
 
 **Penyebab**: Nama kategori tidak ada di database atau typo
@@ -155,14 +243,18 @@ Setelah import selesai, Anda akan melihat summary:
 - Gunakan kategori dari list yang tersedia
 - Buat kategori baru terlebih dahulu jika diperlukan
 
-### "SKU already exists"
+### "Import failed: SQLSTATE[23000]..." (Long SQL Error)
 
-**Penyebab**: SKU sudah digunakan produk lain
+### "Import failed: SQLSTATE[23000]..." (Long SQL Error)
+
+**Penyebab**: Database constraint violation atau error teknis
 
 **Solusi**:
 
-- Gunakan SKU yang unique
-- Atau edit/hapus produk existing dengan SKU tersebut
+- Klik "Show technical details" untuk melihat error lengkap
+- Error sekarang ditampilkan dengan format yang lebih readable
+- Jika masih bingung, screenshot dan contact developer
+- Kemungkinan besar terkait duplicate key atau foreign key constraint
 
 ### "Validation failed"
 
@@ -193,9 +285,12 @@ composer run dev
 1. **Mulai dengan Sample Kecil**: Test dengan 2-3 baris dulu sebelum import ratusan produk
 2. **Gunakan Template**: Selalu gunakan template yang sudah disediakan
 3. **Preview Dulu**: Selalu preview sebelum confirm import
-4. **Backup Data**: Backup database sebelum import besar
-5. **Batch Import**: Untuk data besar (>500 produk), pecah jadi beberapa file
-6. **SKU Konsisten**: Gunakan format SKU yang konsisten (contoh: BRAND-MODEL-VARIANT)
+4. **Gunakan Update Mode dengan Hati-hati**: Backup data dulu sebelum bulk update
+5. **Check Duplicate dalam File**: Pastikan tidak ada SKU duplikat dalam file Excel Anda
+6. **Backup Data**: Backup database sebelum import besar
+7. **Batch Import**: Untuk data besar (>500 produk), pecah jadi beberapa file
+8. **SKU Konsisten**: Gunakan format SKU yang konsisten (contoh: BRAND-MODEL-VARIANT)
+9. **Link ke Existing Product**: Gunakan link "View existing product" untuk review sebelum update
 
 ## 📝 Limitasi
 
@@ -203,7 +298,8 @@ composer run dev
 - Format support: **.xlsx, .xls, .csv**
 - Recommended batch size: **≤ 500 produk per import**
 - **Tidak support image upload** (harus manual setelah import)
-- **Tidak support update existing product** (hanya insert baru)
+- **Tidak boleh ada duplikat SKU dalam file** (akan reject seluruh import)
+- **Update mode hanya update field tertentu** (price, stock, description)
 
 ## 🎯 Example Use Cases
 
@@ -213,7 +309,8 @@ composer run dev
 2. Isi 10 baris dengan data laptop
 3. Pastikan kategori = "Laptop"
 4. SKU unique untuk tiap laptop
-5. Upload, preview, confirm
+5. **Jangan centang update checkbox** (karena produk baru)
+6. Upload, preview, confirm
 
 ### Use Case 2: Import dari Supplier
 
@@ -221,11 +318,29 @@ composer run dev
 2. Format ulang sesuai template kami
 3. Map kategori supplier ke kategori kami
 4. Generate SKU untuk tiap produk
-5. Upload, preview, confirm
+5. **Jangan centang update checkbox**
+6. Upload, preview, confirm
 
-### Use Case 3: Bulk Stock Update
+### Use Case 3: Bulk Price Update
 
-**TIDAK BISA** - Import hanya untuk produk baru. Untuk update stock existing, gunakan fitur edit manual.
+1. Export produk existing (atau buat list SKU + price baru)
+2. Format sesuai template dengan SKU existing
+3. Update kolom `price` dan `stock` sesuai kebutuhan
+4. **PENTING: Centang "Update existing products with same SKU"**
+5. Upload, preview (pastikan semua menunjukkan "Update")
+6. Confirm import
+
+### Use Case 4: Stock Opname Update
+
+1. Buat file Excel dengan SKU dan stock baru hasil stock opname
+2. Isi kolom `price` dengan harga existing (atau harga baru jika ada perubahan)
+3. **Centang "Update existing products with same SKU"**
+4. Preview dulu untuk memastikan yang diupdate benar
+5. Confirm import
+
+### Use Case 5: Partial Import (Ada Duplikat dalam File)
+
+**TIDAK BISA** - Jika ada duplikat SKU dalam file yang sama, seluruh import akan ditolak. Fix duplikat dulu sebelum upload ulang.
 
 ## 📧 Support
 
@@ -239,4 +354,22 @@ Jika mengalami masalah:
 ---
 
 **Last Updated**: 2026-01-01
-**Version**: 1.0.0
+**Version**: 2.0.0
+
+## 🆕 Changelog
+
+### v2.0.0 (2026-01-01)
+
+- ✅ Added duplicate detection within uploaded file
+- ✅ Added bulk duplicate check against database
+- ✅ Added optional update mode for existing products
+- ✅ Improved error messages (user-friendly + technical details)
+- ✅ Added links to existing products in error messages
+- ✅ Added "Action" column (Create/Update) in preview
+
+### v1.0.0 (Initial Release)
+
+- Basic import functionality
+- Preview validation
+- Background job processing
+- Template download

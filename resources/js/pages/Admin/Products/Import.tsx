@@ -11,6 +11,9 @@ interface ImportResult {
     row: number;
     status: 'valid' | 'success' | 'error';
     message: string;
+    action?: 'create' | 'update';
+    product_id?: number;
+    technical_details?: string;
     data: Record<string, any>;
 }
 
@@ -43,10 +46,12 @@ export default function Import() {
     const [file, setFile] = useState<File | null>(null);
     const [previewing, setPreviewing] = useState(false);
     const [importing, setImporting] = useState(false);
+    const [allowUpdate, setAllowUpdate] = useState(false);
     const [previewResults, setPreviewResults] = useState<PreviewResponse | null>(null);
     const [importJobId, setImportJobId] = useState<string | null>(null);
     const [importResults, setImportResults] = useState<ImportStatusResponse | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [expandedErrors, setExpandedErrors] = useState<Set<number>>(new Set());
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,6 +72,7 @@ export default function Import() {
 
         const formData = new FormData();
         formData.append('file', file);
+        formData.append('allow_update', allowUpdate ? '1' : '0');
 
         try {
             const response = await fetch('/admin/products/import/preview', {
@@ -100,6 +106,7 @@ export default function Import() {
 
         const formData = new FormData();
         formData.append('file', file);
+        formData.append('allow_update', allowUpdate ? '1' : '0');
 
         try {
             const response = await fetch('/admin/products/import/store', {
@@ -177,9 +184,22 @@ export default function Import() {
         setPreviewResults(null);
         setImportResults(null);
         setError(null);
+        setExpandedErrors(new Set());
         if (fileInputRef.current) {
             fileInputRef.current.value = '';
         }
+    };
+
+    const toggleErrorDetails = (row: number) => {
+        setExpandedErrors((prev) => {
+            const newSet = new Set(prev);
+            if (newSet.has(row)) {
+                newSet.delete(row);
+            } else {
+                newSet.add(row);
+            }
+            return newSet;
+        });
     };
 
     const getStatusIcon = (status: string) => {
@@ -262,6 +282,50 @@ export default function Import() {
                                 )}
                             </div>
 
+                            <div className="flex items-center gap-2">
+                                <input
+                                    type="checkbox"
+                                    id="allow-update"
+                                    checked={allowUpdate}
+                                    onChange={(e) => setAllowUpdate(e.target.checked)}
+                                    className="h-4 w-4 rounded border-gray-300 text-gray-900 focus:ring-2 focus:ring-gray-900 focus:ring-offset-0"
+                                />
+                                <label htmlFor="allow-update" className="text-sm text-gray-700">
+                                    Update existing products with same SKU
+                                </label>
+                            </div>
+
+                            {allowUpdate && (
+                                <div className="rounded border border-gray-200 bg-gray-50 p-3">
+                                    <p className="text-xs text-gray-600">
+                                        When enabled, products with existing SKUs will be updated. Only price, stock, and description will be
+                                        modified.
+                                    </p>
+                                </div>
+                            )}
+
+                            <div className="flex items-center gap-2">
+                                <input
+                                    type="checkbox"
+                                    id="allow-update"
+                                    checked={allowUpdate}
+                                    onChange={(e) => setAllowUpdate(e.target.checked)}
+                                    className="h-4 w-4 rounded border-gray-300 text-gray-900 focus:ring-2 focus:ring-gray-900 focus:ring-offset-0"
+                                />
+                                <label htmlFor="allow-update" className="text-sm text-gray-700">
+                                    Update existing products with same SKU
+                                </label>
+                            </div>
+
+                            {allowUpdate && (
+                                <div className="rounded border border-gray-200 bg-gray-50 p-3">
+                                    <p className="text-xs text-gray-600">
+                                        When enabled, products with existing SKUs will be updated. Only price, stock, and description will be
+                                        modified.
+                                    </p>
+                                </div>
+                            )}
+
                             {error && (
                                 <div className="flex items-start gap-3 rounded border border-gray-200 bg-gray-50 p-4">
                                     <AlertCircle size={20} className="mt-0.5 flex-shrink-0 text-gray-700" />
@@ -326,6 +390,7 @@ export default function Import() {
                                     <TableHeader>
                                         <TableRow>
                                             <TableHead>Row</TableHead>
+                                            <TableHead>Action</TableHead>
                                             <TableHead>Status</TableHead>
                                             <TableHead>Name</TableHead>
                                             <TableHead>SKU</TableHead>
@@ -338,6 +403,15 @@ export default function Import() {
                                             <TableRow key={result.row}>
                                                 <TableCell>{result.row}</TableCell>
                                                 <TableCell>
+                                                    {result.action && (
+                                                        <span
+                                                            className={`text-xs font-medium ${result.action === 'update' ? 'text-gray-700' : 'text-gray-600'}`}
+                                                        >
+                                                            {result.action === 'update' ? 'Update' : 'Create'}
+                                                        </span>
+                                                    )}
+                                                </TableCell>
+                                                <TableCell>
                                                     <div className="flex items-center gap-2">
                                                         {getStatusIcon(result.status)}
                                                         <span className="capitalize">{result.status}</span>
@@ -347,9 +421,38 @@ export default function Import() {
                                                 <TableCell>{result.data.sku || '-'}</TableCell>
                                                 <TableCell>{result.data.category || '-'}</TableCell>
                                                 <TableCell>
-                                                    <span className={result.status === 'error' ? 'text-gray-700' : 'text-gray-600'}>
-                                                        {result.message}
-                                                    </span>
+                                                    <div className="space-y-1">
+                                                        <span className={result.status === 'error' ? 'text-gray-700' : 'text-gray-600'}>
+                                                            {result.message}
+                                                        </span>
+                                                        {result.product_id && result.status === 'error' && (
+                                                            <div>
+                                                                <a
+                                                                    href={`/admin/products/${result.product_id}/edit`}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    className="text-xs text-gray-600 underline hover:text-gray-900"
+                                                                >
+                                                                    View existing product
+                                                                </a>
+                                                            </div>
+                                                        )}
+                                                        {result.status === 'error' && result.technical_details && (
+                                                            <div>
+                                                                <button
+                                                                    onClick={() => toggleErrorDetails(result.row)}
+                                                                    className="text-xs text-gray-500 underline hover:text-gray-700"
+                                                                >
+                                                                    {expandedErrors.has(result.row) ? 'Hide' : 'Show'} technical details
+                                                                </button>
+                                                                {expandedErrors.has(result.row) && (
+                                                                    <pre className="mt-2 overflow-x-auto rounded bg-gray-50 p-2 text-xs text-gray-600">
+                                                                        {result.technical_details}
+                                                                    </pre>
+                                                                )}
+                                                            </div>
+                                                        )}
+                                                    </div>
                                                 </TableCell>
                                             </TableRow>
                                         ))}
@@ -420,7 +523,38 @@ export default function Import() {
                                                         </TableCell>
                                                         <TableCell>{result.data.name || '-'}</TableCell>
                                                         <TableCell>{result.data.sku || '-'}</TableCell>
-                                                        <TableCell className="text-gray-700">{result.message}</TableCell>
+                                                        <TableCell>
+                                                            <div className="space-y-1">
+                                                                <span className="text-gray-700">{result.message}</span>
+                                                                {result.product_id && (
+                                                                    <div>
+                                                                        <a
+                                                                            href={`/admin/products/${result.product_id}/edit`}
+                                                                            target="_blank"
+                                                                            rel="noopener noreferrer"
+                                                                            className="text-xs text-gray-600 underline hover:text-gray-900"
+                                                                        >
+                                                                            View existing product
+                                                                        </a>
+                                                                    </div>
+                                                                )}
+                                                                {result.technical_details && (
+                                                                    <div>
+                                                                        <button
+                                                                            onClick={() => toggleErrorDetails(result.row)}
+                                                                            className="text-xs text-gray-500 underline hover:text-gray-700"
+                                                                        >
+                                                                            {expandedErrors.has(result.row) ? 'Hide' : 'Show'} technical details
+                                                                        </button>
+                                                                        {expandedErrors.has(result.row) && (
+                                                                            <pre className="mt-2 overflow-x-auto rounded bg-gray-50 p-2 text-xs text-gray-600">
+                                                                                {result.technical_details}
+                                                                            </pre>
+                                                                        )}
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </TableCell>
                                                     </TableRow>
                                                 ))}
                                         </TableBody>

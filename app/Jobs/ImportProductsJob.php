@@ -20,14 +20,17 @@ class ImportProductsJob implements ShouldQueue
 
     protected $jobId;
 
+    protected $allowUpdate;
+
     /**
      * Create a new job instance.
      */
-    public function __construct(string $filePath, int $userId, string $jobId)
+    public function __construct(string $filePath, int $userId, string $jobId, bool $allowUpdate = false)
     {
         $this->filePath = $filePath;
         $this->userId = $userId;
         $this->jobId = $jobId;
+        $this->allowUpdate = $allowUpdate;
     }
 
     /**
@@ -46,7 +49,7 @@ class ImportProductsJob implements ShouldQueue
             Cache::put("import_job_{$this->jobId}_status", 'processing', now()->addHours(1));
 
             // Perform the import
-            $import = new ProductsImport(false); // Not preview mode
+            $import = new ProductsImport(false, $this->allowUpdate); // Not preview mode
             Excel::import($import, Storage::path($this->filePath));
 
             // Get results

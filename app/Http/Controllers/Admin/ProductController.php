@@ -8,6 +8,7 @@ use App\Jobs\ImportProductsJob;
 use App\Models\Product;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -265,13 +266,15 @@ class ProductController extends Controller
     {
         $request->validate([
             'file' => 'required|file|mimes:xlsx,xls,csv|max:10240', // Max 10MB
+            'allow_update' => 'nullable|boolean',
         ]);
 
         try {
             $file = $request->file('file');
+            $allowUpdate = $request->input('allow_update', false);
 
             // Perform preview import (validation only, no database insert)
-            $import = new ProductsImport(true); // Preview mode
+            $import = new ProductsImport(true, $allowUpdate); // Preview mode
             Excel::import($import, $file);
 
             $results = $import->getResults();
@@ -301,10 +304,12 @@ class ProductController extends Controller
     {
         $request->validate([
             'file' => 'required|file|mimes:xlsx,xls,csv|max:10240', // Max 10MB
+            'allow_update' => 'nullable|boolean',
         ]);
 
         try {
             $file = $request->file('file');
+            $allowUpdate = $request->input('allow_update', false);
 
             // Store file temporarily
             $filePath = $file->store('imports', 'local');
@@ -316,7 +321,7 @@ class ProductController extends Controller
             Cache::put("import_job_{$jobId}_status", 'processing', now()->addHours(1));
 
             // Dispatch job
-            ImportProductsJob::dispatch($filePath, auth()->id(), $jobId);
+            ImportProductsJob::dispatch($filePath, Auth::id(), $jobId, $allowUpdate);
 
             return response()->json([
                 'success' => true,
