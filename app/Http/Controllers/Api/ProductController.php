@@ -96,6 +96,40 @@ class ProductController extends Controller
             'images.*' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120',
             'stock' => 'required|integer|min:0',
             'specifications' => 'nullable|array',
+            'specifications.processor' => 'nullable|string|max:255',
+            'specifications.gpu' => 'nullable|string|max:255',
+            'specifications.ram' => 'nullable|string|max:100',
+            'specifications.storage' => 'nullable|string|max:255',
+            'specifications.display' => 'nullable|string|max:255',
+            'specifications.keyboard' => 'nullable|string|max:255',
+            'specifications.battery' => 'nullable|string|max:255',
+            'specifications.warranty' => 'nullable|string|max:255',
+            'specifications.condition' => 'nullable|string|in:new,excellent,good,fair,used-excellent,used-very-good,used-good',
+            'specifications.extras' => 'nullable|string|max:500',
+            'specifications.original_price' => 'nullable|numeric|min:0',
+            'specifications.features' => 'nullable|string|max:1000',
+            // Hardware (additional)
+            'specifications.chipset' => 'nullable|string|max:255',
+            'specifications.optical_drive' => 'nullable|string|max:255',
+            'specifications.wireless_connectivity' => 'nullable|string|max:255',
+            // Ports & Expansion
+            'specifications.expansion_slots' => 'nullable|string|max:500',
+            'specifications.external_ports' => 'nullable|string|max:500',
+            // Physical Specs
+            'specifications.dimensions_width' => 'nullable|string|max:100',
+            'specifications.dimensions_depth' => 'nullable|string|max:100',
+            'specifications.dimensions_height' => 'nullable|string|max:100',
+            'specifications.weight' => 'nullable|string|max:100',
+            // Power
+            'specifications.power_supply_type' => 'nullable|string|max:255',
+            // Multimedia
+            'specifications.webcam' => 'nullable|string|max:255',
+            'specifications.audio' => 'nullable|string|max:255',
+            // Software
+            'specifications.operating_system' => 'nullable|string|max:255',
+            'specifications.software_included' => 'nullable|string|max:500',
+            // Product Info
+            'specifications.product_number' => 'nullable|string|max:255',
         ]);
 
         $primaryImageUrl = null;
@@ -206,6 +240,40 @@ class ProductController extends Controller
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
             'stock' => 'required|integer|min:0',
             'specifications' => 'nullable|array',
+            'specifications.processor' => 'nullable|string|max:255',
+            'specifications.gpu' => 'nullable|string|max:255',
+            'specifications.ram' => 'nullable|string|max:100',
+            'specifications.storage' => 'nullable|string|max:255',
+            'specifications.display' => 'nullable|string|max:255',
+            'specifications.keyboard' => 'nullable|string|max:255',
+            'specifications.battery' => 'nullable|string|max:255',
+            'specifications.warranty' => 'nullable|string|max:255',
+            'specifications.condition' => 'nullable|string|in:new,excellent,good,fair,used-excellent,used-very-good,used-good',
+            'specifications.extras' => 'nullable|string|max:500',
+            'specifications.original_price' => 'nullable|numeric|min:0',
+            'specifications.features' => 'nullable|string|max:1000',
+            // Hardware (additional)
+            'specifications.chipset' => 'nullable|string|max:255',
+            'specifications.optical_drive' => 'nullable|string|max:255',
+            'specifications.wireless_connectivity' => 'nullable|string|max:255',
+            // Ports & Expansion
+            'specifications.expansion_slots' => 'nullable|string|max:500',
+            'specifications.external_ports' => 'nullable|string|max:500',
+            // Physical Specs
+            'specifications.dimensions_width' => 'nullable|string|max:100',
+            'specifications.dimensions_depth' => 'nullable|string|max:100',
+            'specifications.dimensions_height' => 'nullable|string|max:100',
+            'specifications.weight' => 'nullable|string|max:100',
+            // Power
+            'specifications.power_supply_type' => 'nullable|string|max:255',
+            // Multimedia
+            'specifications.webcam' => 'nullable|string|max:255',
+            'specifications.audio' => 'nullable|string|max:255',
+            // Software
+            'specifications.operating_system' => 'nullable|string|max:255',
+            'specifications.software_included' => 'nullable|string|max:500',
+            // Product Info
+            'specifications.product_number' => 'nullable|string|max:255',
         ]);
 
         // Handle new image uploads if provided

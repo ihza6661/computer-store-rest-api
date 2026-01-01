@@ -59,6 +59,22 @@ export default function EditProduct({ product, categories }: Props) {
             extras: product.specifications?.extras || '',
             original_price: product.specifications?.original_price || '',
             features: product.specifications?.features || '',
+            // NEW FIELDS
+            chipset: product.specifications?.chipset || '',
+            optical_drive: product.specifications?.optical_drive || '',
+            wireless_connectivity: product.specifications?.wireless_connectivity || '',
+            expansion_slots: product.specifications?.expansion_slots || '',
+            external_ports: product.specifications?.external_ports || '',
+            dimensions_width: product.specifications?.dimensions_width || '',
+            dimensions_depth: product.specifications?.dimensions_depth || '',
+            dimensions_height: product.specifications?.dimensions_height || '',
+            weight: product.specifications?.weight || '',
+            power_supply_type: product.specifications?.power_supply_type || '',
+            webcam: product.specifications?.webcam || '',
+            audio: product.specifications?.audio || '',
+            operating_system: product.specifications?.operating_system || '',
+            software_included: product.specifications?.software_included || '',
+            product_number: product.specifications?.product_number || '',
         },
     });
 
@@ -67,6 +83,11 @@ export default function EditProduct({ product, categories }: Props) {
     const [uploadingImages, setUploadingImages] = React.useState(false);
     const [sectionsOpen, setSectionsOpen] = React.useState({
         hardware: true,
+        portsExpansion: false,
+        physical: false,
+        power: false,
+        multimedia: false,
+        software: false,
         additional: true,
         pricing: true,
     });
@@ -273,6 +294,21 @@ export default function EditProduct({ product, categories }: Props) {
                                 </div>
                             </div>
 
+                            <div>
+                                <label className="mb-1 block text-sm font-medium">
+                                    Product Number <span className="text-xs text-gray-500">(Manufacturer Model)</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    value={data.specifications.product_number}
+                                    onChange={(e) =>
+                                        setData({ ...data, specifications: { ...data.specifications, product_number: e.currentTarget.value } })
+                                    }
+                                    placeholder="e.g., 15s-fq5007TU, MacBook Pro 14-inch M3"
+                                    className="w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-[#0071e3] focus:outline-none"
+                                />
+                            </div>
+
                             <div className="mt-6">
                                 <label className="mb-1 block text-sm font-medium">Description</label>
                                 <textarea
@@ -408,6 +444,314 @@ export default function EditProduct({ product, categories }: Props) {
                                                 className="w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-[#0071e3] focus:outline-none"
                                             />
                                         </div>
+                                    </div>
+
+                                    <div>
+                                        <label className="mb-1 block text-sm font-medium">Chipset</label>
+                                        <input
+                                            type="text"
+                                            value={data.specifications.chipset}
+                                            onChange={(e) =>
+                                                setData({ ...data, specifications: { ...data.specifications, chipset: e.currentTarget.value } })
+                                            }
+                                            placeholder="e.g., Intel H610, AMD B550"
+                                            className="w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-[#0071e3] focus:outline-none"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="mb-1 block text-sm font-medium">Optical Drive</label>
+                                        <input
+                                            type="text"
+                                            value={data.specifications.optical_drive}
+                                            onChange={(e) =>
+                                                setData({ ...data, specifications: { ...data.specifications, optical_drive: e.currentTarget.value } })
+                                            }
+                                            placeholder="e.g., DVD-RW, Blu-ray Combo, None"
+                                            className="w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-[#0071e3] focus:outline-none"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="mb-1 block text-sm font-medium">Wireless Connectivity</label>
+                                        <input
+                                            type="text"
+                                            value={data.specifications.wireless_connectivity}
+                                            onChange={(e) =>
+                                                setData({
+                                                    ...data,
+                                                    specifications: { ...data.specifications, wireless_connectivity: e.currentTarget.value },
+                                                })
+                                            }
+                                            placeholder="e.g., WiFi 6E, Bluetooth 5.3"
+                                            className="w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-[#0071e3] focus:outline-none"
+                                        />
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Ports & Expansion */}
+                        <div className="overflow-hidden rounded-lg border">
+                            <button
+                                type="button"
+                                onClick={() => toggleSection('portsExpansion')}
+                                className="flex w-full items-center justify-between bg-gray-50 px-4 py-3 transition-colors hover:bg-gray-100/60"
+                            >
+                                <h3 className="text-md font-semibold text-gray-800">
+                                    Ports & Expansion
+                                    <span className="ml-2 text-xs font-normal text-gray-500">(Optional)</span>
+                                </h3>
+                                <span className="text-gray-500">{sectionsOpen.portsExpansion ? '▼' : '▶'}</span>
+                            </button>
+
+                            {sectionsOpen.portsExpansion && (
+                                <div className="space-y-4 bg-white p-4">
+                                    <div>
+                                        <label className="mb-1 block text-sm font-medium">Expansion Slots</label>
+                                        <input
+                                            type="text"
+                                            value={data.specifications.expansion_slots}
+                                            onChange={(e) =>
+                                                setData({
+                                                    ...data,
+                                                    specifications: { ...data.specifications, expansion_slots: e.currentTarget.value },
+                                                })
+                                            }
+                                            placeholder="e.g., 1x M.2 NVMe, 2x DIMM slots"
+                                            className="w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-[#0071e3] focus:outline-none"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="mb-1 block text-sm font-medium">External Ports</label>
+                                        <input
+                                            type="text"
+                                            value={data.specifications.external_ports}
+                                            onChange={(e) =>
+                                                setData({
+                                                    ...data,
+                                                    specifications: { ...data.specifications, external_ports: e.currentTarget.value },
+                                                })
+                                            }
+                                            placeholder="e.g., 2x USB 3.2, 1x HDMI 2.0, 1x USB-C Thunderbolt 4"
+                                            className="w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-[#0071e3] focus:outline-none"
+                                        />
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Physical Specifications */}
+                        <div className="overflow-hidden rounded-lg border">
+                            <button
+                                type="button"
+                                onClick={() => toggleSection('physical')}
+                                className="flex w-full items-center justify-between bg-gray-50 px-4 py-3 transition-colors hover:bg-gray-100/60"
+                            >
+                                <h3 className="text-md font-semibold text-gray-800">
+                                    Physical Specifications
+                                    <span className="ml-2 text-xs font-normal text-gray-500">(Optional)</span>
+                                </h3>
+                                <span className="text-gray-500">{sectionsOpen.physical ? '▼' : '▶'}</span>
+                            </button>
+
+                            {sectionsOpen.physical && (
+                                <div className="space-y-4 bg-white p-4">
+                                    <div>
+                                        <label className="mb-1 block text-sm font-medium">
+                                            Dimensions <span className="text-xs text-gray-500">(W x D x H)</span>
+                                        </label>
+                                        <div className="grid grid-cols-3 gap-4">
+                                            <div>
+                                                <input
+                                                    type="text"
+                                                    value={data.specifications.dimensions_width}
+                                                    onChange={(e) =>
+                                                        setData({
+                                                            ...data,
+                                                            specifications: { ...data.specifications, dimensions_width: e.currentTarget.value },
+                                                        })
+                                                    }
+                                                    placeholder="Width (cm)"
+                                                    className="w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-[#0071e3] focus:outline-none"
+                                                />
+                                            </div>
+
+                                            <div>
+                                                <input
+                                                    type="text"
+                                                    value={data.specifications.dimensions_depth}
+                                                    onChange={(e) =>
+                                                        setData({
+                                                            ...data,
+                                                            specifications: { ...data.specifications, dimensions_depth: e.currentTarget.value },
+                                                        })
+                                                    }
+                                                    placeholder="Depth (cm)"
+                                                    className="w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-[#0071e3] focus:outline-none"
+                                                />
+                                            </div>
+
+                                            <div>
+                                                <input
+                                                    type="text"
+                                                    value={data.specifications.dimensions_height}
+                                                    onChange={(e) =>
+                                                        setData({
+                                                            ...data,
+                                                            specifications: { ...data.specifications, dimensions_height: e.currentTarget.value },
+                                                        })
+                                                    }
+                                                    placeholder="Height (cm)"
+                                                    className="w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-[#0071e3] focus:outline-none"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label className="mb-1 block text-sm font-medium">Weight</label>
+                                        <input
+                                            type="text"
+                                            value={data.specifications.weight}
+                                            onChange={(e) =>
+                                                setData({ ...data, specifications: { ...data.specifications, weight: e.currentTarget.value } })
+                                            }
+                                            placeholder="e.g., 1.6 kg"
+                                            className="w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-[#0071e3] focus:outline-none"
+                                        />
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Power & Battery */}
+                        <div className="overflow-hidden rounded-lg border">
+                            <button
+                                type="button"
+                                onClick={() => toggleSection('power')}
+                                className="flex w-full items-center justify-between bg-gray-50 px-4 py-3 transition-colors hover:bg-gray-100/60"
+                            >
+                                <h3 className="text-md font-semibold text-gray-800">
+                                    Power & Battery
+                                    <span className="ml-2 text-xs font-normal text-gray-500">(Optional)</span>
+                                </h3>
+                                <span className="text-gray-500">{sectionsOpen.power ? '▼' : '▶'}</span>
+                            </button>
+
+                            {sectionsOpen.power && (
+                                <div className="space-y-4 bg-white p-4">
+                                    <div>
+                                        <label className="mb-1 block text-sm font-medium">Power Supply Type</label>
+                                        <input
+                                            type="text"
+                                            value={data.specifications.power_supply_type}
+                                            onChange={(e) =>
+                                                setData({
+                                                    ...data,
+                                                    specifications: { ...data.specifications, power_supply_type: e.currentTarget.value },
+                                                })
+                                            }
+                                            placeholder="e.g., 65W USB-C Power Adapter, 500W ATX PSU"
+                                            className="w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-[#0071e3] focus:outline-none"
+                                        />
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Multimedia */}
+                        <div className="overflow-hidden rounded-lg border">
+                            <button
+                                type="button"
+                                onClick={() => toggleSection('multimedia')}
+                                className="flex w-full items-center justify-between bg-gray-50 px-4 py-3 transition-colors hover:bg-gray-100/60"
+                            >
+                                <h3 className="text-md font-semibold text-gray-800">
+                                    Multimedia
+                                    <span className="ml-2 text-xs font-normal text-gray-500">(Optional)</span>
+                                </h3>
+                                <span className="text-gray-500">{sectionsOpen.multimedia ? '▼' : '▶'}</span>
+                            </button>
+
+                            {sectionsOpen.multimedia && (
+                                <div className="space-y-4 bg-white p-4">
+                                    <div>
+                                        <label className="mb-1 block text-sm font-medium">Webcam</label>
+                                        <input
+                                            type="text"
+                                            value={data.specifications.webcam}
+                                            onChange={(e) =>
+                                                setData({ ...data, specifications: { ...data.specifications, webcam: e.currentTarget.value } })
+                                            }
+                                            placeholder="e.g., 1080p FaceTime HD Camera, 720p Webcam"
+                                            className="w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-[#0071e3] focus:outline-none"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="mb-1 block text-sm font-medium">Audio</label>
+                                        <input
+                                            type="text"
+                                            value={data.specifications.audio}
+                                            onChange={(e) =>
+                                                setData({ ...data, specifications: { ...data.specifications, audio: e.currentTarget.value } })
+                                            }
+                                            placeholder="e.g., Stereo speakers, Bang & Olufsen audio"
+                                            className="w-full rounded-lg border px-3 py-2 focus:ring-[#0071e3] focus:outline-none"
+                                        />
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Software */}
+                        <div className="overflow-hidden rounded-lg border">
+                            <button
+                                type="button"
+                                onClick={() => toggleSection('software')}
+                                className="flex w-full items-center justify-between bg-gray-50 px-4 py-3 transition-colors hover:bg-gray-100/60"
+                            >
+                                <h3 className="text-md font-semibold text-gray-800">
+                                    Software
+                                    <span className="ml-2 text-xs font-normal text-gray-500">(Optional)</span>
+                                </h3>
+                                <span className="text-gray-500">{sectionsOpen.software ? '▼' : '▶'}</span>
+                            </button>
+
+                            {sectionsOpen.software && (
+                                <div className="space-y-4 bg-white p-4">
+                                    <div>
+                                        <label className="mb-1 block text-sm font-medium">Operating System</label>
+                                        <input
+                                            type="text"
+                                            value={data.specifications.operating_system}
+                                            onChange={(e) =>
+                                                setData({
+                                                    ...data,
+                                                    specifications: { ...data.specifications, operating_system: e.currentTarget.value },
+                                                })
+                                            }
+                                            placeholder="e.g., Windows 11 Pro, macOS Sonoma"
+                                            className="w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-[#0071e3] focus:outline-none"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="mb-1 block text-sm font-medium">Software Included</label>
+                                        <input
+                                            type="text"
+                                            value={data.specifications.software_included}
+                                            onChange={(e) =>
+                                                setData({
+                                                    ...data,
+                                                    specifications: { ...data.specifications, software_included: e.currentTarget.value },
+                                                })
+                                            }
+                                            placeholder="e.g., Microsoft Office 365, Adobe Creative Cloud Trial"
+                                            className="w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-[#0071e3] focus:outline-none"
+                                        />
                                     </div>
                                 </div>
                             )}

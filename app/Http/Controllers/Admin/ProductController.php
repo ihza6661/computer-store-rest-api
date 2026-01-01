@@ -51,6 +51,28 @@ class ProductController extends Controller
             'specifications.extras' => 'nullable|string|max:500',
             'specifications.original_price' => 'nullable|numeric|min:0',
             'specifications.features' => 'nullable|string|max:1000',
+            // Hardware (additional)
+            'specifications.chipset' => 'nullable|string|max:255',
+            'specifications.optical_drive' => 'nullable|string|max:255',
+            'specifications.wireless_connectivity' => 'nullable|string|max:255',
+            // Ports & Expansion
+            'specifications.expansion_slots' => 'nullable|string|max:500',
+            'specifications.external_ports' => 'nullable|string|max:500',
+            // Physical Specs
+            'specifications.dimensions_width' => 'nullable|string|max:100',
+            'specifications.dimensions_depth' => 'nullable|string|max:100',
+            'specifications.dimensions_height' => 'nullable|string|max:100',
+            'specifications.weight' => 'nullable|string|max:100',
+            // Power
+            'specifications.power_supply_type' => 'nullable|string|max:255',
+            // Multimedia
+            'specifications.webcam' => 'nullable|string|max:255',
+            'specifications.audio' => 'nullable|string|max:255',
+            // Software
+            'specifications.operating_system' => 'nullable|string|max:255',
+            'specifications.software_included' => 'nullable|string|max:500',
+            // Product Info
+            'specifications.product_number' => 'nullable|string|max:255',
         ]);
 
         $primaryImageUrl = null;
@@ -164,6 +186,28 @@ class ProductController extends Controller
             'specifications.extras' => 'nullable|string|max:500',
             'specifications.original_price' => 'nullable|numeric|min:0',
             'specifications.features' => 'nullable|string|max:1000',
+            // Hardware (additional)
+            'specifications.chipset' => 'nullable|string|max:255',
+            'specifications.optical_drive' => 'nullable|string|max:255',
+            'specifications.wireless_connectivity' => 'nullable|string|max:255',
+            // Ports & Expansion
+            'specifications.expansion_slots' => 'nullable|string|max:500',
+            'specifications.external_ports' => 'nullable|string|max:500',
+            // Physical Specs
+            'specifications.dimensions_width' => 'nullable|string|max:100',
+            'specifications.dimensions_depth' => 'nullable|string|max:100',
+            'specifications.dimensions_height' => 'nullable|string|max:100',
+            'specifications.weight' => 'nullable|string|max:100',
+            // Power
+            'specifications.power_supply_type' => 'nullable|string|max:255',
+            // Multimedia
+            'specifications.webcam' => 'nullable|string|max:255',
+            'specifications.audio' => 'nullable|string|max:255',
+            // Software
+            'specifications.operating_system' => 'nullable|string|max:255',
+            'specifications.software_included' => 'nullable|string|max:500',
+            // Product Info
+            'specifications.product_number' => 'nullable|string|max:255',
         ]);
 
         // Handle new image uploads if provided
