@@ -271,7 +271,7 @@ class ProductController extends Controller
 
         try {
             $file = $request->file('file');
-            $allowUpdate = $request->input('allow_update', false);
+            $allowUpdate = $request->boolean('allow_update');
 
             // Perform preview import (validation only, no database insert)
             $import = new ProductsImport(true, $allowUpdate); // Preview mode
@@ -309,7 +309,7 @@ class ProductController extends Controller
 
         try {
             $file = $request->file('file');
-            $allowUpdate = $request->input('allow_update', false);
+            $allowUpdate = $request->boolean('allow_update');
 
             // Store file temporarily
             $filePath = $file->store('imports', 'local');

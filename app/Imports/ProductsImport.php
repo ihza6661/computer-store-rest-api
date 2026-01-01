@@ -24,6 +24,14 @@ class ProductsImport implements ToCollection, WithHeadingRow
     {
         $this->preview = $preview;
         $this->allowUpdate = $allowUpdate;
+        
+        // Debug logging to verify boolean conversion
+        Log::debug('ProductsImport initialized', [
+            'preview' => $preview,
+            'allowUpdate' => $allowUpdate,
+            'preview_type' => gettype($preview),
+            'allowUpdate_type' => gettype($allowUpdate),
+        ]);
     }
 
     /**

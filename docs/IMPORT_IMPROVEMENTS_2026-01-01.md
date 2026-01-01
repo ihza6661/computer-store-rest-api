@@ -290,6 +290,44 @@ The product import feature has been upgraded from a basic "insert-only" tool to 
 
 ---
 
+## 🐛 Bugfixes
+
+### Boolean Type Conversion Issue (2026-01-01)
+
+**Problem:**
+When the "Update existing products" checkbox was checked, the preview still showed `Action: Create` instead of `Action: Update`.
+
+**Root Cause:**
+
+- Frontend correctly sent `allow_update` as `'1'` (string) via FormData
+- Laravel's validation passed, but `$request->input('allow_update')` returned string `'1'`
+- ProductsImport constructor expected `bool`, causing type mismatch
+- String `'1'` didn't properly convert to boolean `true` in all contexts
+
+**Fix:**
+Changed `ProductController.php` lines 274 and 312:
+
+```php
+// BEFORE
+$allowUpdate = $request->input('allow_update', false);
+
+// AFTER
+$allowUpdate = $request->boolean('allow_update');
+```
+
+**Result:**
+
+- Laravel's `$request->boolean()` properly converts `'1'`, `'true'`, `1`, `true` → `true`
+- Preview now correctly shows `Action: Update` when checkbox is checked
+- Actual import now properly updates existing products
+
+**Files Modified:**
+
+- `app/Http/Controllers/Admin/ProductController.php` (2 lines)
+- `app/Imports/ProductsImport.php` (added debug logging)
+
+---
+
 **Implemented by:** OpenCode AI  
 **Approved by:** Project stakeholder  
 **Status:** Production ready
