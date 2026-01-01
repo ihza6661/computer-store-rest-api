@@ -68,6 +68,9 @@ class ProductsImport implements ToCollection, WithHeadingRow
             $rowNumber = $index + 2; // +2 because: 1 for heading, 1 for 0-based index
 
             try {
+                // Normalize SKU early to prevent whitespace issues
+                $normalizedSku = trim($row['sku'] ?? '');
+                
                 // Validate row data
                 $validator = Validator::make($row->toArray(), [
                     'name' => 'required|string|max:255',
@@ -118,8 +121,9 @@ class ProductsImport implements ToCollection, WithHeadingRow
                 }
 
                 // Check if SKU already exists in database (bulk checked earlier)
-                if (isset($existingProducts[$row['sku']])) {
-                    $existingProduct = $existingProducts[$row['sku']];
+                // Use normalized SKU to match the bulk fetch logic that also trims
+                if (isset($existingProducts[$normalizedSku])) {
+                    $existingProduct = $existingProducts[$normalizedSku];
                     
                     if ($this->allowUpdate) {
                         // Mark for update in preview mode
@@ -154,7 +158,7 @@ class ProductsImport implements ToCollection, WithHeadingRow
 
                         Log::info('Product updated successfully', [
                             'row' => $rowNumber,
-                            'sku' => $row['sku'],
+                            'sku' => $normalizedSku,
                             'product_id' => $existingProduct->id,
                         ]);
 
@@ -164,7 +168,7 @@ class ProductsImport implements ToCollection, WithHeadingRow
                         $this->results[] = [
                             'row' => $rowNumber,
                             'status' => 'error',
-                            'message' => "SKU '{$row['sku']}' already exists in database",
+                            'message' => "SKU '{$normalizedSku}' already exists in database",
                             'product_id' => $existingProduct->id,
                             'data' => $row->toArray(),
                         ];
@@ -203,7 +207,7 @@ class ProductsImport implements ToCollection, WithHeadingRow
                     'brand' => $row['brand'] ?? null,
                     'description' => $row['description'] ?? null,
                     'price' => $row['price'],
-                    'sku' => $row['sku'],
+                    'sku' => $normalizedSku,
                     'stock' => $row['stock'],
                     'specifications' => ! empty($specifications) ? $specifications : null,
                     'image_url' => '', // No image support
@@ -220,12 +224,12 @@ class ProductsImport implements ToCollection, WithHeadingRow
 
                 Log::info('Product imported successfully', [
                     'row' => $rowNumber,
-                    'sku' => $row['sku'],
+                    'sku' => $normalizedSku,
                     'name' => $row['name'],
                 ]);
             } catch (QueryException $e) {
                 // Handle database constraint violations with user-friendly messages
-                $errorMessage = $this->normalizeDatabaseError($e, $row['sku'] ?? 'unknown');
+                $errorMessage = $this->normalizeDatabaseError($e, $normalizedSku ?? 'unknown');
                 
                 $this->results[] = [
                     'row' => $rowNumber,
