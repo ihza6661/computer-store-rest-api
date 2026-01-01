@@ -700,15 +700,15 @@ export default function EditProduct({ product, categories }: Props) {
                             </div>
                         )}
 
-                        <div className="flex justify-end gap-2 border-t pt-4">
-                            <Button type="submit" disabled={processing || uploadingImages} variant="primary">
-                                {uploadingImages ? `Uploading ${data.images.length} image(s)...` : processing ? 'Saving...' : 'Save Changes'}
-                            </Button>
+                        <div className="flex flex-col gap-2 border-t pt-4 sm:flex-row sm:justify-end sm:gap-3">
                             <Link href="/admin/products">
-                                <Button type="button" variant="secondary">
+                                <Button type="button" variant="secondary" className="w-full sm:w-auto">
                                     Cancel
                                 </Button>
                             </Link>
+                            <Button type="submit" disabled={processing || uploadingImages} variant="primary" className="w-full sm:w-auto">
+                                {uploadingImages ? `Uploading ${data.images.length} image(s)...` : processing ? 'Saving...' : 'Save Changes'}
+                            </Button>
                         </div>
                     </form>
                 </div>

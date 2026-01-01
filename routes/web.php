@@ -53,6 +53,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
         ]);
     })->name('admin.products.create');
 
+    Route::get('/admin/products/import', function () {
+        return Inertia::render('Admin/Products/Import');
+    })->name('admin.products.import');
+
     Route::get('/admin/products/{product}/edit', function ($product) {
         $productData = \App\Models\Product::with(['category', 'images'])->findOrFail($product);
         $categories = \App\Models\Category::select('id', 'name')->get();
@@ -123,6 +127,16 @@ Route::middleware(['auth', 'admin'])->group(function () {
         ->name('admin.products.update');
     Route::delete('/admin/products/{product}', [ProductController::class, 'destroy'])
         ->name('admin.products.destroy');
+
+    // Product Import routes
+    Route::post('/admin/products/import/preview', [ProductController::class, 'importPreview'])
+        ->name('admin.products.import.preview');
+    Route::post('/admin/products/import/store', [ProductController::class, 'importStore'])
+        ->name('admin.products.import.store');
+    Route::get('/admin/products/import/status/{jobId}', [ProductController::class, 'importStatus'])
+        ->name('admin.products.import.status');
+    Route::get('/admin/products/import/template', [ProductController::class, 'downloadTemplate'])
+        ->name('admin.products.import.template');
 
     // Product Image Management Routes
     Route::delete('/admin/products/{product}/images/{image}', [ProductImageController::class, 'destroy'])

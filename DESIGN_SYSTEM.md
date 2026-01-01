@@ -888,6 +888,402 @@ On mobile viewports (<640px), page headers with primary actions MUST stack verti
 
 ---
 
+#### 7.2.3 Card Header Action Buttons
+
+Card headers MAY contain action buttons, but they MUST follow mobile-first responsive patterns.
+
+**Rule**: Action buttons in card headers MUST stack vertically on mobile (<640px) and adapt responsively to larger viewports.
+
+**Pattern**:
+
+```tsx
+<CardHeader>
+    <div className="space-y-4">
+        <div>
+            <CardTitle>Section Title</CardTitle>
+            <p className="mt-1 text-sm text-gray-600">Optional description or summary</p>
+        </div>
+        <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
+            <Button variant="primary" size="md" className="w-full sm:w-auto">
+                <Icon size={18} />
+                Primary Action
+            </Button>
+            <Button variant="ghost" size="md" className="w-full sm:w-auto">
+                Secondary Action
+            </Button>
+        </div>
+    </div>
+</CardHeader>
+```
+
+**Behavior**:
+
+- **Mobile (<640px)**:
+    - Buttons stack vertically with 8px gap (`gap-2`)
+    - Full width (`w-full`) for larger touch targets
+    - Title and buttons separated by 16px (`space-y-4`)
+
+- **Desktop (≥640px)**:
+    - Buttons horizontal with 12px gap (`sm:gap-3`)
+    - Auto width (`sm:w-auto`) for compact layout
+    - Maintains vertical separation from title
+
+**Real Example**: `resources/js/pages/Admin/Products/Import.tsx:276-299`
+
+**Forbidden**:
+
+- ❌ Using `flex justify-between` that pushes buttons to opposite sides on mobile
+- ❌ Fixed-width buttons that don't adapt to viewport
+- ❌ Buttons on same line as title causing text wrap/overflow
+- ❌ Icon-only buttons without text labels on mobile
+
+**Why This Matters**:
+
+- Prevents horizontal overflow on narrow screens (iPhone SE: 375px width)
+- Ensures touch targets are accessible (≥44x44px iOS HIG requirement)
+- Maintains clear visual hierarchy
+- Prevents button text truncation
+
+---
+
+#### 7.2.4 Mobile-Responsive Button Patterns
+
+All multi-button layouts MUST adapt to mobile viewports using responsive utilities.
+
+**Breakpoint Selection Guide**:
+
+| Pattern                    | Breakpoint    | Rationale                                    |
+| -------------------------- | ------------- | -------------------------------------------- |
+| Page header actions        | `sm:` (640px) | Adequate horizontal space for title + button |
+| Card header actions        | `sm:` (640px) | Matches page header pattern consistency      |
+| Form actions (save/cancel) | `sm:` (640px) | Standard pattern across all forms            |
+| Table/Card display switch  | `md:` (768px) | Tables need more horizontal space            |
+| Modal dialog actions       | `sm:` (640px) | Dialogs are constrained containers           |
+
+**Pattern 1: Form Action Buttons**
+
+```tsx
+<div className="flex flex-col gap-2 sm:flex-row sm:justify-end sm:gap-3">
+    <Button variant="ghost" size="md" className="w-full sm:w-auto">
+        Cancel
+    </Button>
+    <Button variant="primary" size="md" className="w-full sm:w-auto">
+        Save Changes
+    </Button>
+</div>
+```
+
+**Pattern 2: Mobile Card Action Row**
+
+Used in table-to-card responsive layouts (mobile list views):
+
+```tsx
+<div className="flex gap-2 border-t border-gray-200 pt-2">
+    <Link href={`/admin/items/${item.id}/edit`} className="flex-1">
+        <Button variant="secondary" size="sm" className="w-full">
+            <Edit2 size={16} />
+            Edit
+        </Button>
+    </Link>
+    <Button variant="ghost" size="sm" onClick={handleDelete} className="flex-1">
+        <Trash2 size={16} />
+        Delete
+    </Button>
+</div>
+```
+
+**Key characteristics**:
+
+- Parent `flex gap-2` container
+- Each button wrapper has `flex-1` (equal width distribution)
+- Buttons have `w-full` to fill container
+- Separated from content with `border-t border-gray-200 pt-2`
+
+**Real Examples**:
+
+- `resources/js/pages/Admin/Products/Index.tsx:366-377` (mobile card actions)
+- `resources/js/pages/Admin/Categories/Index.tsx:115-124` (mobile card actions)
+
+**Pattern 3: Pagination**
+
+```tsx
+<div className="mt-6 flex flex-col items-center justify-center gap-2 sm:flex-row">
+    <Button variant="secondary" size="sm" disabled={page === 1}>
+        Previous
+    </Button>
+
+    <div className="flex flex-wrap justify-center gap-2">{/* Page number buttons */}</div>
+
+    <Button variant="secondary" size="sm" disabled={page === lastPage}>
+        Next
+    </Button>
+</div>
+```
+
+**Spacing Rules**:
+
+- Mobile gap: `gap-2` (8px) - tighter spacing for limited screen width
+- Desktop gap: `sm:gap-3` (12px) - comfortable spacing
+- Vertical separation: `space-y-4` (16px) - clear section separation
+
+---
+
+#### 7.2.5 Touch Target Requirements
+
+All interactive elements MUST meet Apple Human Interface Guidelines touch target minimums.
+
+**Minimum Touch Target Size**: **44×44px** (iOS HIG requirement)
+
+**Current Button Compliance Status**:
+
+| Button Size | Height | Min Height     | Compliant                         |
+| ----------- | ------ | -------------- | --------------------------------- |
+| `size="sm"` | 32px   | `min-h-[32px]` | ⚠️ No (desktop only)              |
+| `size="md"` | 36px   | `min-h-[36px]` | ⚠️ Marginal (acceptable)          |
+| `size="lg"` | 40px   | `min-h-[40px]` | ⚠️ Close (use for mobile primary) |
+
+**Note**: Current button sizes do NOT fully meet the 44px requirement. This is acceptable for desktop-first applications with careful mobile adaptation.
+
+**Mitigation Strategies**:
+
+1. **Full-width buttons on mobile** (`w-full`)
+    - Increases horizontal touch area
+    - Makes tap target much larger despite button height
+
+2. **Adequate spacing between buttons** (`gap-2` minimum)
+    - Prevents accidental taps on adjacent buttons
+    - 8px minimum gap provides error tolerance
+
+3. **Use `size="md"` or `size="lg"` for mobile primary actions**
+    - Avoid `size="sm"` for mobile-primary interactions
+    - Reserve `size="sm"` for desktop-only tertiary actions
+
+**Testing Touch Targets**:
+
+```bash
+# In browser DevTools (Device Mode)
+1. Select "iPhone SE" preset (375×667)
+2. Enable "Show media queries" in DevTools settings
+3. Inspect button element
+4. Verify computed height ≥36px (acceptable)
+5. Verify no horizontal overflow or text truncation
+```
+
+**Forbidden**:
+
+- ❌ Icon-only buttons <32×32px on mobile
+- ❌ Text buttons without adequate padding
+- ❌ Buttons <8px apart (risk of mis-tap)
+
+---
+
+#### 7.2.6 Common Mobile Anti-Patterns
+
+These patterns MUST be avoided to prevent mobile layout issues.
+
+**Anti-Pattern 1: Horizontal Layout Without Responsive Adaptation**
+
+```tsx
+// ❌ WRONG - No mobile adaptation
+<div className="flex items-center justify-between">
+    <CardTitle>Preview Results</CardTitle>
+    <div className="flex gap-3">
+        <Button variant="primary">Confirm Import</Button>
+        <Button variant="ghost">Cancel</Button>
+    </div>
+</div>
+```
+
+**Problem**:
+
+- On iPhone SE (375px), title + buttons = overflow
+- Button text truncates or wraps awkwardly
+- Poor touch targets (buttons too narrow)
+
+**Visual**:
+
+```
+iPhone SE (375px):
+┌─────────────────────────────────────┐
+│ Preview Results         [Conf] [Can│ ← Truncated!
+└─────────────────────────────────────┘
+```
+
+**Correct**:
+
+```tsx
+// ✅ CORRECT - Responsive stacking
+<div className="space-y-4">
+    <div>
+        <CardTitle>Preview Results</CardTitle>
+    </div>
+    <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
+        <Button variant="primary" className="w-full sm:w-auto">
+            Confirm Import
+        </Button>
+        <Button variant="ghost" className="w-full sm:w-auto">
+            Cancel
+        </Button>
+    </div>
+</div>
+```
+
+**Visual**:
+
+```
+iPhone SE (375px):
+┌─────────────────────────────────────┐
+│ Preview Results                     │
+│                                     │
+│ ┌─────────────────────────────────┐ │
+│ │     Confirm Import              │ │
+│ └─────────────────────────────────┘ │
+│ ┌─────────────────────────────────┐ │
+│ │     Cancel                      │ │
+│ └─────────────────────────────────┘ │
+└─────────────────────────────────────┘
+```
+
+---
+
+**Anti-Pattern 2: Fixed-Width Buttons on Mobile**
+
+```tsx
+// ❌ WRONG - No width adaptation
+<Button variant="primary" className="w-32">
+    Confirm Import
+</Button>
+```
+
+**Problem**:
+
+- Fixed width (128px) may truncate long button text
+- Doesn't utilize available mobile screen width
+- Creates inconsistent button sizes
+
+**Correct**:
+
+```tsx
+// ✅ CORRECT - Responsive width
+<Button variant="primary" className="w-full sm:w-auto">
+    Confirm Import
+</Button>
+```
+
+---
+
+**Anti-Pattern 3: Icon-Only Buttons on Mobile**
+
+```tsx
+// ❌ WRONG - No text label on mobile
+<Button variant="secondary" size="sm">
+    <Upload size={18} />
+</Button>
+```
+
+**Problem**:
+
+- Ambiguous without text label
+- Reduced touch target (icon-only = narrow button)
+- Violates accessibility standards
+
+**Correct**:
+
+```tsx
+// ✅ CORRECT - Icon + text label
+<Button variant="secondary" size="md" className="w-full sm:w-auto">
+    <Upload size={18} />
+    Import Products
+</Button>
+```
+
+---
+
+**Anti-Pattern 4: Insufficient Button Spacing**
+
+```tsx
+// ❌ WRONG - No gap between buttons
+<div className="flex">
+    <Button variant="primary">Save</Button>
+    <Button variant="ghost">Cancel</Button>
+</div>
+```
+
+**Problem**:
+
+- Buttons touch or have <8px gap
+- High risk of accidental mis-tap
+- Visually cramped
+
+**Correct**:
+
+```tsx
+// ✅ CORRECT - Adequate spacing
+<div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
+    <Button variant="primary" className="w-full sm:w-auto">
+        Save
+    </Button>
+    <Button variant="ghost" className="w-full sm:w-auto">
+        Cancel
+    </Button>
+</div>
+```
+
+---
+
+**Anti-Pattern 5: Multiple Primary Buttons on Same Row (Mobile)**
+
+```tsx
+// ❌ WRONG - Multiple primary buttons compete
+<div className="flex gap-3">
+    <Button variant="primary">Export</Button>
+    <Button variant="primary">Import</Button>
+    <Button variant="primary">Sync</Button>
+</div>
+```
+
+**Problem**:
+
+- Visual hierarchy unclear (which action is primary?)
+- On mobile, 3 buttons side-by-side = cramped
+- Violates "one primary action" rule
+
+**Correct**:
+
+```tsx
+// ✅ CORRECT - One primary, others secondary
+<div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
+    <Button variant="primary" className="w-full sm:w-auto">
+        Import
+    </Button>
+    <Button variant="secondary" className="w-full sm:w-auto">
+        Export
+    </Button>
+    <Button variant="secondary" className="w-full sm:w-auto">
+        Sync
+    </Button>
+</div>
+```
+
+Or better yet, move secondary actions to a dropdown/menu.
+
+---
+
+**Testing Checklist**:
+
+Before committing any UI with buttons:
+
+- [ ] Test on iPhone SE (375×667) in DevTools
+- [ ] Verify no horizontal overflow
+- [ ] Verify button text is fully visible (no truncation)
+- [ ] Verify touch targets feel comfortable (not cramped)
+- [ ] Verify adequate spacing between buttons (≥8px)
+- [ ] Verify buttons stack vertically on mobile (<640px)
+- [ ] Verify one clear primary action
+- [ ] Verify no icon-only buttons without text labels
+
+---
+
 ### 7.3 Layout Rules (Desktop)
 
 #### 7.3.1 Width

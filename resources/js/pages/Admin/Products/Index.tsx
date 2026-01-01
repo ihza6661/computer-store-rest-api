@@ -10,7 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { apiDelete } from '@/lib/api';
 import { formatPriceWithCurrency } from '@/lib/utils';
 import { Head, Link } from '@inertiajs/react';
-import { Edit2, Package, Plus, Search, Trash2, X } from 'lucide-react';
+import { Edit2, FileSpreadsheet, Package, Plus, Search, Trash2, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import AdminLayout from '../Layouts/AdminLayout';
 
@@ -211,12 +211,20 @@ export default function ProductsIndex() {
                 {/* Header with title and action button in separate flex container */}
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     <PageHeader title="Products" description="Manage your product inventory" />
-                    <Link href="/admin/products/create">
-                        <Button variant="primary" size="md">
-                            <Plus size={18} />
-                            Add Product
-                        </Button>
-                    </Link>
+                    <div className="flex gap-3">
+                        <Link href="/admin/products/import">
+                            <Button variant="secondary" size="md">
+                                <FileSpreadsheet size={18} />
+                                Import Products
+                            </Button>
+                        </Link>
+                        <Link href="/admin/products/create">
+                            <Button variant="primary" size="md">
+                                <Plus size={18} />
+                                Add Product
+                            </Button>
+                        </Link>
+                    </div>
                 </div>
 
                 {/* Search and Filter Section - unwrapped from Card */}

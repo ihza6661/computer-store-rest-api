@@ -3,10 +3,18 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Imports\ProductsImport;
+use App\Jobs\ImportProductsJob;
 use App\Models\Product;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class ProductController extends Controller
 {
@@ -247,5 +255,204 @@ class ProductController extends Controller
 
         return redirect()->route('admin.products.index')
             ->with('success', 'Product deleted successfully!');
+    }
+
+    /**
+     * Show import preview with validation
+     * POST /admin/products/import/preview
+     */
+    public function importPreview(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls,csv|max:10240', // Max 10MB
+        ]);
+
+        try {
+            $file = $request->file('file');
+
+            // Perform preview import (validation only, no database insert)
+            $import = new ProductsImport(true); // Preview mode
+            Excel::import($import, $file);
+
+            $results = $import->getResults();
+
+            return response()->json([
+                'success' => true,
+                'results' => $results,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Import preview failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to process file: '.$e->getMessage(),
+            ], 400);
+        }
+    }
+
+    /**
+     * Execute import in background
+     * POST /admin/products/import/store
+     */
+    public function importStore(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls,csv|max:10240', // Max 10MB
+        ]);
+
+        try {
+            $file = $request->file('file');
+
+            // Store file temporarily
+            $filePath = $file->store('imports', 'local');
+
+            // Generate unique job ID
+            $jobId = Str::uuid()->toString();
+
+            // Dispatch job
+            ImportProductsJob::dispatch($filePath, auth()->id(), $jobId);
+
+            return response()->json([
+                'success' => true,
+                'job_id' => $jobId,
+                'message' => 'Import job started. You will be notified when it completes.',
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Import dispatch failed', [
+                'error' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to start import: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Check import job status
+     * GET /admin/products/import/status/{jobId}
+     */
+    public function importStatus(string $jobId)
+    {
+        $status = Cache::get("import_job_{$jobId}_status", 'not_found');
+        $results = Cache::get("import_job_{$jobId}_results");
+        $error = Cache::get("import_job_{$jobId}_error");
+
+        return response()->json([
+            'status' => $status,
+            'results' => $results,
+            'error' => $error,
+        ]);
+    }
+
+    /**
+     * Download Excel template
+     * GET /admin/products/import/template
+     */
+    public function downloadTemplate()
+    {
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Set headers
+        $headers = [
+            'name',
+            'category',
+            'brand',
+            'description',
+            'price',
+            'sku',
+            'stock',
+            'processor',
+            'gpu',
+            'ram',
+            'storage',
+            'display',
+            'keyboard',
+            'battery',
+            'warranty',
+            'condition',
+            'extras',
+            'original_price',
+            'features',
+        ];
+
+        $sheet->fromArray([$headers], null, 'A1');
+
+        // Add example data
+        $exampleData = [
+            [
+                'MacBook Pro M3 16" 2024',
+                'Laptop',
+                'Apple',
+                'High performance laptop with M3 chip',
+                35000000,
+                'MBP-M3-16-001',
+                5,
+                'Apple M3 Max',
+                'Integrated 40-core GPU',
+                '48GB Unified Memory',
+                '2TB SSD',
+                '16.2" Liquid Retina XDR',
+                'Magic Keyboard with Touch ID',
+                'Up to 22 hours',
+                '1 Year Apple Limited Warranty',
+                'new',
+                'USB-C charger, cleaning cloth',
+                38000000,
+                'ProMotion, HDR, P3 wide color',
+            ],
+            [
+                'Dell XPS 15 9530',
+                'Laptop',
+                'Dell',
+                'Premium ultrabook for professionals',
+                28000000,
+                'DELL-XPS15-001',
+                3,
+                'Intel Core i7-13700H',
+                'NVIDIA RTX 4060 8GB',
+                '32GB DDR5',
+                '1TB NVMe SSD',
+                '15.6" 3.5K OLED Touch',
+                'Backlit keyboard',
+                'Up to 13 hours',
+                '1 Year Premium Support',
+                'new',
+                'Dell USB-C charger 130W',
+                30000000,
+                'Thunderbolt 4, Wi-Fi 6E, Killer AX1675',
+            ],
+        ];
+
+        $sheet->fromArray($exampleData, null, 'A2');
+
+        // Auto-size columns
+        foreach (range('A', $sheet->getHighestColumn()) as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        // Style header row
+        $headerStyle = [
+            'font' => ['bold' => true],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => ['rgb' => 'E5E7EB'],
+            ],
+        ];
+        $sheet->getStyle('A1:'.$sheet->getHighestColumn().'1')->applyFromArray($headerStyle);
+
+        // Create writer and download
+        $writer = new Xlsx($spreadsheet);
+        $fileName = 'product_import_template_'.date('Y-m-d').'.xlsx';
+        $tempFile = tempnam(sys_get_temp_dir(), 'excel_');
+
+        $writer->save($tempFile);
+
+        return response()->download($tempFile, $fileName)->deleteFileAfterSend(true);
     }
 }

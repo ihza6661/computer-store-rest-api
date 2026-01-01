@@ -80,15 +80,15 @@ export default function CreateCategory() {
                             />
                         </div>
 
-                        <div className="flex justify-end gap-2">
-                            <Button type="submit" disabled={loading} variant="primary">
-                                {loading ? 'Creating...' : 'Create Category'}
-                            </Button>
+                        <div className="flex flex-col gap-2 sm:flex-row sm:justify-end sm:gap-3">
                             <Link href="/admin/categories">
-                                <Button type="button" variant="secondary">
+                                <Button type="button" variant="secondary" className="w-full sm:w-auto">
                                     Cancel
                                 </Button>
                             </Link>
+                            <Button type="submit" disabled={loading} variant="primary" className="w-full sm:w-auto">
+                                {loading ? 'Creating...' : 'Create Category'}
+                            </Button>
                         </div>
                     </form>
                 </div>

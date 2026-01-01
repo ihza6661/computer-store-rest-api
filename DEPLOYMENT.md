@@ -30,6 +30,10 @@ SESSION_SECURE_COOKIE=true  # Required for HTTPS
 QUEUE_CONNECTION=database
 CACHE_STORE=database
 
+# IMPORTANT: Queue Worker Configuration
+# The Product Import feature uses background jobs that require a queue worker.
+# See "Queue Worker Setup" section below for configuration details.
+
 # Cloudinary (for image uploads)
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
@@ -113,6 +117,170 @@ Migrations run automatically on deployment via `Procfile`:
 release: php artisan migrate --force
 ```
 
+### Queue Worker Setup (Required for Product Import Feature)
+
+The Product Import feature uses Laravel's queue system to process Excel imports in the background. Without a queue worker running, import jobs will remain stuck in "processing" state.
+
+#### Option 1: Heroku Worker Dyno (Recommended for Production)
+
+**Add a worker dyno to your Procfile:**
+
+```
+web: vendor/bin/heroku-php-apache2 public/
+release: php artisan migrate --force
+worker: php artisan queue:work --tries=3 --timeout=300
+```
+
+**Enable the worker dyno:**
+
+```bash
+# Scale up worker dyno
+heroku ps:scale worker=1
+
+# Check dyno status
+heroku ps
+
+# View worker logs
+heroku logs --tail --dyno=worker
+```
+
+**Cost Consideration:**
+
+- Basic worker dyno: $7/month (25 Eco hours free per month)
+- For low-volume imports, consider Option 2 or 3
+
+#### Option 2: Heroku Scheduler (Free Alternative)
+
+For low-frequency imports (e.g., weekly/daily), use Heroku Scheduler addon:
+
+**Install Scheduler:**
+
+```bash
+heroku addons:create scheduler:standard
+```
+
+**Add scheduled job (via Heroku Dashboard):**
+
+- Command: `php artisan queue:work --stop-when-empty --tries=3`
+- Frequency: Every 10 minutes (or as needed)
+
+**Pros:**
+
+- Free
+- No permanent worker dyno needed
+
+**Cons:**
+
+- Jobs may be delayed up to 10 minutes
+- Not suitable for real-time processing
+
+#### Option 3: Local Development Queue Worker
+
+For local development, run the queue worker in a separate terminal:
+
+**Using Laravel's dev script (includes queue worker):**
+
+```bash
+composer run dev
+```
+
+This runs:
+
+- Laravel server on port 8000
+- Queue worker with auto-reload on code changes
+
+**Or manually:**
+
+```bash
+php artisan queue:work --tries=3
+```
+
+#### Queue Configuration Best Practices
+
+**Timeout Settings:**
+
+- Default: 60 seconds
+- Recommended for imports: 300 seconds (5 minutes)
+- Large files may need 600 seconds (10 minutes)
+
+**Retry Settings:**
+
+- Tries: 3 attempts before marking as failed
+- Delay: Exponential backoff (1s, 5s, 15s)
+
+**Monitor Queue Health:**
+
+```bash
+# Check pending jobs
+heroku run php artisan queue:monitor
+
+# Failed jobs list
+heroku run php artisan queue:failed
+
+# Retry all failed jobs
+heroku run php artisan queue:retry all
+
+# Clear failed jobs
+heroku run php artisan queue:flush
+```
+
+#### Troubleshooting Queue Issues
+
+**Problem: Import stuck at "processing"**
+
+**Symptoms:**
+
+- Import status shows "processing" indefinitely
+- No products created after import
+
+**Solutions:**
+
+1. Check if worker dyno is running: `heroku ps`
+2. Check worker logs: `heroku logs --tail --dyno=worker`
+3. Verify `QUEUE_CONNECTION=database` is set
+4. Check jobs table: `heroku run php artisan tinker` → `DB::table('jobs')->count()`
+
+**Problem: Worker dyno crashes**
+
+**Symptoms:**
+
+- Worker dyno shows "crashed" state
+- Logs show memory errors
+
+**Solutions:**
+
+1. Increase timeout: Update `worker:` command to `--timeout=600`
+2. Reduce batch size in import logic
+3. Upgrade to Standard 1X dyno (512MB RAM)
+
+**Problem: Jobs fail with "Maximum execution time exceeded"**
+
+**Solutions:**
+
+1. Increase `--timeout` value in worker command
+2. Add `set_time_limit(300)` in ImportProductsJob
+3. Process smaller batches
+
+#### Queue Monitoring Dashboard
+
+For production, consider installing Laravel Horizon (optional):
+
+```bash
+composer require laravel/horizon
+php artisan horizon:install
+```
+
+Horizon provides:
+
+- Real-time queue monitoring
+- Failed job management
+- Metrics and analytics
+
+**Access Horizon dashboard:**
+`https://your-app.herokuapp.com/horizon`
+
+_Note: Requires authentication middleware_
+
 ### Deployment Checklist
 
 Before deploying to Heroku:
@@ -121,10 +289,16 @@ Before deploying to Heroku:
 - [ ] Ensure `APP_KEY` is generated (Heroku should auto-generate)
 - [ ] Verify `APP_URL` matches your Heroku app URL
 - [ ] Set `SESSION_SECURE_COOKIE=true` for production
+- [ ] Set `QUEUE_CONNECTION=database` for background jobs
 - [ ] Configure Cloudinary credentials
 - [ ] Configure SendGrid API key (if using email)
 - [ ] Run database migrations (automatic via Procfile)
 - [ ] Seed admin users if needed: `heroku run php artisan db:seed --class=AdminSeeder`
+- [ ] **Set up queue worker (required for product import feature)**
+    - [ ] Add `worker:` line to Procfile
+    - [ ] Scale worker dyno: `heroku ps:scale worker=1`
+    - [ ] Or configure Heroku Scheduler for periodic processing
+- [ ] Test product import feature after deployment
 
 ### Deployment Commands
 
