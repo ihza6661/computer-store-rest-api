@@ -72,6 +72,7 @@ export default function Import() {
             const response = await fetch('/admin/products/import/preview', {
                 method: 'POST',
                 body: formData,
+                credentials: 'include',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector<HTMLMetaElement>('meta[name="csrf-token"]')?.content || '',
                 },
@@ -104,6 +105,7 @@ export default function Import() {
             const response = await fetch('/admin/products/import/store', {
                 method: 'POST',
                 body: formData,
+                credentials: 'include',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector<HTMLMetaElement>('meta[name="csrf-token"]')?.content || '',
                 },
