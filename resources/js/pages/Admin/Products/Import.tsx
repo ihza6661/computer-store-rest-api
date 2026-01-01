@@ -304,28 +304,6 @@ export default function Import() {
                                 </div>
                             )}
 
-                            <div className="flex items-center gap-2">
-                                <input
-                                    type="checkbox"
-                                    id="allow-update"
-                                    checked={allowUpdate}
-                                    onChange={(e) => setAllowUpdate(e.target.checked)}
-                                    className="h-4 w-4 rounded border-gray-300 text-gray-900 focus:ring-2 focus:ring-gray-900 focus:ring-offset-0"
-                                />
-                                <label htmlFor="allow-update" className="text-sm text-gray-700">
-                                    Update existing products with same SKU
-                                </label>
-                            </div>
-
-                            {allowUpdate && (
-                                <div className="rounded border border-gray-200 bg-gray-50 p-3">
-                                    <p className="text-xs text-gray-600">
-                                        When enabled, products with existing SKUs will be updated. Only price, stock, and description will be
-                                        modified.
-                                    </p>
-                                </div>
-                            )}
-
                             {error && (
                                 <div className="flex items-start gap-3 rounded border border-gray-200 bg-gray-50 p-4">
                                     <AlertCircle size={20} className="mt-0.5 flex-shrink-0 text-gray-700" />
