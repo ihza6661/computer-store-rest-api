@@ -47,7 +47,7 @@ class ImportProductsJob implements ShouldQueue
 
             // Perform the import
             $import = new ProductsImport(false); // Not preview mode
-            Excel::import($import, $this->filePath);
+            Excel::import($import, Storage::path($this->filePath));
 
             // Get results
             $results = $import->getResults();

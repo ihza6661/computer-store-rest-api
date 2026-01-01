@@ -312,6 +312,9 @@ class ProductController extends Controller
             // Generate unique job ID
             $jobId = Str::uuid()->toString();
 
+            // Initialize status in cache to prevent 'not_found' race condition
+            Cache::put("import_job_{$jobId}_status", 'processing', now()->addHours(1));
+
             // Dispatch job
             ImportProductsJob::dispatch($filePath, auth()->id(), $jobId);
 

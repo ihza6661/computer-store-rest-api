@@ -128,7 +128,18 @@ export default function Import() {
     };
 
     const pollImportStatus = async (jobId: string) => {
+        let attempts = 0;
+        const maxAttempts = 150; // 5 minutes max (150 * 2 seconds = 300 seconds)
+
         const poll = async () => {
+            attempts++;
+
+            if (attempts > maxAttempts) {
+                setError('Import is taking too long. Please refresh the page and check your products.');
+                setImporting(false);
+                return;
+            }
+
             try {
                 const response = await fetch(`/admin/products/import/status/${jobId}`);
                 const data: ImportStatusResponse = await response.json();
@@ -144,8 +155,8 @@ export default function Import() {
                 } else if (data.status === 'failed') {
                     setError(data.error || 'Import failed');
                     setImporting(false);
-                } else if (data.status === 'processing') {
-                    // Continue polling
+                } else {
+                    // Keep polling for 'processing' or 'not_found' status
                     setTimeout(poll, 2000);
                 }
             } catch (err) {
