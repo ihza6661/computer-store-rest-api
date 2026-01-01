@@ -311,31 +311,50 @@ class ProductController extends Controller
             $file = $request->file('file');
             $allowUpdate = $request->boolean('allow_update');
 
-            // Store file temporarily
-            $filePath = $file->store('imports', 'local');
-
-            // Generate unique job ID
+            // Generate unique job ID for tracking
             $jobId = Str::uuid()->toString();
 
-            // Initialize status in cache to prevent 'not_found' race condition
+            // Set status to processing
             Cache::put("import_job_{$jobId}_status", 'processing', now()->addHours(1));
 
-            // Dispatch job
-            ImportProductsJob::dispatch($filePath, Auth::id(), $jobId, $allowUpdate);
+            // Process import synchronously (Heroku doesn't share filesystem between dynos)
+            // This avoids file not found errors when worker dyno tries to access the file
+            $import = new ProductsImport(false, $allowUpdate);
+            Excel::import($import, $file);
+
+            // Get results
+            $results = $import->getResults();
+
+            // Store results in cache
+            Cache::put("import_job_{$jobId}_results", $results, now()->addHours(1));
+            Cache::put("import_job_{$jobId}_status", 'completed', now()->addHours(1));
+
+            Log::info('Product import completed synchronously', [
+                'job_id' => $jobId,
+                'user_id' => Auth::id(),
+                'summary' => $results['summary'],
+            ]);
 
             return response()->json([
                 'success' => true,
                 'job_id' => $jobId,
-                'message' => 'Import job started. You will be notified when it completes.',
+                'message' => 'Import completed successfully.',
             ]);
         } catch (\Exception $e) {
-            Log::error('Import dispatch failed', [
+            Log::error('Import failed', [
                 'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
             ]);
+
+            // Store error in cache if job_id exists
+            if (isset($jobId)) {
+                Cache::put("import_job_{$jobId}_status", 'failed', now()->addHours(1));
+                Cache::put("import_job_{$jobId}_error", $e->getMessage(), now()->addHours(1));
+            }
 
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to start import: '.$e->getMessage(),
+                'message' => 'Failed to import: '.$e->getMessage(),
             ], 500);
         }
     }
