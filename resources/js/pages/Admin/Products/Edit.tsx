@@ -438,9 +438,13 @@ export default function EditProduct({ product, categories }: Props) {
                                             className="w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-[#0071e3] focus:outline-none"
                                         >
                                             <option value="">Select condition</option>
+                                            <option value="new">New (Baru)</option>
                                             <option value="excellent">Excellent (Sangat Baik)</option>
                                             <option value="good">Good (Baik)</option>
                                             <option value="fair">Fair (Cukup Baik)</option>
+                                            <option value="used-excellent">Used - Excellent (Bekas - Sangat Baik)</option>
+                                            <option value="used-very-good">Used - Very Good (Bekas - Baik Sekali)</option>
+                                            <option value="used-good">Used - Good (Bekas - Baik)</option>
                                         </select>
                                         <p className="mt-1 text-xs text-gray-600">This will be displayed as a badge on the product card</p>
                                     </div>
