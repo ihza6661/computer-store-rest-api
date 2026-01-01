@@ -193,10 +193,10 @@ export default function EditProduct({ product, categories }: Props) {
                 <div>
                     <BackLink href="/admin/products">Products</BackLink>
                     <h1 className="text-3xl font-bold">Edit Product</h1>
-                    <p className="text-gray-600">Update product information</p>
+                    <p className="text-sm text-gray-500">Update product information</p>
                 </div>
 
-                <div className="rounded-lg bg-white p-6 shadow">
+                <div className="rounded-lg border border-gray-200/60 bg-white p-6">
                     <h2 className="mb-6 text-lg font-bold">Product Details</h2>
 
                     <form onSubmit={handleSubmit} className="space-y-6">
@@ -273,7 +273,7 @@ export default function EditProduct({ product, categories }: Props) {
                                 </div>
                             </div>
 
-                            <div>
+                            <div className="mt-6">
                                 <label className="mb-1 block text-sm font-medium">Description</label>
                                 <textarea
                                     value={data.description}
@@ -514,7 +514,7 @@ export default function EditProduct({ product, categories }: Props) {
                                     <div>
                                         <label className="mb-1 block text-sm font-medium">Current Price (Rp) *</label>
                                         <div className="relative">
-                                            <span className="absolute top-1/2 left-3 -translate-y-1/2 font-medium text-gray-500">Rp</span>
+                                            <span className="absolute top-1/2 left-3 -translate-y-1/2 font-normal text-gray-400">Rp</span>
                                             <input
                                                 type="number"
                                                 step="1"
@@ -533,7 +533,7 @@ export default function EditProduct({ product, categories }: Props) {
                                             Original Price (Rp) <span className="text-xs text-gray-500">(Optional - For discount display)</span>
                                         </label>
                                         <div className="relative">
-                                            <span className="absolute top-1/2 left-3 -translate-y-1/2 font-medium text-gray-500">Rp</span>
+                                            <span className="absolute top-1/2 left-3 -translate-y-1/2 font-normal text-gray-400">Rp</span>
                                             <input
                                                 type="number"
                                                 step="1"
@@ -693,17 +693,14 @@ export default function EditProduct({ product, categories }: Props) {
 
                         {/* Validation Warnings */}
                         {(!data.specifications.processor || !data.specifications.ram || !data.specifications.storage) && (
-                            <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
-                                <p className="mb-2 text-sm font-medium text-gray-700">Recommendation:</p>
-                                <ul className="ml-4 list-disc space-y-1 text-sm text-gray-600">
-                                    {!data.specifications.processor && <li>Add Processor for better product display</li>}
-                                    {!data.specifications.ram && <li>Add RAM for better product display</li>}
-                                    {!data.specifications.storage && <li>Add Storage for better product display</li>}
-                                </ul>
+                            <div className="space-y-1 text-sm text-gray-600">
+                                {!data.specifications.processor && <p>Consider adding Processor for better product display</p>}
+                                {!data.specifications.ram && <p>Consider adding RAM for better product display</p>}
+                                {!data.specifications.storage && <p>Consider adding Storage for better product display</p>}
                             </div>
                         )}
 
-                        <div className="flex gap-2 border-t pt-4">
+                        <div className="flex justify-end gap-2 border-t pt-4">
                             <Button type="submit" disabled={processing || uploadingImages} variant="primary">
                                 {uploadingImages ? `Uploading ${data.images.length} image(s)...` : processing ? 'Saving...' : 'Save Changes'}
                             </Button>

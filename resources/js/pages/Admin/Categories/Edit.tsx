@@ -36,10 +36,10 @@ export default function EditCategory({ category }: Props) {
                 <div>
                     <BackLink href="/admin/categories">Categories</BackLink>
                     <h1 className="text-3xl font-bold">Edit Category</h1>
-                    <p className="text-gray-600">Update category information</p>
+                    <p className="text-sm text-gray-500">Update category information</p>
                 </div>
 
-                <div className="rounded-lg bg-white p-6 shadow">
+                <div className="rounded-lg border border-gray-200/60 bg-white p-6">
                     <h2 className="mb-6 text-lg font-bold">Category Details</h2>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
@@ -66,7 +66,7 @@ export default function EditCategory({ category }: Props) {
                             />
                         </div>
 
-                        <div className="flex gap-2">
+                        <div className="flex justify-end gap-2">
                             <Button type="submit" disabled={processing} variant="primary">
                                 {processing ? 'Saving...' : 'Save Changes'}
                             </Button>

@@ -1,90 +1,86 @@
-import { Head, Link } from '@inertiajs/react'
-import AdminLayout from '../Layouts/AdminLayout'
-import { Plus, FolderKanban } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { apiDelete } from '@/lib/api'
-import { Button } from '@/components/ui/Button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
-import { ConfirmModal } from '@/components/ui/ConfirmModal'
-import { Spinner } from '@/components/ui/Spinner'
-import { EmptyState } from '@/components/ui/EmptyState'
-import { CardSkeleton } from '@/components/ui/Skeleton'
-import { PageHeader } from '@/components/layout/PageHeader'
+import { PageHeader } from '@/components/layout/PageHeader';
+import { Button } from '@/components/ui/Button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
+import { ConfirmModal } from '@/components/ui/ConfirmModal';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { CardSkeleton } from '@/components/ui/Skeleton';
+import { apiDelete } from '@/lib/api';
+import { Head, Link } from '@inertiajs/react';
+import { FolderKanban, Plus } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import AdminLayout from '../Layouts/AdminLayout';
 
 interface Category {
-  id: number
-  name: string
-  slug: string
-  description: string
+    id: number;
+    name: string;
+    slug: string;
+    description: string;
 }
 
 export default function CategoriesIndex() {
-    const [categories, setCategories] = useState<Category[]>([])
-    const [loading, setLoading] = useState(true)
-    const [deleteModalOpen, setDeleteModalOpen] = useState(false)
-    const [categoryToDelete, setCategoryToDelete] = useState<number | null>(null)
-    const [deleting, setDeleting] = useState(false)
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [categoryToDelete, setCategoryToDelete] = useState<number | null>(null);
+    const [deleting, setDeleting] = useState(false);
 
     useEffect(() => {
-        fetchCategories()
-    }, [])
+        fetchCategories();
+    }, []);
 
     const fetchCategories = () => {
-        setLoading(true)
+        setLoading(true);
         fetch('/api/categories')
             .then((res) => res.json())
             .then((data) => {
-                setCategories(data)
-                setLoading(false)
-            })
-    }
+                setCategories(data);
+                setLoading(false);
+            });
+    };
 
     const handleDelete = (id: number) => {
-        setCategoryToDelete(id)
-        setDeleteModalOpen(true)
-    }
+        setCategoryToDelete(id);
+        setDeleteModalOpen(true);
+    };
 
     const confirmDelete = async () => {
-        if (!categoryToDelete) return
+        if (!categoryToDelete) return;
 
-        setDeleting(true)
+        setDeleting(true);
         try {
-            const response = await apiDelete(`/api/admin/categories/${categoryToDelete}`)
+            const response = await apiDelete(`/api/admin/categories/${categoryToDelete}`);
 
             if (!response.ok) {
-                alert('Failed to delete category')
-                return
+                alert('Failed to delete category');
+                return;
             }
 
-            fetchCategories()
-            setDeleteModalOpen(false)
-            setCategoryToDelete(null)
+            fetchCategories();
+            setDeleteModalOpen(false);
+            setCategoryToDelete(null);
         } catch {
-            alert('Error deleting category')
+            alert('Error deleting category');
         } finally {
-            setDeleting(false)
+            setDeleting(false);
         }
-    }
+    };
 
     return (
         <AdminLayout>
             <Head title="Categories" />
             <div className="space-y-6">
-                <PageHeader
-                    title="Categories"
-                    description="Manage product categories"
-                    actions={
-                        <Link href="/admin/categories/create">
-                            <Button variant="primary" size="md">
-                                <Plus size={18} />
-                                Add Category
-                            </Button>
-                        </Link>
-                    }
-                />
+                <div className="flex items-start justify-between gap-4">
+                    <PageHeader title="Categories" description="Manage product categories" />
+                    <Link href="/admin/categories/create">
+                        <Button variant="primary" size="md">
+                            <Plus size={18} />
+                            Add Category
+                        </Button>
+                    </Link>
+                </div>
 
                 {loading ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                         {[...Array(6)].map((_, i) => (
                             <CardSkeleton key={i} />
                         ))}
@@ -108,7 +104,7 @@ export default function CategoriesIndex() {
                         </CardContent>
                     </Card>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                         {categories.map((cat) => (
                             <Card key={cat.id}>
                                 <CardHeader>
@@ -137,8 +133,8 @@ export default function CategoriesIndex() {
             <ConfirmModal
                 open={deleteModalOpen}
                 onClose={() => {
-                    setDeleteModalOpen(false)
-                    setCategoryToDelete(null)
+                    setDeleteModalOpen(false);
+                    setCategoryToDelete(null);
                 }}
                 onConfirm={confirmDelete}
                 title="Delete Category"
@@ -147,5 +143,5 @@ export default function CategoriesIndex() {
                 loading={deleting}
             />
         </AdminLayout>
-    )
+    );
 }

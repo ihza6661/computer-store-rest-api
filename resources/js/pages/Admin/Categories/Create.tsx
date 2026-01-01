@@ -48,10 +48,10 @@ export default function CreateCategory() {
                 <div>
                     <BackLink href="/admin/categories">Categories</BackLink>
                     <h1 className="text-3xl font-bold">Create Category</h1>
-                    <p className="text-gray-600">Add a new product category</p>
+                    <p className="text-sm text-gray-500">Add a new product category</p>
                 </div>
 
-                <div className="rounded-lg bg-white p-6 shadow">
+                <div className="rounded-lg border border-gray-200/60 bg-white p-6">
                     <h2 className="mb-6 text-lg font-bold">Category Details</h2>
 
                     {errors.general && <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-red-700">{errors.general}</div>}
@@ -80,7 +80,7 @@ export default function CreateCategory() {
                             />
                         </div>
 
-                        <div className="flex gap-2">
+                        <div className="flex justify-end gap-2">
                             <Button type="submit" disabled={loading} variant="primary">
                                 {loading ? 'Creating...' : 'Create Category'}
                             </Button>

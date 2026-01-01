@@ -11,6 +11,7 @@ Violations of this document are regressions, not creative decisions.
 - [Enforcement & Automation](DESIGN_SYSTEM.md#appendix-b-enforcement--automation) - Pre-commit validation
 - [Future Evolution](DESIGN_SYSTEM_ROADMAP.md) - Token-only mode, CI hardening (non-urgent)
 - [Agent Rules](AGENTS.md) - AI agent operating constraints
+- [Layout & Interaction Rules](DESIGN_SYSTEM.md#7-admin-ui-layout--interaction-rules-apple-standard) - Page structure and composition rules
 
 ---
 
@@ -814,9 +815,228 @@ focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1
 
 ---
 
-## 7. Iconography Rules
+## 7. Admin UI Layout & Interaction Rules (Apple-Standard)
 
-### 7.1 Allowed Icon Usage
+These rules govern spatial hierarchy and page composition. If a layout choice is not explicitly allowed here, it is forbidden by default.
+
+### 7.1 Core Principles (Non-Negotiable)
+
+1. **Hierarchy over decoration**
+    - Visual importance must match semantic importance.
+    - Titles dominate. Navigation supports. Inputs comply.
+
+2. **Clarity beats density**
+    - Desktop admin UIs are not dashboards for astronauts.
+    - If everything is visible at once, nothing is readable.
+
+3. **Consistency is more important than cleverness**
+    - Reuse patterns even if a one-off looks "slightly better".
+
+---
+
+### 7.2 Page Structure Rules
+
+#### 7.2.1 Page Header
+
+Every admin page MUST follow this order:
+
+1. Optional back/context link (subordinate)
+2. Page title (primary)
+3. Optional subtitle/description (muted)
+
+**Rules**
+
+- Back link is **above** the title, never beside it
+- Back link is text-style, never a button
+- Page title is the largest text on the page
+- Subtitle is smaller and muted
+
+**Forbidden**
+
+- Back button as a peer of the title
+- Icons or actions competing with the title
+- Centered headers on desktop admin pages
+
+---
+
+### 7.3 Layout Rules (Desktop)
+
+#### 7.3.1 Width
+
+- Max content width: **1100–1200px**
+- Content must be centered with generous horizontal padding
+- Never stretch forms edge-to-edge on large screens
+
+---
+
+#### 7.3.2 Forms (Create / Edit Pages)
+
+**Default Form Layout**
+
+- **Single primary column**
+- Inputs stacked vertically
+- Related fields may use **2-column grid**, never more
+
+**Rules**
+
+- One task per page
+- One form per page
+- One primary action
+
+**Allowed**
+
+- 2-column layout for:
+    - Price + Stock
+    - First Name + Last Name
+    - Start Date + End Date
+
+**Forbidden**
+
+- Forms next to tables
+- Forms split across multiple visual columns
+- More than 2 inputs in one row
+
+---
+
+#### 7.3.3 Tables (Index / List Pages)
+
+Tables are for **browsing**, not editing.
+
+**Rules**
+
+- Tables live on their own page or section
+- Filters/search sit ABOVE the table
+- Actions are per-row or in a top-right toolbar
+
+**Forbidden**
+
+- Inline editing inside tables (unless explicitly documented)
+- Forms directly beside tables on desktop
+- Tables inside cards for layout reasons
+
+---
+
+### 7.4 Detail Pages (Read Views)
+
+Detail pages follow this structure:
+
+1. Header (back link + title)
+2. Content blocks (cards or sections)
+3. Actions at the bottom or top-right (muted)
+
+**Rules**
+
+- Information grouped into labeled sections
+- Labels muted, values emphasized
+- Long text gets its own full-width block
+
+---
+
+### 7.5 Actions & Buttons
+
+#### 7.5.1 Primary Action
+
+- Exactly **one** primary button per page
+- Located bottom-right of the form or top-right of the page
+
+#### 7.5.2 Secondary Actions
+
+- Text buttons or muted buttons
+- Never visually compete with primary action
+
+**Forbidden**
+
+- Multiple primary buttons
+- Destructive actions styled as primary
+- Buttons inside headers unless documented
+
+---
+
+### 7.6 Visual Rules
+
+#### 7.6.1 Color
+
+- Use design tokens only
+- Grayscale by default
+- Color indicates state, not decoration
+
+**Forbidden**
+
+- Hardcoded colors
+- Arbitrary Tailwind color classes
+- Decorative color usage
+
+---
+
+#### 7.6.2 Spacing
+
+- Use spacing tokens only
+- Vertical rhythm must be consistent
+- Sections separated by space, not lines
+
+**Forbidden**
+
+- Custom margins for "visual tuning"
+- One-off spacing fixes
+
+---
+
+### 7.7 Components & Reuse
+
+- Reuse existing components before creating new ones
+- If a new pattern is needed:
+    1. Document it
+    2. Get approval
+    3. Then implement
+
+**Forbidden**
+
+- One-off components for single pages
+- Copy-pasted layout structures with minor tweaks
+
+---
+
+### 7.8 AI Agent Constraints
+
+When implementing UI:
+
+1. **Follow this document first**
+2. If unsure, STOP and ask
+3. Never invent new layout patterns
+4. Never "improve" hierarchy subjectively
+5. If it's not documented, it's not allowed
+
+Violations are bugs, not preferences.
+
+---
+
+### 7.9 Success Criteria
+
+A page is considered correct when:
+
+- Hierarchy is immediately obvious
+- Actions are unambiguous
+- Layout matches other admin pages
+- No explanation is needed for navigation
+
+If the UI needs explanation, the rules were violated.
+
+---
+
+### 7.10 Final Note (for the agent)
+
+You are not designing.  
+You are **implementing a system**.
+
+Precision > creativity.  
+Consistency > novelty.  
+Rules > intuition.
+
+---
+
+## 8. Iconography Rules
+
+### 8.1 Allowed Icon Usage
 
 Icons may **ONLY** be used:
 
@@ -830,7 +1050,7 @@ Icons may **ONLY** be used:
     - Size: `h-4 w-4`
     - Color: `text-gray-400`
 
-### 7.2 Icon Color Constraints
+### 8.2 Icon Color Constraints
 
 Icons must **ONLY** use:
 
@@ -849,7 +1069,7 @@ Icons must **ONLY** use:
 
 **Exception**: Icons within error messages may inherit `text-red-600` from parent.
 
-### 7.3 Icon Size Constraints
+### 8.3 Icon Size Constraints
 
 Allowed sizes:
 
@@ -864,7 +1084,7 @@ Allowed sizes:
 - Decorative large icons
 - Icon-only pages
 
-### 7.4 Emoji Ban
+### 8.4 Emoji Ban
 
 **Emojis are PERMANENTLY BANNED from structural UI.**
 
@@ -889,11 +1109,11 @@ Emojis may **NOT** appear in:
 
 ---
 
-## 8. Forbidden Patterns (Anti-Pattern List)
+## 9. Forbidden Patterns (Anti-Pattern List)
 
 The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violations:
 
-### 8.1 Color-Coded Sections
+### 9.1 Color-Coded Sections
 
 **Forbidden**:
 
@@ -907,7 +1127,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 
 **Correct**: Use white background with typography hierarchy.
 
-### 8.2 Emoji Headers
+### 9.2 Emoji Headers
 
 **Forbidden**:
 
@@ -921,7 +1141,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 
 **Correct**: Use text only.
 
-### 8.3 Colored Status Badges
+### 9.3 Colored Status Badges
 
 **Forbidden**:
 
@@ -935,7 +1155,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 
 **Correct**: Use text-only badges with clear wording.
 
-### 8.4 Semantic Background Colors
+### 9.4 Semantic Background Colors
 
 **Forbidden**:
 
@@ -949,7 +1169,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 
 **Correct**: Use gray background or white, with gray text.
 
-### 8.5 Colored Text Emphasis
+### 9.5 Colored Text Emphasis
 
 **Forbidden**:
 
@@ -963,7 +1183,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 
 **Correct**: Use font weight and size.
 
-### 8.6 Expressive Warning Boxes
+### 9.6 Expressive Warning Boxes
 
 **Forbidden**:
 
@@ -977,7 +1197,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 
 **Correct**: Use gray background with gray text.
 
-### 8.7 Colored Hover States
+### 9.7 Colored Hover States
 
 **Forbidden**:
 
@@ -989,7 +1209,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 
 **Correct**: Use `hover:bg-gray-100/40`.
 
-### 8.8 Multiple Accent Colors
+### 9.8 Multiple Accent Colors
 
 **Forbidden**:
 
@@ -1003,7 +1223,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 
 **Correct**: Use single accent color with variant differentiation.
 
-### 8.9 Decorative Icons
+### 9.9 Decorative Icons
 
 **Forbidden**:
 
@@ -1017,7 +1237,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 
 **Correct**: Remove icon or use monochrome.
 
-### 8.10 Gradient Backgrounds
+### 9.10 Gradient Backgrounds
 
 **Forbidden**:
 
@@ -1029,7 +1249,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 
 **Correct**: Use solid white or gray.
 
-### 8.11 Shadow Elevation System
+### 9.11 Shadow Elevation System
 
 **Forbidden**:
 
@@ -1041,7 +1261,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 
 **Correct**: Use border for definition.
 
-### 8.12 Colored Form Labels
+### 9.12 Colored Form Labels
 
 **Forbidden**:
 
@@ -1053,7 +1273,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 
 **Correct**: Use `text-gray-700`.
 
-### 8.13 Required Field Indicators (Verbose)
+### 9.13 Required Field Indicators (Verbose)
 
 **Forbidden**:
 
@@ -1067,7 +1287,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 
 **Correct**: Use asterisk only with `text-gray-400`.
 
-### 8.14 Colored Progress Bars
+### 9.14 Colored Progress Bars
 
 **Forbidden**:
 
@@ -1079,7 +1299,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 
 **Correct**: Use gray progress bars.
 
-### 8.15 Animated Notifications
+### 9.15 Animated Notifications
 
 **Forbidden**:
 
@@ -1091,7 +1311,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 
 **Correct**: Gray toast with simple fade-in.
 
-### 8.16 Colored Link Underlines
+### 9.16 Colored Link Underlines
 
 **Forbidden**:
 
@@ -1103,7 +1323,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 
 **Correct**: `text-gray-700 underline hover:text-gray-900`.
 
-### 8.17 Colored Table Rows
+### 9.17 Colored Table Rows
 
 **Forbidden**:
 
@@ -1117,7 +1337,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 
 **Correct**: Use consistent white/transparent rows.
 
-### 8.18 Icon Buttons with Colored Backgrounds
+### 9.18 Icon Buttons with Colored Backgrounds
 
 **Forbidden**:
 
@@ -1131,7 +1351,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 
 **Correct**: Use ghost button variant.
 
-### 8.19 Colored Section Dividers
+### 9.19 Colored Section Dividers
 
 **Forbidden**:
 
@@ -1143,7 +1363,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 
 **Correct**: `border-t border-gray-200`.
 
-### 8.20 Tooltip with Colored Backgrounds
+### 9.20 Tooltip with Colored Backgrounds
 
 **Forbidden**:
 
@@ -1155,7 +1375,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 
 **Correct**: `bg-gray-900 text-white` (high contrast) or `bg-white border-gray-200`.
 
-### 8.21 Colored Placeholder Text
+### 9.21 Colored Placeholder Text
 
 **Forbidden**:
 
@@ -1167,7 +1387,7 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 
 **Correct**: `placeholder:text-gray-400` or `placeholder:text-gray-500`.
 
-### 8.22 "Helper" Hint Boxes
+### 9.22 "Helper" Hint Boxes
 
 **Forbidden**:
 
@@ -1183,11 +1403,11 @@ The following patterns are **EXPLICITLY FORBIDDEN** and constitute design violat
 
 ---
 
-## 9. Enforcement Checklist
+## 10. Enforcement Checklist
 
 This checklist must be reviewed before merging any UI changes:
 
-### 9.1 Color Audit
+### 10.1 Color Audit
 
 - [ ] No `bg-blue-50`, `bg-green-50`, `bg-yellow-50`, or similar
 - [ ] No `text-blue-600`, `text-green-600`, `text-orange-600`, or similar
@@ -1196,21 +1416,21 @@ This checklist must be reviewed before merging any UI changes:
 - [ ] Apple Blue (`#0071e3`) used ONLY in primary buttons and focus rings
 - [ ] Red used ONLY in destructive actions and error states
 
-### 9.2 Background Audit
+### 10.2 Background Audit
 
 - [ ] All section backgrounds are white or gray-50
 - [ ] No colored section headers
 - [ ] No colored hover backgrounds except gray
 - [ ] No transparent backgrounds with colored overlays
 
-### 9.3 Typography Audit
+### 10.3 Typography Audit
 
 - [ ] System font stack used exclusively
 - [ ] Font weights limited to normal (400), medium (500), semibold (600)
 - [ ] Text colors limited to black, gray-700, gray-600, gray-500, gray-400, or red-500/600
 - [ ] No colored text for emphasis
 
-### 9.4 Component Audit
+### 10.4 Component Audit
 
 - [ ] Buttons use ONLY primary, secondary, ghost, or destructive red
 - [ ] Badges use ONLY text-gray-600 with no background
@@ -1219,7 +1439,7 @@ This checklist must be reviewed before merging any UI changes:
 - [ ] Modals use white background with gray border
 - [ ] Toasts use gray for success, red-50 for errors only
 
-### 9.5 Interaction Audit
+### 10.5 Interaction Audit
 
 - [ ] Focus rings use ONLY `ring-[#0071e3]`
 - [ ] Hover states use ONLY gray backgrounds
@@ -1227,14 +1447,14 @@ This checklist must be reviewed before merging any UI changes:
 - [ ] No animated flourishes
 - [ ] Loading states use gray spinners/progress bars
 
-### 9.6 Icon Audit
+### 10.6 Icon Audit
 
 - [ ] Icons use ONLY gray colors (gray-400, gray-500, gray-600)
 - [ ] Icon sizes limited to h-3 through h-6
 - [ ] No decorative icons
 - [ ] **ZERO EMOJIS in structural UI**
 
-### 9.7 Anti-Pattern Check
+### 10.7 Anti-Pattern Check
 
 - [ ] No color-coded sections
 - [ ] No emoji headers
@@ -1246,7 +1466,7 @@ This checklist must be reviewed before merging any UI changes:
 - [ ] No gradient backgrounds
 - [ ] No "Pro Tip" or "Helper" boxes with colored backgrounds
 
-### 9.8 Accessibility Check
+### 10.8 Accessibility Check
 
 - [ ] Focus rings visible on all interactive elements
 - [ ] Color is not the sole means of conveying information
@@ -1255,11 +1475,11 @@ This checklist must be reviewed before merging any UI changes:
 
 ---
 
-## 10. Recommended Enforcement Mechanisms
+## 11. Recommended Enforcement Mechanisms
 
 While this document is the authoritative source, the following tools can help detect violations:
 
-### 10.1 ESLint Rules
+### 11.1 ESLint Rules
 
 Configure ESLint to warn on:
 
@@ -1267,7 +1487,7 @@ Configure ESLint to warn on:
 - String literals containing `text-blue-`, `text-green-`, `text-orange-`, `text-yellow-`, `text-purple-`
 - Emoji unicode characters in JSX
 
-### 10.2 Stylelint Rules
+### 11.2 Stylelint Rules
 
 Configure Stylelint (if using CSS modules) to forbid:
 
@@ -1275,7 +1495,7 @@ Configure Stylelint (if using CSS modules) to forbid:
 - Gradient functions
 - Box-shadow properties
 
-### 10.3 Git Pre-Commit Hooks
+### 11.3 Git Pre-Commit Hooks
 
 Add a pre-commit hook that runs:
 
@@ -1287,7 +1507,7 @@ git diff --cached --name-only | grep -E '\.(tsx|jsx)$' | xargs grep -n 'bg-\(blu
 git diff --cached --name-only | grep -E 'components/.*\.(tsx|jsx)$' | xargs grep -P '[\x{1F600}-\x{1F64F}]' && echo "❌ Emoji detected in component" && exit 1
 ```
 
-### 10.4 Pull Request Checklist
+### 11.4 Pull Request Checklist
 
 Include this in your PR template:
 
@@ -1301,7 +1521,7 @@ Include this in your PR template:
 - [ ] Focus rings use Apple Blue only
 ```
 
-### 10.5 Code Review Guidelines
+### 11.5 Code Review Guidelines
 
 Reviewers must reject PRs that:
 
@@ -1315,7 +1535,7 @@ Reviewers must reject PRs that:
 
 ---
 
-## 11. Document Maintenance
+## 12. Document Maintenance
 
 ### 11.1 Amendment Process
 
@@ -1329,13 +1549,14 @@ This document may only be amended when:
 
 If you are considering loosening a rule, the default answer is no.
 
-### 11.2 Version History
+### 12.2 Version History
 
+- **v1.1** (2026-01-01): Added Section 7 - Admin UI Layout & Interaction Rules (Apple-Standard)
 - **v1.0** (2026-01-01): Initial enforcement constitution
 
 ---
 
-## 12. Final Test
+## 13. Final Test
 
 Before merging any UI changes, ask:
 

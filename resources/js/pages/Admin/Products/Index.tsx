@@ -1,46 +1,45 @@
-import { Head, Link } from '@inertiajs/react'
-import AdminLayout from '../Layouts/AdminLayout'
-import { Plus, Edit2, Trash2, Search, X, Package } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { formatPriceWithCurrency } from '@/lib/utils'
-import { apiDelete } from '@/lib/api'
-import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
-import { Select } from '@/components/ui/Select'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table'
-import { ConfirmModal } from '@/components/ui/ConfirmModal'
-import { Spinner } from '@/components/ui/Spinner'
-import { EmptyState } from '@/components/ui/EmptyState'
-import { TableSkeleton } from '@/components/ui/Skeleton'
-import { PageHeader } from '@/components/layout/PageHeader'
+import { PageHeader } from '@/components/layout/PageHeader';
+import { Button } from '@/components/ui/Button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { ConfirmModal } from '@/components/ui/ConfirmModal';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { Input } from '@/components/ui/Input';
+import { Select } from '@/components/ui/Select';
+import { TableSkeleton } from '@/components/ui/Skeleton';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table';
+import { apiDelete } from '@/lib/api';
+import { formatPriceWithCurrency } from '@/lib/utils';
+import { Head, Link } from '@inertiajs/react';
+import { Edit2, Package, Plus, Search, Trash2, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import AdminLayout from '../Layouts/AdminLayout';
 
 interface Product {
-  id: number
-  name: string
-  price: number
-  stock: number
-  image_url: string
-  category_id: number
+    id: number;
+    name: string;
+    price: number;
+    stock: number;
+    image_url: string;
+    category_id: number;
 }
 
 interface Category {
-  id: number
-  name: string
+    id: number;
+    name: string;
 }
 
 interface PaginationMeta {
-  current_page: number
-  last_page: number
-  per_page: number
-  total: number
-  from: number
-  to: number
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+    from: number;
+    to: number;
 }
 
 export default function ProductsIndex() {
-    const [products, setProducts] = useState<Product[]>([])
-    const [loading, setLoading] = useState(true)
+    const [products, setProducts] = useState<Product[]>([]);
+    const [loading, setLoading] = useState(true);
 
     // Pagination state
     const [pagination, setPagination] = useState<PaginationMeta>({
@@ -50,236 +49,229 @@ export default function ProductsIndex() {
         total: 0,
         from: 0,
         to: 0,
-    })
+    });
 
     // Filter and search state
-    const [searchQuery, setSearchQuery] = useState('')
-    const [searchInput, setSearchInput] = useState('')
-    const [categoryFilter, setCategoryFilter] = useState('')
-    const [sortBy, setSortBy] = useState('created_at')
-    const [sortOrder, setSortOrder] = useState('desc')
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchInput, setSearchInput] = useState('');
+    const [categoryFilter, setCategoryFilter] = useState('');
+    const [sortBy, setSortBy] = useState('created_at');
+    const [sortOrder, setSortOrder] = useState('desc');
 
     // Categories for filter dropdown
-    const [categories, setCategories] = useState<Category[]>([])
+    const [categories, setCategories] = useState<Category[]>([]);
 
     // Delete modal state
-    const [deleteModalOpen, setDeleteModalOpen] = useState(false)
-    const [productToDelete, setProductToDelete] = useState<number | null>(null)
-    const [deleting, setDeleting] = useState(false)
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [productToDelete, setProductToDelete] = useState<number | null>(null);
+    const [deleting, setDeleting] = useState(false);
 
-  useEffect(() => {
-    fetchCategories()
-  }, [])
+    useEffect(() => {
+        fetchCategories();
+    }, []);
 
-  useEffect(() => {
-    fetchProducts(1)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery, categoryFilter, sortBy, sortOrder])
+    useEffect(() => {
+        fetchProducts(1);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchQuery, categoryFilter, sortBy, sortOrder]);
 
-  const fetchCategories = async () => {
-    try {
-      const response = await fetch('/api/categories')
-      const data = await response.json()
-      setCategories(data)
-    } catch (error) {
-      console.error('Failed to fetch categories:', error)
-    }
-  }
+    const fetchCategories = async () => {
+        try {
+            const response = await fetch('/api/categories');
+            const data = await response.json();
+            setCategories(data);
+        } catch (error) {
+            console.error('Failed to fetch categories:', error);
+        }
+    };
 
-  const fetchProducts = async (page: number = 1) => {
-    setLoading(true)
-    
-    const params = new URLSearchParams({
-      page: page.toString(),
-      per_page: '10',
-      sort_by: sortBy,
-      order: sortOrder,
-    })
-    
-    if (searchQuery) {
-      params.append('search', searchQuery)
-    }
-    
-    if (categoryFilter) {
-      params.append('category_id', categoryFilter)
-    }
+    const fetchProducts = async (page: number = 1) => {
+        setLoading(true);
 
-    try {
-      const response = await fetch(`/api/products?${params.toString()}`)
-      const data = await response.json()
-      
-      setProducts(data.data || [])
-      setPagination({
-        current_page: data.current_page,
-        last_page: data.last_page,
-        per_page: data.per_page,
-        total: data.total,
-        from: data.from || 0,
-        to: data.to || 0,
-      })
-    } catch (error) {
-      console.error('Failed to fetch products:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
+        const params = new URLSearchParams({
+            page: page.toString(),
+            per_page: '10',
+            sort_by: sortBy,
+            order: sortOrder,
+        });
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    setSearchQuery(searchInput)
-  }
+        if (searchQuery) {
+            params.append('search', searchQuery);
+        }
 
-  const clearSearch = () => {
-    setSearchInput('')
-    setSearchQuery('')
-  }
+        if (categoryFilter) {
+            params.append('category_id', categoryFilter);
+        }
+
+        try {
+            const response = await fetch(`/api/products?${params.toString()}`);
+            const data = await response.json();
+
+            setProducts(data.data || []);
+            setPagination({
+                current_page: data.current_page,
+                last_page: data.last_page,
+                per_page: data.per_page,
+                total: data.total,
+                from: data.from || 0,
+                to: data.to || 0,
+            });
+        } catch (error) {
+            console.error('Failed to fetch products:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        setSearchQuery(searchInput);
+    };
+
+    const clearSearch = () => {
+        setSearchInput('');
+        setSearchQuery('');
+    };
 
     const handleDelete = async (id: number) => {
-        setProductToDelete(id)
-        setDeleteModalOpen(true)
-    }
+        setProductToDelete(id);
+        setDeleteModalOpen(true);
+    };
 
     const confirmDelete = async () => {
-        if (!productToDelete) return
+        if (!productToDelete) return;
 
-        setDeleting(true)
+        setDeleting(true);
         try {
-            const response = await apiDelete(`/api/admin/products/${productToDelete}`)
+            const response = await apiDelete(`/api/admin/products/${productToDelete}`);
 
             if (!response.ok) {
-                alert('Failed to delete product')
-                return
+                alert('Failed to delete product');
+                return;
             }
 
             // Smart page navigation: if last item on page, go to previous page
-            const isLastItemOnPage = products.length === 1 && pagination.current_page > 1
-            const targetPage = isLastItemOnPage ? pagination.current_page - 1 : pagination.current_page
+            const isLastItemOnPage = products.length === 1 && pagination.current_page > 1;
+            const targetPage = isLastItemOnPage ? pagination.current_page - 1 : pagination.current_page;
 
-            fetchProducts(targetPage)
-            setDeleteModalOpen(false)
-            setProductToDelete(null)
+            fetchProducts(targetPage);
+            setDeleteModalOpen(false);
+            setProductToDelete(null);
         } catch {
-            alert('Error deleting product')
+            alert('Error deleting product');
         } finally {
-            setDeleting(false)
+            setDeleting(false);
         }
-    }
+    };
 
-  const handlePageChange = (page: number) => {
-    if (page >= 1 && page <= pagination.last_page) {
-      fetchProducts(page)
-    }
-  }
+    const handlePageChange = (page: number) => {
+        if (page >= 1 && page <= pagination.last_page) {
+            fetchProducts(page);
+        }
+    };
 
-  const getPageNumbers = () => {
-    const pages = []
-    const { current_page, last_page } = pagination
-    
-    // Always show first page
-    pages.push(1)
-    
-    // Calculate range around current page
-    const start = Math.max(2, current_page - 1)
-    const end = Math.min(last_page - 1, current_page + 1)
-    
-    // Add ellipsis after first page if needed
-    if (start > 2) {
-      pages.push('...')
-    }
-    
-    // Add pages around current
-    for (let i = start; i <= end; i++) {
-      pages.push(i)
-    }
-    
-    // Add ellipsis before last page if needed
-    if (end < last_page - 1) {
-      pages.push('...')
-    }
-    
-    // Always show last page if there's more than one page
-    if (last_page > 1) {
-      pages.push(last_page)
-    }
-    
-    return pages
-  }
+    const getPageNumbers = () => {
+        const pages = [];
+        const { current_page, last_page } = pagination;
+
+        // Always show first page
+        pages.push(1);
+
+        // Calculate range around current page
+        const start = Math.max(2, current_page - 1);
+        const end = Math.min(last_page - 1, current_page + 1);
+
+        // Add ellipsis after first page if needed
+        if (start > 2) {
+            pages.push('...');
+        }
+
+        // Add pages around current
+        for (let i = start; i <= end; i++) {
+            pages.push(i);
+        }
+
+        // Add ellipsis before last page if needed
+        if (end < last_page - 1) {
+            pages.push('...');
+        }
+
+        // Always show last page if there's more than one page
+        if (last_page > 1) {
+            pages.push(last_page);
+        }
+
+        return pages;
+    };
 
     return (
         <AdminLayout>
             <Head title="Products" />
             <div className="space-y-6">
-                <PageHeader
-                    title="Products"
-                    description="Manage your product inventory"
-                    actions={
-                        <Link href="/admin/products/create">
-                            <Button variant="primary" size="md">
-                                <Plus size={18} />
-                                Add Product
-                            </Button>
-                        </Link>
-                    }
-                />
+                {/* Header with title and action button in separate flex container */}
+                <div className="flex items-start justify-between gap-4">
+                    <PageHeader title="Products" description="Manage your product inventory" />
+                    <Link href="/admin/products/create">
+                        <Button variant="primary" size="md">
+                            <Plus size={18} />
+                            Add Product
+                        </Button>
+                    </Link>
+                </div>
 
-                {/* Search and Filter Section */}
-                <Card>
-                    <CardContent className="p-4 md:p-6">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            {/* Search */}
-                            <form onSubmit={handleSearch} className="relative">
-                                <Input
-                                    type="text"
-                                    placeholder="Search products..."
-                                    value={searchInput}
-                                    onChange={(e) => setSearchInput(e.target.value)}
-                                    className="pl-10 pr-10"
-                                />
-                                <Search
-                                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                                    size={18}
-                                />
-                                {searchInput && (
-                                    <button
-                                        type="button"
-                                        onClick={clearSearch}
-                                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1"
-                                    >
-                                        <X size={18} />
-                                    </button>
-                                )}
-                            </form>
+                {/* Search and Filter Section - unwrapped from Card */}
+                <div className="space-y-4">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                        {/* Search */}
+                        <form onSubmit={handleSearch} className="relative">
+                            <Input
+                                type="text"
+                                placeholder="Search products..."
+                                value={searchInput}
+                                onChange={(e) => setSearchInput(e.target.value)}
+                                className="pr-10 pl-10"
+                            />
+                            <Search className="absolute top-1/2 left-3 -translate-y-1/2 transform text-gray-400" size={18} />
+                            {searchInput && (
+                                <button
+                                    type="button"
+                                    onClick={clearSearch}
+                                    className="absolute top-1/2 right-3 -translate-y-1/2 transform p-1 text-gray-400 hover:text-gray-600"
+                                >
+                                    <X size={18} />
+                                </button>
+                            )}
+                        </form>
 
-                            {/* Category Filter */}
-                            <Select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
-                                <option value="">All Categories</option>
-                                {categories.map((category) => (
-                                    <option key={category.id} value={category.id}>
-                                        {category.name}
-                                    </option>
-                                ))}
+                        {/* Category Filter */}
+                        <Select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
+                            <option value="">All Categories</option>
+                            {categories.map((category) => (
+                                <option key={category.id} value={category.id}>
+                                    {category.name}
+                                </option>
+                            ))}
+                        </Select>
+
+                        {/* Sort Options */}
+                        <div className="flex gap-2">
+                            <Select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="flex-1">
+                                <option value="created_at">Date Added</option>
+                                <option value="name">Name</option>
+                                <option value="price">Price</option>
+                                <option value="stock">Stock</option>
                             </Select>
-
-                            {/* Sort Options */}
-                            <div className="flex gap-2">
-                                <Select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="flex-1">
-                                    <option value="created_at">Date Added</option>
-                                    <option value="name">Name</option>
-                                    <option value="price">Price</option>
-                                    <option value="stock">Stock</option>
-                                </Select>
-                                <Select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
-                                    <option value="asc">Ascending</option>
-                                    <option value="desc">Descending</option>
-                                </Select>
-                            </div>
+                            <Select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
+                                <option value="asc">Ascending</option>
+                                <option value="desc">Descending</option>
+                            </Select>
                         </div>
-                    </CardContent>
-                </Card>
+                    </div>
+                </div>
 
                 <Card>
                     <CardHeader>
-                        <div className="flex flex-col gap-2 md:flex-row md:justify-between md:items-center">
+                        <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                             <CardTitle>Product List</CardTitle>
                             {pagination.total > 0 && (
                                 <p className="text-sm text-gray-600">
@@ -294,11 +286,7 @@ export default function ProductsIndex() {
                         ) : products.length === 0 ? (
                             <EmptyState
                                 icon={<Package size={48} />}
-                                title={
-                                    searchQuery || categoryFilter
-                                        ? 'No products found'
-                                        : 'No products yet'
-                                }
+                                title={searchQuery || categoryFilter ? 'No products found' : 'No products yet'}
                                 description={
                                     searchQuery || categoryFilter
                                         ? 'Try adjusting your search or filter criteria.'
@@ -318,7 +306,7 @@ export default function ProductsIndex() {
                         ) : (
                             <>
                                 {/* Desktop/Tablet Table (≥768px) */}
-                                <div className="hidden md:block overflow-x-auto">
+                                <div className="hidden overflow-x-auto md:block">
                                     <Table>
                                         <TableHeader>
                                             <TableRow>
@@ -342,11 +330,7 @@ export default function ProductsIndex() {
                                                                     Edit
                                                                 </Button>
                                                             </Link>
-                                                            <Button
-                                                                variant="ghost"
-                                                                size="sm"
-                                                                onClick={() => handleDelete(product.id)}
-                                                            >
+                                                            <Button variant="ghost" size="sm" onClick={() => handleDelete(product.id)}>
                                                                 <Trash2 size={16} />
                                                                 Delete
                                                             </Button>
@@ -359,7 +343,7 @@ export default function ProductsIndex() {
                                 </div>
 
                                 {/* Mobile Card Layout (<768px) */}
-                                <div className="md:hidden space-y-3">
+                                <div className="space-y-3 md:hidden">
                                     {products.map((product) => (
                                         <Card key={product.id} className="border border-gray-200">
                                             <CardContent className="p-4">
@@ -375,25 +359,18 @@ export default function ProductsIndex() {
                                                             </div>
                                                             <div className="flex justify-between">
                                                                 <span className="text-gray-600">Stock:</span>
-                                                                <span className="font-medium text-gray-900">
-                                                                    {product.stock} units
-                                                                </span>
+                                                                <span className="font-medium text-gray-900">{product.stock} units</span>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div className="flex gap-2 pt-2 border-t border-gray-200">
+                                                    <div className="flex gap-2 border-t border-gray-200 pt-2">
                                                         <Link href={`/admin/products/${product.id}/edit`} className="flex-1">
                                                             <Button variant="secondary" size="sm" className="w-full">
                                                                 <Edit2 size={16} />
                                                                 Edit
                                                             </Button>
                                                         </Link>
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="sm"
-                                                            onClick={() => handleDelete(product.id)}
-                                                            className="flex-1"
-                                                        >
+                                                        <Button variant="ghost" size="sm" onClick={() => handleDelete(product.id)} className="flex-1">
                                                             <Trash2 size={16} />
                                                             Delete
                                                         </Button>
@@ -406,7 +383,7 @@ export default function ProductsIndex() {
 
                                 {/* Pagination */}
                                 {pagination.last_page > 1 && (
-                                    <div className="mt-6 flex flex-col sm:flex-row justify-center items-center gap-2">
+                                    <div className="mt-6 flex flex-col items-center justify-center gap-2 sm:flex-row">
                                         <Button
                                             variant="secondary"
                                             size="sm"
@@ -416,7 +393,7 @@ export default function ProductsIndex() {
                                             Previous
                                         </Button>
 
-                                        <div className="flex gap-2 flex-wrap justify-center">
+                                        <div className="flex flex-wrap justify-center gap-2">
                                             {getPageNumbers().map((page, index) =>
                                                 page === '...' ? (
                                                     <span key={`ellipsis-${index}`} className="px-3 py-2 text-gray-500">
@@ -431,7 +408,7 @@ export default function ProductsIndex() {
                                                     >
                                                         {page}
                                                     </Button>
-                                                )
+                                                ),
                                             )}
                                         </div>
 
@@ -455,8 +432,8 @@ export default function ProductsIndex() {
             <ConfirmModal
                 open={deleteModalOpen}
                 onClose={() => {
-                    setDeleteModalOpen(false)
-                    setProductToDelete(null)
+                    setDeleteModalOpen(false);
+                    setProductToDelete(null);
                 }}
                 onConfirm={confirmDelete}
                 title="Delete Product"
@@ -465,5 +442,5 @@ export default function ProductsIndex() {
                 loading={deleting}
             />
         </AdminLayout>
-    )
+    );
 }

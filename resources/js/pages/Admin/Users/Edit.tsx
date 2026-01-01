@@ -40,10 +40,10 @@ export default function EditUser({ user }: Props) {
                 <div>
                     <BackLink href="/admin/users">Users</BackLink>
                     <h1 className="text-3xl font-bold">Edit User</h1>
-                    <p className="text-gray-600">Update user information</p>
+                    <p className="text-sm text-gray-500">Update user information</p>
                 </div>
 
-                <div className="rounded-lg bg-white p-6 shadow">
+                <div className="rounded-lg border border-gray-200/60 bg-white p-6">
                     <h2 className="mb-6 text-lg font-bold">User Details</h2>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
@@ -85,7 +85,7 @@ export default function EditUser({ user }: Props) {
                             {errors.role && <p className="text-sm text-red-500">{errors.role}</p>}
                         </div>
 
-                        <div>
+                        <div className="mt-6">
                             <label className="mb-1 block text-sm font-medium">Password</label>
                             <input
                                 type="password"
@@ -98,7 +98,7 @@ export default function EditUser({ user }: Props) {
                             {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
                         </div>
 
-                        <div className="flex gap-2">
+                        <div className="flex justify-end gap-2">
                             <Button type="submit" disabled={processing} variant="primary">
                                 {processing ? 'Saving...' : 'Save Changes'}
                             </Button>

@@ -55,8 +55,8 @@ export default function ShowContact({ contact: initialContact }: Props) {
                     <h1 className="text-3xl font-bold">Contact Submission</h1>
                 </div>
 
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                    <div className="rounded-lg bg-white p-6 shadow">
+                <div className="space-y-6">
+                    <div className="rounded-lg border border-gray-200/60 bg-white p-6">
                         <h2 className="mb-4 text-lg font-bold">Submission Details</h2>
                         <div className="space-y-4">
                             <div>
@@ -88,13 +88,13 @@ export default function ShowContact({ contact: initialContact }: Props) {
                         </div>
                     </div>
 
-                    <div className="rounded-lg bg-white p-6 shadow">
+                    <div className="rounded-lg border border-gray-200/60 bg-white p-6">
                         <h2 className="mb-4 text-lg font-bold">Message</h2>
                         <p className="whitespace-pre-wrap">{contact.message}</p>
                     </div>
                 </div>
 
-                <div className="rounded-lg bg-white p-6 shadow">
+                <div className="rounded-lg border border-gray-200/60 bg-white p-6">
                     <h2 className="mb-4 text-lg font-bold">Admin Reply</h2>
 
                     {successMessage && <div className="mb-4 rounded-lg border border-gray-300 bg-gray-100 p-3 text-gray-700">{successMessage}</div>}
