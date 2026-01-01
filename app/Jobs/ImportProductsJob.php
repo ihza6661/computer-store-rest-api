@@ -48,9 +48,24 @@ class ImportProductsJob implements ShouldQueue
             // Update status to processing
             Cache::put("import_job_{$this->jobId}_status", 'processing', now()->addHours(1));
 
+            // Check if file exists before processing
+            if (!Storage::disk('local')->exists($this->filePath)) {
+                throw new \Exception("File does not exist: {$this->filePath}");
+            }
+
+            // Get the full path for Excel import
+            $fullPath = Storage::disk('local')->path($this->filePath);
+            
+            Log::info('Processing file', [
+                'job_id' => $this->jobId,
+                'relative_path' => $this->filePath,
+                'full_path' => $fullPath,
+                'file_exists' => file_exists($fullPath),
+            ]);
+
             // Perform the import
             $import = new ProductsImport(false, $this->allowUpdate); // Not preview mode
-            Excel::import($import, Storage::path($this->filePath));
+            Excel::import($import, $fullPath);
 
             // Get results
             $results = $import->getResults();
