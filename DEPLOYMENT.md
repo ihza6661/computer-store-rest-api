@@ -89,6 +89,101 @@ heroku config:set CLOUDINARY_URL=cloudinary://api_key:api_secret@cloud_name
 3. Click **Reveal Config Vars**
 4. Add/update the variables listed above
 
+### SSL Certificate Management (Heroku ACM)
+
+Heroku's Automatic Certificate Management (ACM) is enabled for the custom domain to provide free SSL certificates via Let's Encrypt.
+
+#### ACM Status Check
+
+```bash
+# Check ACM status and certificate details
+heroku certs:auto
+
+# View domain and SSL endpoint information
+heroku domains
+
+# Get specific domain information
+heroku domains:info api.computer-store.ihza.me
+```
+
+#### Certificate Details
+
+- **Provider**: Let's Encrypt (via Heroku ACM)
+- **Type**: SNI-based SSL/TLS
+- **Renewal**: Automatic (every 90 days)
+- **Cost**: Free (included with Heroku)
+- **Issuer**: Let's Encrypt R13
+- **Validity**: 90 days (auto-renewed at 60 days)
+
+#### Current Certificate Info
+
+```
+Common Name: api.computer-store.ihza.me
+SNI Endpoint: brachiosaurus-39937
+Status: Active
+Renewal: Automatic
+Expires: 2026-04-02 (auto-renews)
+```
+
+#### ACM Management Commands
+
+```bash
+# Enable ACM (already enabled)
+heroku certs:auto:enable
+
+# Check ACM status
+heroku certs:auto
+
+# Wait for certificate provisioning (if needed)
+heroku certs:auto --wait
+
+# Disable ACM (not recommended)
+heroku certs:auto:disable
+```
+
+#### SSL Verification
+
+**Test SSL connection:**
+```bash
+# Quick test
+curl -I https://api.computer-store.ihza.me
+
+# Detailed certificate info
+openssl s_client -connect api.computer-store.ihza.me:443 -servername api.computer-store.ihza.me
+```
+
+**Expected response:**
+- HTTP/2 or HTTP/1.1 200 OK
+- No SSL certificate errors
+- Valid Let's Encrypt certificate
+
+#### Troubleshooting SSL Issues
+
+**Issue: SSL certificate not provisioning**
+
+Check domain DNS:
+```bash
+heroku domains:info api.computer-store.ihza.me
+```
+
+Ensure DNS status shows `succeeded` and CNAME points to Heroku DNS target.
+
+**Issue: Certificate expired or renewal failed**
+
+ACM auto-renews, but if manual intervention is needed:
+```bash
+# Disable and re-enable ACM
+heroku certs:auto:disable
+heroku certs:auto:enable
+```
+
+**Issue: Browser shows SSL error**
+
+1. Wait 5-10 minutes for global propagation
+2. Clear browser cache and SSL state
+3. Try incognito/private browsing mode
+4. Verify certificate is valid via command line
+
 ### Important Notes
 
 #### Session Cookies in Production:
@@ -294,18 +389,30 @@ Before deploying to Heroku:
 
 - [ ] Set all required environment variables
 - [ ] Ensure `APP_KEY` is generated (Heroku should auto-generate)
-- [ ] Verify `APP_URL` matches your Heroku app URL
+- [ ] Verify `APP_URL` matches your custom domain (`https://api.computer-store.ihza.me`)
+- [ ] Set `SESSION_DOMAIN=.ihza.me` for cross-subdomain cookies
 - [ ] Set `SESSION_SECURE_COOKIE=true` for production
 - [ ] Set `QUEUE_CONNECTION=database` for background jobs
 - [ ] Configure Cloudinary credentials
 - [ ] Configure SendGrid API key (if using email)
+- [ ] **Add custom domain to Heroku** (if not already added)
+    - [ ] Add domain: `heroku domains:add api.computer-store.ihza.me`
+    - [ ] Configure DNS CNAME record in Vercel DNS
+- [ ] **Enable SSL Certificate Management**
+    - [ ] Enable ACM: `heroku certs:auto:enable`
+    - [ ] Verify certificate: `heroku certs:auto`
+    - [ ] Check SNI endpoint: `heroku domains`
 - [ ] Run database migrations (automatic via Procfile)
 - [ ] Seed admin users if needed: `heroku run php artisan db:seed --class=AdminSeeder`
 - [ ] **Set up queue worker (required for product import feature)**
     - [ ] Add `worker:` line to Procfile
     - [ ] Scale worker dyno: `heroku ps:scale worker=1`
     - [ ] Or configure Heroku Scheduler for periodic processing
-- [ ] Test product import feature after deployment
+- [ ] Test production deployment
+    - [ ] Visit `https://api.computer-store.ihza.me/` (should load without SSL errors)
+    - [ ] Test admin login and session persistence
+    - [ ] Test product import feature
+    - [ ] Verify frontend-backend communication
 
 ### Deployment Commands
 
@@ -370,6 +477,63 @@ heroku config
 2. Check `APP_URL` is correctly set in Heroku
 3. Ensure credentials are included in fetch requests (`credentials: 'include'`)
 
+#### SSL Certificate Errors:
+
+**Symptoms:**
+
+- Browser shows "Your connection is not private" or SSL warning
+- Error: `ERR_SSL_UNRECOGNIZED_NAME_ALERT`
+- curl shows SSL/TLS errors
+
+**Solutions:**
+
+1. **Verify ACM is enabled:**
+   ```bash
+   heroku certs:auto
+   ```
+   Should show certificate details and "Cert issued" status
+
+2. **Check domain DNS configuration:**
+   ```bash
+   heroku domains:info api.computer-store.ihza.me
+   ```
+   Ensure status is "succeeded" and CNAME points to Heroku DNS target
+
+3. **Check SNI endpoint exists:**
+   ```bash
+   heroku domains
+   ```
+   SNI Endpoint column should show endpoint name (not "undefined")
+
+4. **If certificate not provisioning:**
+   ```bash
+   # Disable and re-enable ACM
+   heroku certs:auto:disable
+   heroku certs:auto:enable
+   
+   # Wait for provisioning (5-15 minutes)
+   heroku certs:auto --wait
+   ```
+
+5. **If domain not responding:**
+   - Wait 5-30 minutes for DNS propagation
+   - Clear browser cache and SSL state
+   - Test in incognito/private mode
+   - Verify DNS: `curl -I https://api.computer-store.ihza.me`
+
+6. **Verify certificate is valid:**
+   ```bash
+   openssl s_client -connect api.computer-store.ihza.me:443 -servername api.computer-store.ihza.me < /dev/null
+   ```
+   Should show Let's Encrypt certificate with your domain in Subject Alternative Name (SAN)
+
+**Common Issues:**
+
+- **ACM disabled**: Enable with `heroku certs:auto:enable`
+- **DNS not configured**: Add CNAME record in DNS provider pointing to Heroku DNS target
+- **Certificate provisioning in progress**: Wait 5-15 minutes for Let's Encrypt to issue certificate
+- **Browser cache**: Clear SSL state and try incognito mode
+
 ### Testing Production Deployment
 
 1. **Login Test:**
@@ -390,8 +554,35 @@ heroku config
 
 4. **Cookie Verification:**
     - Open DevTools → Application → Cookies
-    - Look for `computer-store-computer-session` cookie
-    - Verify it has: `Secure=true`, `SameSite=Lax`
+    - Look for `laravel-session` cookie
+    - Verify it has: `Domain=.ihza.me`, `Secure=true`, `SameSite=Lax`
+
+5. **SSL Certificate Test:**
+    - Check SSL padlock in browser address bar
+    - Click padlock → View certificate
+    - Verify:
+      - Issuer: Let's Encrypt R13
+      - Valid for: api.computer-store.ihza.me
+      - Expiration date in the future
+    - Or test via command line:
+      ```bash
+      curl -I https://api.computer-store.ihza.me
+      # Should return HTTP/2 200 with no SSL errors
+      ```
+
+6. **API Endpoint Test:**
+    ```bash
+    # Test products API
+    curl https://api.computer-store.ihza.me/api/products
+    
+    # Should return JSON with product data
+    ```
+
+7. **Frontend Integration Test:**
+    - Visit https://computer-store.ihza.me
+    - Verify products load from API
+    - Check browser console for CORS errors (should be none)
+    - Test navigation and user interactions
 
 ### Support
 
