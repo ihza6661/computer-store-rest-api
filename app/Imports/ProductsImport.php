@@ -88,7 +88,7 @@ class ProductsImport implements ToCollection, WithHeadingRow
                     'price' => 'required|numeric|min:0',
                     'sku' => 'required|string|max:255',
                     'stock' => 'required|integer|min:0',
-                    // Specifications (optional)
+                    // Specifications (optional) - Existing fields
                     'processor' => 'nullable|string|max:255',
                     'gpu' => 'nullable|string|max:255',
                     'ram' => 'nullable|string|max:100',
@@ -101,6 +101,22 @@ class ProductsImport implements ToCollection, WithHeadingRow
                     'extras' => 'nullable|string|max:500',
                     'original_price' => 'nullable|numeric|min:0',
                     'features' => 'nullable|string|max:1000',
+                    // New specification fields (13 fields)
+                    'product_number' => 'nullable|string|max:100',
+                    'chipset' => 'nullable|string|max:255',
+                    'optical_drive' => 'nullable|string|max:100',
+                    'wireless_connectivity' => 'nullable|string|max:255',
+                    'expansion_slots' => 'nullable|string|max:255',
+                    'external_ports' => 'nullable|string|max:500',
+                    'dimensions_width' => 'nullable|string|max:50',
+                    'dimensions_depth' => 'nullable|string|max:50',
+                    'dimensions_height' => 'nullable|string|max:50',
+                    'weight' => 'nullable|string|max:50',
+                    'power_supply_type' => 'nullable|string|max:255',
+                    'webcam' => 'nullable|string|max:255',
+                    'audio' => 'nullable|string|max:255',
+                    'operating_system' => 'nullable|string|max:100',
+                    'software_included' => 'nullable|string|max:500',
                 ]);
 
                 if ($validator->fails()) {
@@ -200,7 +216,16 @@ class ProductsImport implements ToCollection, WithHeadingRow
 
                 // Build specifications array
                 $specifications = [];
-                $specFields = ['processor', 'gpu', 'ram', 'storage', 'display', 'keyboard', 'battery', 'warranty', 'condition', 'extras', 'original_price', 'features'];
+                $specFields = [
+                    // Existing fields
+                    'processor', 'gpu', 'ram', 'storage', 'display', 'keyboard', 'battery', 
+                    'warranty', 'condition', 'extras', 'original_price', 'features',
+                    // New fields (13 new specification fields)
+                    'product_number', 'chipset', 'optical_drive', 'wireless_connectivity',
+                    'expansion_slots', 'external_ports', 'dimensions_width', 'dimensions_depth',
+                    'dimensions_height', 'weight', 'power_supply_type', 'webcam', 'audio',
+                    'operating_system', 'software_included',
+                ];
 
                 foreach ($specFields as $field) {
                     if (isset($row[$field]) && ! empty($row[$field])) {

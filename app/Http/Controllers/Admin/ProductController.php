@@ -429,8 +429,9 @@ class ProductController extends Controller
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
-        // Set headers
+        // Set headers - organized logically by category (32 total columns)
         $headers = [
+            // Basic Information (8 columns)
             'name',
             'category',
             'brand',
@@ -438,13 +439,44 @@ class ProductController extends Controller
             'price',
             'sku',
             'stock',
+            'product_number',
+            
+            // Hardware Specifications (6 columns)
             'processor',
+            'chipset',
             'gpu',
             'ram',
             'storage',
+            'optical_drive',
+            
+            // Display & Input (2 columns)
             'display',
             'keyboard',
+            
+            // Connectivity & Expansion (3 columns)
+            'wireless_connectivity',
+            'expansion_slots',
+            'external_ports',
+            
+            // Physical Specifications (4 columns)
+            'dimensions_width',
+            'dimensions_depth',
+            'dimensions_height',
+            'weight',
+            
+            // Power (2 columns)
             'battery',
+            'power_supply_type',
+            
+            // Multimedia (2 columns)
+            'webcam',
+            'audio',
+            
+            // Software (2 columns)
+            'operating_system',
+            'software_included',
+            
+            // Commercial Information (5 columns)
             'warranty',
             'condition',
             'extras',
@@ -454,49 +486,120 @@ class ProductController extends Controller
 
         $sheet->fromArray([$headers], null, 'A1');
 
-        // Add example data
+        // Add 3 comprehensive example rows showing different product types
         $exampleData = [
+            // Example 1: Gaming Laptop (Complete specs - ALL fields filled)
             [
-                'MacBook Pro M3 16" 2024',
+                'ASUS TUF Gaming A15 Ryzen 7 RTX 4060',
                 'Laptop',
-                'Apple',
-                'High performance laptop with M3 chip',
-                35000000,
-                'MBP-M3-16-001',
-                5,
-                'Apple M3 Max',
-                'Integrated 40-core GPU',
-                '48GB Unified Memory',
-                '2TB SSD',
-                '16.2" Liquid Retina XDR',
-                'Magic Keyboard with Touch ID',
-                'Up to 22 hours',
-                '1 Year Apple Limited Warranty',
-                'new',
-                'USB-C charger, cleaning cloth',
-                38000000,
-                'ProMotion, HDR, P3 wide color',
-            ],
-            [
-                'Dell XPS 15 9530',
-                'Laptop',
-                'Dell',
-                'Premium ultrabook for professionals',
-                28000000,
-                'DELL-XPS15-001',
+                'ASUS',
+                'Laptop gaming powerful dengan AMD Ryzen 7 dan RTX 4060, perfect untuk gaming dan content creation',
+                16500000,
+                'DB-TUF-A15-R7-4060',
                 3,
-                'Intel Core i7-13700H',
-                'NVIDIA RTX 4060 8GB',
-                '32GB DDR5',
-                '1TB NVMe SSD',
-                '15.6" 3.5K OLED Touch',
-                'Backlit keyboard',
-                'Up to 13 hours',
-                '1 Year Premium Support',
+                'FA507NU-LP042W',
+                'AMD Ryzen™ 7 7735HS (8-core, 16-thread, up to 4.75 GHz)',
+                'AMD Integrated SoC',
+                'NVIDIA® GeForce RTX™ 4060 8GB GDDR6',
+                '16 GB DDR5-4800 MHz',
+                '512 GB PCIe® 4.0 NVMe™ M.2 SSD',
+                'None',
+                '15.6" FHD (1920x1080) 144Hz IPS',
+                'RGB Backlit Keyboard',
+                'Wi-Fi 6 (802.11ax), Bluetooth® 5.3',
+                '1x M.2 PCIe 4.0 slot (expandable)',
+                '1x USB-C 3.2, 3x USB-A 3.2, 1x HDMI 2.1, 1x Audio Jack, 1x RJ45',
+                '35.4',
+                '25.1',
+                '2.24',
+                '2.2kg',
+                'Up to 8 hours',
+                '200W AC Adapter, 90Wh Li-ion',
+                '720p HD Webcam',
+                'DTS:X Ultra, Dual Speakers with AI Noise Cancellation',
+                'Windows 11 Home',
+                'Microsoft Office Trial, MyASUS',
+                'Garansi toko 3 bulan',
+                'used-excellent',
+                'Tas Laptop, Mouse Gaming',
+                '19500000',
+                'Adaptive Sync, MUX Switch, Dolby Atmos',
+            ],
+            
+            // Example 2: Business Laptop (Complete specs - Professional use case)
+            [
+                'Lenovo ThinkPad L14 Gen 2 Core i5',
+                'Laptop',
+                'Lenovo',
+                'Business laptop profesional dengan build quality solid, cocok untuk pekerjaan kantoran dan multitasking',
+                8500000,
+                'DB-THINKPAD-L14-I5',
+                5,
+                '20X1005NUS',
+                'Intel® Core™ i5-10210U (4-core, 8-thread, up to 4.2 GHz)',
+                'Intel Integrated SoC',
+                'Intel® UHD Graphics',
+                '8 GB DDR4-2666 MHz (Upgradeable to 32GB)',
+                '512 GB NVMe M.2 SSD',
+                'None',
+                '14" FHD (1920x1080) IPS Anti-glare',
+                'Spill-resistant keyboard with ThinkPad TrackPoint',
+                'Intel Wi-Fi 6 AX201, Bluetooth® 5.1',
+                '1x M.2 2242 SSD slot, 1x SODIMM slot',
+                '2x USB-C 3.2 (with PD), 2x USB-A 3.2, 1x HDMI 2.0, 1x Audio Jack, 1x RJ45, 1x MicroSD',
+                '32.9',
+                '22.7',
+                '1.79',
+                '1.6kg',
+                'Up to 12 hours',
+                '65W USB-C AC Adapter, 45Wh Li-Polymer',
+                '720p HD with Privacy Shutter, Dual Microphones',
+                'Dolby Audio, Dual Speakers',
+                'Windows 10 Pro',
+                'Lenovo Vantage, Microsoft Office',
+                'Garansi toko 3 bulan',
+                'used-very-good',
+                'Charger, Tas Laptop',
+                '12000000',
+                'Military-grade durability (MIL-STD-810H), Rapid Charge',
+            ],
+            
+            // Example 3: Smartphone (Shows optional fields - some left blank)
+            [
+                'iPhone 15 Pro Max 256GB Natural Titanium',
+                'Smartphone',
+                'Apple',
+                'Flagship iPhone dengan titanium design, A17 Pro chip, dan advanced camera system',
+                21999000,
+                'DB-IP15PM-256-NT',
+                8,
+                'MU793ID/A',
+                'Apple A17 Pro chip (6-core CPU, 6-core GPU, 16-core Neural Engine)',
+                '',  // chipset (blank for smartphones - processor field is sufficient)
+                '',  // gpu (integrated in processor for smartphones)
+                '8 GB',
+                '256 GB',
+                '',  // optical_drive (N/A for smartphones)
+                '6.7" Super Retina XDR OLED, 120Hz ProMotion, Always-On Display',
+                '',  // keyboard (N/A for smartphones)
+                '5G, Wi-Fi 6E (802.11ax), Bluetooth 5.3, NFC, Ultra Wideband',
+                'Nano-SIM + eSIM',
+                '1x USB-C (USB 3.0, 10Gbps)',
+                '7.65',
+                '0.82',
+                '15.99',
+                '221g',
+                'Up to 29 hours video playback',
+                'USB-C, MagSafe wireless charging, Qi2 wireless',
+                '12MP TrueDepth front camera with Photonic Engine',
+                'Spatial Audio, Dolby Atmos, 4-mic array with noise cancellation',
+                'iOS 17',
+                'Apple Apps Suite (Safari, Mail, Photos, etc.)',
+                'Garansi resmi iBox 1 tahun',
                 'new',
-                'Dell USB-C charger 130W',
-                30000000,
-                'Thunderbolt 4, Wi-Fi 6E, Killer AX1675',
+                'USB-C Cable, Documentation',
+                '22999000',
+                'Dynamic Island, Ceramic Shield, IP68 water resistance, Action Button',
             ],
         ];
 

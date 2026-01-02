@@ -41,15 +41,56 @@ Buka template Excel dan isi data produk dengan kolom berikut:
 
 #### Kolom Opsional
 
+**Basic Information:**
+
 - `brand`: Brand/merek produk
 - `description`: Deskripsi produk
+- `product_number`: Nomor produk/part number (contoh: 4Y7J1PA)
+
+**Core Hardware Specifications:**
+
 - `processor`: Spesifikasi processor
+- `chipset`: Chipset (contoh: AMD Integrated SoC, Intel B760)
 - `gpu`: Spesifikasi GPU/kartu grafis
 - `ram`: Spesifikasi RAM
 - `storage`: Spesifikasi penyimpanan
+
+**Display & Input:**
+
 - `display`: Spesifikasi layar
 - `keyboard`: Spesifikasi keyboard
-- `battery`: Spesifikasi baterai
+
+**Connectivity & Expansion:**
+
+- `optical_drive`: Optical drive (contoh: DVD±RW, None)
+- `wireless_connectivity`: Konektivitas wireless (contoh: Wi-Fi 6, Bluetooth 5.2)
+- `expansion_slots`: Slot ekspansi (contoh: 1x M.2, 2x PCIe)
+- `external_ports`: Port eksternal (contoh: 2x USB-C, 3x USB-A, HDMI)
+
+**Physical Specifications:**
+
+- `dimensions_width`: Lebar dalam CM (contoh: 30.66)
+- `dimensions_depth`: Kedalaman dalam CM (contoh: 19.46)
+- `dimensions_height`: Tinggi dalam CM (contoh: 1.65)
+- `weight`: Berat (contoh: 1.3kg, 250g)
+
+**Power:**
+
+- `battery`: Spesifikasi baterai (contoh: Up to 13 hours)
+- `power_supply_type`: Tipe power supply (contoh: 65W AC Adapter)
+
+**Multimedia:**
+
+- `webcam`: Spesifikasi webcam (contoh: 720p HD)
+- `audio`: Spesifikasi audio (contoh: Bang & Olufsen, Dual Speakers)
+
+**Software:**
+
+- `operating_system`: Sistem operasi (contoh: Windows 11 Home)
+- `software_included`: Software yang disertakan
+
+**Commercial Information:**
+
 - `warranty`: Garansi
 - `condition`: Kondisi barang (new, excellent, good, fair, used-excellent, used-very-good, used-good)
 - `extras`: Aksesoris tambahan
@@ -58,11 +99,68 @@ Buka template Excel dan isi data produk dengan kolom berikut:
 
 #### Contoh Data
 
+**Contoh 1: Gaming Laptop (Lengkap dengan spesifikasi baru)**
+
 ```
-| name                    | category | brand | price    | sku           | stock |
-|------------------------|----------|-------|----------|---------------|-------|
-| MacBook Pro M3 16"     | Laptop   | Apple | 35000000 | MBP-M3-16-001| 5     |
-| Dell XPS 15 9530       | Laptop   | Dell  | 28000000 | DELL-XPS15-001| 3   |
+name: ASUS TUF Gaming A15 Ryzen 7 RTX 4060
+category: Laptop
+brand: ASUS
+price: 16500000
+sku: DB-TUF-A15-R7-4060
+stock: 3
+processor: AMD Ryzen™ 7 7735HS (8-core, 16-thread, up to 4.75 GHz)
+chipset: AMD Integrated SoC
+gpu: NVIDIA® GeForce RTX™ 4060 8GB GDDR6
+ram: 16 GB DDR5-4800 MHz
+storage: 512 GB PCIe® 4.0 NVMe™ M.2 SSD
+display: 15.6" FHD (1920x1080) 144Hz IPS
+dimensions_width: 35.4
+dimensions_depth: 25.1
+dimensions_height: 2.24
+weight: 2.2kg
+wireless_connectivity: Wi-Fi 6 (802.11ax), Bluetooth® 5.3
+external_ports: 1x USB-C 3.2, 3x USB-A 3.2, 1x HDMI 2.1, 1x Audio Jack, 1x RJ45
+operating_system: Windows 11 Home
+condition: new
+```
+
+**Contoh 2: Smartphone (Field relevan untuk smartphone)**
+
+```
+name: iPhone 15 Pro Max 256GB
+category: Smartphone
+brand: Apple
+price: 21999000
+sku: DB-IP15PM-256-NT
+stock: 5
+processor: Apple A17 Pro chip (6-core CPU, 6-core GPU)
+ram: 8 GB
+storage: 256 GB
+display: 6.7" Super Retina XDR OLED, 120Hz ProMotion
+dimensions_width: 7.65
+dimensions_depth: 0.82
+dimensions_height: 15.99
+weight: 221g
+wireless_connectivity: 5G, Wi-Fi 6E, Bluetooth 5.3, NFC
+operating_system: iOS 17
+condition: new
+```
+
+**Contoh 3: Accessories (Field minimal)**
+
+```
+name: TP-Link USB 3.0 Type-C Card Reader UA430C
+category: Aksesori Gaming
+brand: TP-Link
+price: 350000
+sku: DB-TPLINK-UA430C
+stock: 10
+product_number: UA430C
+dimensions_width: 8
+dimensions_depth: 3
+dimensions_height: 1.2
+weight: 45g
+condition: new
 ```
 
 ### 4. Upload dan Preview
@@ -291,6 +389,20 @@ composer run dev
 7. **Batch Import**: Untuk data besar (>500 produk), pecah jadi beberapa file
 8. **SKU Konsisten**: Gunakan format SKU yang konsisten (contoh: BRAND-MODEL-VARIANT)
 9. **Link ke Existing Product**: Gunakan link "View existing product" untuk review sebelum update
+10. **Field Relevance by Product Type**:
+    - **Laptops**: Isi semua hardware fields (processor, chipset, gpu, ram, storage, display, keyboard)
+    - **Smartphones**: Skip chipset (processor sudah cukup), fokus ke connectivity & multimedia
+    - **Accessories**: Field minimal (dimensions, weight, product_number biasanya cukup)
+    - **Custom Fields**: Untuk accessories yang unik, field specifications bisa berisi data custom
+11. **Dimensions Format**:
+    - Selalu gunakan **CM** untuk dimensions (width, depth, height)
+    - Contoh: `30.66` bukan `30.66cm` atau `12.07 inch`
+12. **Weight Format**:
+    - Gunakan **kg** untuk laptop/desktop (contoh: `2.2kg`)
+    - Gunakan **g** untuk smartphone/accessories (contoh: `221g`)
+13. **Condition Values**:
+    - Gunakan lowercase: `new`, `used-excellent`, `used-very-good`, `used-good`
+    - **Jangan** gunakan: `New`, `Used-Excellent`, atau format lain
 
 ## 📝 Limitasi
 
@@ -353,10 +465,23 @@ Jika mengalami masalah:
 
 ---
 
-**Last Updated**: 2026-01-01
-**Version**: 2.0.0
+**Last Updated**: 2026-01-02
+**Version**: 2.1.0
 
 ## 🆕 Changelog
+
+### v2.1.0 (2026-01-02)
+
+- ✅ Added 13 new specification fields for comprehensive product data
+- ✅ Added support for `product_number` field
+- ✅ Added hardware fields: `chipset`, `optical_drive`, `wireless_connectivity`
+- ✅ Added connectivity fields: `expansion_slots`, `external_ports`
+- ✅ Added physical dimension fields: `dimensions_width`, `dimensions_depth`, `dimensions_height`, `weight`
+- ✅ Added power field: `power_supply_type`
+- ✅ Added multimedia fields: `webcam`, `audio`
+- ✅ Added software fields: `operating_system`, `software_included`
+- ✅ Updated documentation with comprehensive examples for different product types
+- ✅ Updated ProductsImport class validation rules
 
 ### v2.0.0 (2026-01-01)
 
