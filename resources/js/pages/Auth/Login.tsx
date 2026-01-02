@@ -19,8 +19,9 @@ export default function Login() {
             <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
                 <div className="w-full max-w-md rounded-lg bg-white p-8 shadow">
                     <div className="mb-8">
-                        <h1 className="text-2xl font-bold">Computer Store</h1>
-                        <p className="text-gray-600">Admin Dashboard Login</p>
+                        <h1 className="text-2xl font-semibold">Computer Store</h1>
+                        <p className="text-sm text-gray-600">Admin Dashboard Login</p>
+                        <p className="mt-2 text-xs text-gray-500">Built by Cangkir Co.</p>
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
