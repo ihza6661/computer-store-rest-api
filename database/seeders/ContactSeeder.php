@@ -48,7 +48,7 @@ class ContactSeeder extends Seeder
             'category' => 'sales_inquiry',
             'message' => 'Hello, I run a digital marketing agency and need to equip our new office. Looking for: 15x Lenovo ThinkPad X1 Carbon, 3x Synology NAS DS923+, 20x Dell P2723DE monitors, and various peripherals (keyboards, mice, headsets). Can you prepare a complete package quote? Budget is flexible for quality products. Need delivery by end of next month.',
             'status' => 'read',
-            'admin_reply' => 'Hi Jennifer, thank you for your interest! We\'ve prepared a comprehensive quote for your office setup. Our sales team will contact you within 24 hours with detailed pricing, volume discounts (approximately 12-15% off), and delivery schedule. We can definitely meet your end-of-month deadline. For a purchase of this size, we also offer free installation and 1-year premium support. Best regards, Database Computer Sales Team',
+            'admin_reply' => 'Hi Jennifer, thank you for your interest! We\'ve prepared a comprehensive quote for your office setup. Our sales team will contact you within 24 hours with detailed pricing, volume discounts (approximately 12-15% off), and delivery schedule. We can definitely meet your end-of-month deadline. For a purchase of this size, we also offer free installation and 1-year premium support. Best regards, Computer Store Sales Team',
         ]);
 
         Contact::create([
@@ -143,9 +143,9 @@ class ContactSeeder extends Seeder
             'email' => 'dewi.lestari@foundation.or.id',
             'phone' => '+62-814-3333-4444',
             'category' => 'general',
-            'message' => 'Yayasan kami bergerak di bidang pendidikan untuk anak kurang mampu di Indonesia Timur. Kami ingin melengkapi 5 computer labs (total 150 komputer). Apakah Database Computer punya CSR program atau educational discount? Kami juga terbuka untuk partnership jangka panjang. Budget terbatas tapi komitmen jangka panjang tinggi. Mohon info lebih lanjut. Terima kasih banyak.',
+            'message' => 'Yayasan kami bergerak di bidang pendidikan untuk anak kurang mampu di Indonesia Timur. Kami ingin melengkapi 5 computer labs (total 150 komputer). Apakah Computer Store punya CSR program atau educational discount? Kami juga terbuka untuk partnership jangka panjang. Budget terbatas tapi komitmen jangka panjang tinggi. Mohon info lebih lanjut. Terima kasih banyak.',
             'status' => 'read',
-            'admin_reply' => 'Dear Ibu Dewi, terima kasih atas kepercayaan kepada Database Computer. Kami sangat menghargai misi mulia yayasan Ibu. Database Computer memiliki program CSR untuk institusi pendidikan dengan diskon up to 25% dan payment terms yang fleksibel. Tim kami akan menghubungi Ibu untuk diskusi lebih detail mengenai kebutuhan dan solusi yang kami tawarkan. Mari kita bersama membangun pendidikan Indonesia. Salam, Database Computer CSR Team',
+            'admin_reply' => 'Dear Ibu Dewi, terima kasih atas kepercayaan kepada Computer Store. Kami sangat menghargai misi mulia yayasan Ibu. Computer Store memiliki program CSR untuk institusi pendidikan dengan diskon up to 25% dan payment terms yang fleksibel. Tim kami akan menghubungi Ibu untuk diskusi lebih detail mengenai kebutuhan dan solusi yang kami tawarkan. Mari kita bersama membangun pendidikan Indonesia. Salam, Computer Store CSR Team',
         ]);
 
         Contact::create([
@@ -162,9 +162,9 @@ class ContactSeeder extends Seeder
             'email' => 'putri.w@webagency.co.id',
             'phone' => '+62-822-4444-5555',
             'category' => 'general',
-            'message' => 'Halo Database Computer! Kami digital agency yang sedang develop website untuk client kami. Bolehkah kami menggunakan beberapa product photos dari website Database Computer sebagai mockup/demo content? Tentu dengan watermark dan credit to Database Computer. Website tersebut untuk portfolio kami saja, non-commercial. Mohon izin dan approval. Thank you!',
+            'message' => 'Halo Computer Store! Kami digital agency yang sedang develop website untuk client kami. Bolehkah kami menggunakan beberapa product photos dari website Computer Store sebagai mockup/demo content? Tentu dengan watermark dan credit to Computer Store. Website tersebut untuk portfolio kami saja, non-commercial. Mohon izin dan approval. Thank you!',
             'status' => 'read',
-            'admin_reply' => 'Hi Putri, terima kasih sudah menghubungi kami. Untuk penggunaan product photos sebagai mockup/demo content non-commercial, kami perbolehkan dengan syarat: 1) Include watermark/credit to Database Computer, 2) Include link to website kami, 3) Kirim preview ke marketing@store.com untuk approval. Senang bisa membantu project Anda. Good luck!',
+            'admin_reply' => 'Hi Putri, terima kasih sudah menghubungi kami. Untuk penggunaan product photos sebagai mockup/demo content non-commercial, kami perbolehkan dengan syarat: 1) Include watermark/credit to Computer Store, 2) Include link to website kami, 3) Kirim preview ke marketing@store.com untuk approval. Senang bisa membantu project Anda. Good luck!',
         ]);
 
         Contact::create([
@@ -200,7 +200,7 @@ class ContactSeeder extends Seeder
             'email' => 'hendra.g@distributor.co.id',
             'phone' => '+62-825-1111-2222',
             'category' => 'general',
-            'message' => 'Selamat siang, saya distributor elektronik di Kalimantan dengan 15 retail stores. Tertarik menjadi authorized dealer Database Computer untuk wilayah Kalimantan. Punya pengalaman 10 tahun di industri IT retail. Mohon info mengenai dealer program, margin, MOQ, dan support yang diberikan. Bisa schedule meeting untuk discuss partnership? Terima kasih.',
+            'message' => 'Selamat siang, saya distributor elektronik di Kalimantan dengan 15 retail stores. Tertarik menjadi authorized dealer Computer Store untuk wilayah Kalimantan. Punya pengalaman 10 tahun di industri IT retail. Mohon info mengenai dealer program, margin, MOQ, dan support yang diberikan. Bisa schedule meeting untuk discuss partnership? Terima kasih.',
             'status' => 'new',
         ]);
     }

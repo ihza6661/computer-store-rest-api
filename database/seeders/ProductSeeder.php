@@ -13,7 +13,7 @@ class ProductSeeder extends Seeder
     public function run(): void
     {
         // ===== DATABASE COMPUTER - REAL PRODUCTS ===== //
-        // Official products from Database Computer Pontianak
+        // Official products from Computer Store Pontianak
         // Gold Merchant Tokopedia & Shopee Mall | 12+ Bank Partnerships
 
         // === SMARTPHONES (Category ID: 1) === //

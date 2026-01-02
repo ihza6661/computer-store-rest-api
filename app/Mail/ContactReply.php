@@ -24,7 +24,7 @@ class ContactReply extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'We Have Replied to Your Inquiry - Database Computer',
+            subject: 'We Have Replied to Your Inquiry - Computer Store',
         );
     }
 

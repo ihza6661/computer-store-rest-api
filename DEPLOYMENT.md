@@ -1,4 +1,4 @@
-# Deployment Guide - Database Computer Backend
+# Deployment Guide - Computer Store Backend
 
 ## Heroku Deployment
 
@@ -8,7 +8,7 @@ Configure the following environment variables in Heroku:
 
 ```bash
 # Application Settings
-APP_NAME="Database Computer"
+APP_NAME="Computer Store"
 APP_ENV=production
 APP_DEBUG=false
 APP_URL=https://computer-store-api-dd14765dc7ef.herokuapp.com

@@ -15,13 +15,13 @@
 <body>
     <div class="container">
         <div class="header">
-            <h2>Thank You for Contacting Database Computer</h2>
+            <h2>Thank You for Contacting Computer Store</h2>
         </div>
         
         <div class="content">
             <p>Dear {{ $contact->name }},</p>
             
-            <p>Thank you for submitting your inquiry to Database Computer. We have received your message and appreciate your interest in our products and services.</p>
+            <p>Thank you for submitting your inquiry to Computer Store. We have received your message and appreciate your interest in our products and services.</p>
             
             <div style="background: #f5f5f5; padding: 15px; border-left: 4px solid #3498db;">
                 <p style="margin: 0;"><strong>Submission Reference ID:</strong> #{{ $contact->id }}</p>
@@ -41,11 +41,11 @@
             
             <p style="margin-top: 20px;">If you have any additional questions in the meantime, feel free to email us at <strong>noreply@store.test</strong>.</p>
             
-            <p>Best regards,<br><strong>Database Computer Team</strong></p>
+            <p>Best regards,<br><strong>Computer Store Team</strong></p>
         </div>
         
         <div class="footer">
-            <p>Database Computer | High-Quality Computer Hardware & Software</p>
+            <p>Computer Store | High-Quality Computer Hardware & Software</p>
             <p>This is an automated message. Please do not reply to this email.</p>
         </div>
     </div>

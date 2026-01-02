@@ -42,11 +42,11 @@
                 <strong>Original Category:</strong> {{ ucfirst(str_replace('_', ' ', $contact->category)) }}
             </p>
             
-            <p>Best regards,<br><strong>Database Computer Team</strong></p>
+            <p>Best regards,<br><strong>Computer Store Team</strong></p>
         </div>
         
         <div class="footer">
-            <p>Database Computer | High-Quality Computer Hardware & Software</p>
+            <p>Computer Store | High-Quality Computer Hardware & Software</p>
             <p>This is an automated message. Please do not reply to this email.</p>
         </div>
     </div>
