@@ -1,5 +1,11 @@
 # Deployment Guide - Computer Store Backend
 
+## Production URLs
+
+- **API & Admin Panel**: https://api.computer-store.ihza.me
+- **Frontend**: https://computer-store.ihza.me
+- **Legacy Heroku URL**: https://computer-store-api-dd14765dc7ef.herokuapp.com (redirects to custom domain)
+
 ## Heroku Deployment
 
 ### Required Environment Variables
@@ -11,7 +17,7 @@ Configure the following environment variables in Heroku:
 APP_NAME="Computer Store"
 APP_ENV=production
 APP_DEBUG=false
-APP_URL=https://computer-store-api-dd14765dc7ef.herokuapp.com
+APP_URL=https://api.computer-store.ihza.me
 
 # Database (automatically set by Heroku Postgres addon)
 # DATABASE_URL is automatically set by Heroku
@@ -22,9 +28,9 @@ SESSION_DRIVER=database
 SESSION_LIFETIME=120
 SESSION_ENCRYPT=false
 SESSION_PATH=/
-SESSION_DOMAIN=null
+SESSION_DOMAIN=.ihza.me  # Cross-subdomain cookie sharing
 SESSION_SECURE_COOKIE=true  # Required for HTTPS
-# SESSION_SAME_SITE=lax  # Use 'none' only if cross-domain is needed
+SESSION_SAME_SITE=lax  # Default, secure for same-site requests
 
 # Queue and Cache
 QUEUE_CONNECTION=database
@@ -55,10 +61,11 @@ MAIL_FROM_NAME="${APP_NAME}"
 #### Via Heroku CLI:
 
 ```bash
-# Set APP_URL
-heroku config:set APP_URL=https://computer-store-api-dd14765dc7ef.herokuapp.com
+# Set custom domain URL
+heroku config:set APP_URL=https://api.computer-store.ihza.me
 
-# Set session configuration for production
+# Set session configuration for custom domain
+heroku config:set SESSION_DOMAIN=.ihza.me
 heroku config:set SESSION_SECURE_COOKIE=true
 
 # Set other required variables
@@ -105,9 +112,9 @@ The app automatically allows requests from:
 - `http://localhost:5173` (local dev - Vite)
 - `http://localhost:3000` (local dev - alternative)
 - `http://localhost:8000` (local dev - Laravel)
-- `https://computer-store-pontianak-landing.vercel.app` (production landing)
+- `https://computer-store.ihza.me` (production frontend)
+- `https://computer-store-pontianak-landing.vercel.app` (legacy Vercel URL)
 - `https://computer-store-pontianak-landing-*.vercel.app` (Vercel preview deployments)
-- **APP_URL** (the Heroku backend itself for Inertia admin panel)
 
 ### Database Migrations
 
@@ -368,7 +375,7 @@ heroku config
 1. **Login Test:**
 
     ```
-    Visit: https://computer-store-api-dd14765dc7ef.herokuapp.com/login
+    Visit: https://api.computer-store.ihza.me/login
     Login with: admin@store.test / password
     ```
 

@@ -15,19 +15,18 @@ class CorsMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Allow requests from the frontend and the app itself
+        // Allow requests from the frontend only
         $allowedOrigins = [
+            // Local development
             'http://localhost:5173',
             'http://localhost:3000',
             'http://localhost:8000',
+            // Production frontend
+            'https://computer-store.ihza.me',
+            // Legacy Vercel domains (keep for transition period)
             'https://computer-store-pontianak-landing.vercel.app',
             'https://computer-store-pontianak-landing-*.vercel.app',
         ];
-
-        // Add the app's own URL for Inertia admin panel
-        if (env('APP_URL')) {
-            $allowedOrigins[] = env('APP_URL');
-        }
 
         $origin = $request->header('Origin');
 
