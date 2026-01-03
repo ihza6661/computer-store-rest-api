@@ -6,17 +6,21 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
-// Public API routes (no authentication required)
-Route::get('/products', [ProductController::class, 'index']);
-Route::get('/products/{product}', [ProductController::class, 'show']);
+// Public API routes (with standard rate limiting: 60 req/min)
+Route::middleware(['throttle:api'])->group(function () {
+    Route::get('/products', [ProductController::class, 'index']);
+    Route::get('/products/{product}', [ProductController::class, 'show']);
+    Route::get('/categories', [CategoryController::class, 'index']);
+});
 
-Route::get('/categories', [CategoryController::class, 'index']);
+// Contact form with stricter rate limiting (3 req/min)
+Route::middleware(['throttle:contacts'])->group(function () {
+    Route::post('/contacts', [ContactController::class, 'store']);
+});
 
-Route::post('/contacts', [ContactController::class, 'store']);
-
-// Admin API routes (require session-based authentication)
-Route::middleware(['auth:web'])->group(function () {
-    // Products management
+// Admin API routes (require session-based authentication + higher rate limit: 120 req/min)
+Route::middleware(['auth:web', 'throttle:api-authenticated'])->group(function () {
+    // Products management (standard authenticated limit)
     Route::post('/admin/products', [ProductController::class, 'store']);
     Route::put('/admin/products/{product}', [ProductController::class, 'update']);
     Route::delete('/admin/products/{product}', [ProductController::class, 'destroy']);

@@ -17,7 +17,8 @@ Route::get('/', function () {
 // Auth routes
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'show'])->name('login');
-    Route::post('/login', [LoginController::class, 'store']);
+    Route::post('/login', [LoginController::class, 'store'])
+        ->middleware('throttle:login');
 });
 
 Route::middleware('auth')->group(function () {
@@ -128,15 +129,17 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::delete('/admin/products/{product}', [ProductController::class, 'destroy'])
         ->name('admin.products.destroy');
 
-    // Product Import routes
-    Route::post('/admin/products/import/preview', [ProductController::class, 'importPreview'])
-        ->name('admin.products.import.preview');
-    Route::post('/admin/products/import/store', [ProductController::class, 'importStore'])
-        ->name('admin.products.import.store');
-    Route::get('/admin/products/import/status/{jobId}', [ProductController::class, 'importStatus'])
-        ->name('admin.products.import.status');
-    Route::get('/admin/products/import/template', [ProductController::class, 'downloadTemplate'])
-        ->name('admin.products.import.template');
+    // Product Import routes (higher rate limit for bulk operations: 600 req/min)
+    Route::middleware('throttle:product-imports')->group(function () {
+        Route::post('/admin/products/import/preview', [ProductController::class, 'importPreview'])
+            ->name('admin.products.import.preview');
+        Route::post('/admin/products/import/store', [ProductController::class, 'importStore'])
+            ->name('admin.products.import.store');
+        Route::get('/admin/products/import/status/{jobId}', [ProductController::class, 'importStatus'])
+            ->name('admin.products.import.status');
+        Route::get('/admin/products/import/template', [ProductController::class, 'downloadTemplate'])
+            ->name('admin.products.import.template');
+    });
 
     // Product Image Management Routes
     Route::delete('/admin/products/{product}/images/{image}', [ProductImageController::class, 'destroy'])
@@ -163,4 +166,21 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Contacts reply route (PUT)
     Route::post('/admin/contacts/{contact}', [ContactController::class, 'update'])
         ->name('admin.contacts.update');
+});
+
+// DEBUG ROUTE: Test trusted proxy IP detection
+// Remove this route after verifying in production
+Route::get('/debug/ip', function (Illuminate\Http\Request $request) {
+    return response()->json([
+        'detected_ip' => $request->ip(),
+        'remote_addr' => $request->server('REMOTE_ADDR'),
+        'x_forwarded_for' => $request->header('X-Forwarded-For'),
+        'all_ips' => $request->ips(),
+        'proxy_headers' => [
+            'X-Forwarded-For' => $request->header('X-Forwarded-For'),
+            'X-Forwarded-Host' => $request->header('X-Forwarded-Host'),
+            'X-Forwarded-Proto' => $request->header('X-Forwarded-Proto'),
+            'X-Forwarded-Port' => $request->header('X-Forwarded-Port'),
+        ],
+    ]);
 });
