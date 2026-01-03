@@ -167,20 +167,3 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/admin/contacts/{contact}', [ContactController::class, 'update'])
         ->name('admin.contacts.update');
 });
-
-// DEBUG ROUTE: Test trusted proxy IP detection
-// Remove this route after verifying in production
-Route::get('/debug/ip', function (Illuminate\Http\Request $request) {
-    return response()->json([
-        'detected_ip' => $request->ip(),
-        'remote_addr' => $request->server('REMOTE_ADDR'),
-        'x_forwarded_for' => $request->header('X-Forwarded-For'),
-        'all_ips' => $request->ips(),
-        'proxy_headers' => [
-            'X-Forwarded-For' => $request->header('X-Forwarded-For'),
-            'X-Forwarded-Host' => $request->header('X-Forwarded-Host'),
-            'X-Forwarded-Proto' => $request->header('X-Forwarded-Proto'),
-            'X-Forwarded-Port' => $request->header('X-Forwarded-Port'),
-        ],
-    ]);
-});
