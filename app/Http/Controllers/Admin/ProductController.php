@@ -606,8 +606,8 @@ class ProductController extends Controller
         $sheet->fromArray($exampleData, null, 'A2');
 
         // Auto-size columns
-        foreach (range('A', $sheet->getHighestColumn()) as $col) {
-            $sheet->getColumnDimension($col)->setAutoSize(true);
+        foreach ($sheet->getColumnIterator() as $column) {
+            $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
         }
 
         // Style header row

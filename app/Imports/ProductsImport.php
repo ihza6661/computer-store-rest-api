@@ -108,10 +108,38 @@ class ProductsImport implements ToCollection, WithHeadingRow
                     'wireless_connectivity' => 'nullable|string|max:255',
                     'expansion_slots' => 'nullable|string|max:255',
                     'external_ports' => 'nullable|string|max:500',
-                    'dimensions_width' => 'nullable|string|max:50',
-                    'dimensions_depth' => 'nullable|string|max:50',
-                    'dimensions_height' => 'nullable|string|max:50',
-                    'weight' => 'nullable|string|max:50',
+                    'dimensions_width' => ['nullable', function ($attribute, $value, $fail) {
+                        if ($value !== null && $value !== '' && !is_numeric($value) && !is_string($value)) {
+                            $fail('The '.$attribute.' must be a number or string.');
+                        }
+                        if (is_string($value) && strlen($value) > 50) {
+                            $fail('The '.$attribute.' must not exceed 50 characters.');
+                        }
+                    }],
+                    'dimensions_depth' => ['nullable', function ($attribute, $value, $fail) {
+                        if ($value !== null && $value !== '' && !is_numeric($value) && !is_string($value)) {
+                            $fail('The '.$attribute.' must be a number or string.');
+                        }
+                        if (is_string($value) && strlen($value) > 50) {
+                            $fail('The '.$attribute.' must not exceed 50 characters.');
+                        }
+                    }],
+                    'dimensions_height' => ['nullable', function ($attribute, $value, $fail) {
+                        if ($value !== null && $value !== '' && !is_numeric($value) && !is_string($value)) {
+                            $fail('The '.$attribute.' must be a number or string.');
+                        }
+                        if (is_string($value) && strlen($value) > 50) {
+                            $fail('The '.$attribute.' must not exceed 50 characters.');
+                        }
+                    }],
+                    'weight' => ['nullable', function ($attribute, $value, $fail) {
+                        if ($value !== null && $value !== '' && !is_numeric($value) && !is_string($value)) {
+                            $fail('The '.$attribute.' must be a number or string.');
+                        }
+                        if (is_string($value) && strlen($value) > 50) {
+                            $fail('The '.$attribute.' must not exceed 50 characters.');
+                        }
+                    }],
                     'power_supply_type' => 'nullable|string|max:255',
                     'webcam' => 'nullable|string|max:255',
                     'audio' => 'nullable|string|max:255',
@@ -229,7 +257,12 @@ class ProductsImport implements ToCollection, WithHeadingRow
 
                 foreach ($specFields as $field) {
                     if (isset($row[$field]) && ! empty($row[$field])) {
-                        $specifications[$field] = $row[$field];
+                        // Cast dimension fields to string to handle numeric values from Excel
+                        if (in_array($field, ['dimensions_width', 'dimensions_depth', 'dimensions_height', 'weight'])) {
+                            $specifications[$field] = (string) $row[$field];
+                        } else {
+                            $specifications[$field] = $row[$field];
+                        }
                     }
                 }
 
